@@ -3,3 +3,9 @@ next: Newer Posts
 comment: Comments
 archive_a: Archives
 archive_b: "Archives: %s"
+menu:
+  home: Home
+  archives: Archives
+  tags: Tags
+  categories: Categories
+  about: About

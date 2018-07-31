@@ -155,3 +155,12 @@ swiftype_key:
 archive:
     title: archives
     description: 可以根据归档日期检索所有文件
+
+# aplayer config
+aplayer:
+  meting: true
+
+menu:
+  Home: /
+  Archives: /archives/
+  About: /about

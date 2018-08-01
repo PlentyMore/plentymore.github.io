@@ -38,3 +38,5 @@ tags:
 ## `@Repeatable`
 `@Repeatable` annotation, introduced in Java SE 8, indicates that the marked annotation can be applied more than once to the same declaration or type use. For more information, see Repeating Annotations.
 （Java8新特性，用于指明注解能否在同一个地方多次使用，[example](https://docs.oracle.com/javase/tutorial/java/annotations/repeating.html)
+
+笔记来源： [Annotations](https://docs.oracle.com/javase/tutorial/java/annotations/predefined.html)

@@ -17,7 +17,7 @@ email: plentymorea@gmail.com
 description: "BLOG"
 keyword: # seo key words
 
-favicon: # your favicon png
+favicon: /images/favicon.png
 # custom end
 
 # URL
@@ -47,7 +47,8 @@ duoshuo_username:  # 你的多说帐号
 duoshuo_share: true                     # set to false if you want to use Comment without Sharing
 
 # Use livere
-use_livere:
+use_livere: true
+livere_uid: MTAyMC8zODUyNi8xNTA1NA==
 
 # Analytics settings
 # Baidu Analytics

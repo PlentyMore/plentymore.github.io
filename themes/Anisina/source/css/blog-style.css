@@ -389,6 +389,7 @@ article blockquote cite:before{
     display: table-cell;
     vertical-align: middle;
     padding: 55px 15px 15px;
+    background: linear-gradient(-180deg,transparent,rgba(0,0,0,.45));
 }
 
 
@@ -472,6 +473,9 @@ article blockquote cite:before{
     color: #404040;
     display: block;
     height: 100%;
+}
+.post-preview:first-child > a {
+    background: linear-gradient(-180deg,transparent,rgba(0,0,0,.45));
 }
 .post-preview > a:hover,
 .post-preview > a:focus {

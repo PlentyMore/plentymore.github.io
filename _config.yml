@@ -12,10 +12,10 @@ timezone:
 # custom Site settings
 # more detail check out docs
 SEOTitle: PTLM blog 
-header-img: https://i.imgur.com/KJidZsI.jpg
+header-img: /images/3.jpg
 email: plentymorea@gmail.com
 description: "BLOG"
-keyword: # seo key words
+keyword: pltm # seo key words
 
 favicon: /images/favicon.png
 # custom end

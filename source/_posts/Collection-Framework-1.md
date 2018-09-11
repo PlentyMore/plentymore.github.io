@@ -1,5 +1,5 @@
 ---
-title: Collection Framework
+title: Collection Framework(1)
 date: 2018-09-09 16:01:13
 tags:
     - Container
@@ -473,11 +473,70 @@ LinkedList实现了List和Deque接口，它允许存放任何类型的对象，�
 
 * public boolean removeLastOccurrence(Object o)
 
+# CopyOnWriteArrayList
+和ArrayList类似，不过它是线程安全的，它对的`add`和`set`等操作都将重新复制原来的数组元素并创建新的数组，
+因此开销非常大，一般只用来遍历和查找元素，如果要频繁地增加或改动元素则不应该使用该类。它允许插入null元素。
+
+## 成员变量
+```angularjs
+    /** The lock protecting all mutators */
+    final transient ReentrantLock lock = new ReentrantLock();
+
+    /** The array, accessed only via getArray/setArray. */
+    private transient volatile Object[] array;
+```
+
+## 构造方法
+```angularjs
+    /**
+     * Creates an empty list.
+     */
+    public CopyOnWriteArrayList() {
+        setArray(new Object[0]);
+    }
+
+    /**
+     * Creates a list containing the elements of the specified
+     * collection, in the order they are returned by the collection's
+     * iterator.
+     *
+     * @param c the collection of initially held elements
+     * @throws NullPointerException if the specified collection is null
+     */
+    public CopyOnWriteArrayList(Collection<? extends E> c) {
+        Object[] elements;
+        if (c.getClass() == CopyOnWriteArrayList.class)
+            elements = ((CopyOnWriteArrayList<?>)c).getArray();
+        else {
+            elements = c.toArray();
+            // c.toArray might (incorrectly) not return Object[] (see 6260652)
+            if (elements.getClass() != Object[].class)
+                elements = Arrays.copyOf(elements, elements.length, Object[].class);
+        }
+        setArray(elements);
+    }
+
+    /**
+     * Creates a list holding a copy of the given array.
+     *
+     * @param toCopyIn the array (a copy of this array is used as the
+     *        internal array)
+     * @throws NullPointerException if the specified array is null
+     */
+    public CopyOnWriteArrayList(E[] toCopyIn) {
+        setArray(Arrays.copyOf(toCopyIn, toCopyIn.length, Object[].class));
+    }
+```
+
+## 常用方法
+参考ArrayList
+
 # List总结
 * `ArrayList`不是线程安全的，`Vector`是线程安全的
 * `ArayList`的查找操作只需要常数时间，`LinkedList`则需要线性时间
 * `LinkedList`同时实现了`List`和`Deque`接口
 * `List`中可以包含重复的元素
+* `CopyOnWriteArrayList`一般用于多线程中频繁地访问元素的情景
 
 # HashMap
 `HashMap`的实现已经在[前几篇博客](https://plentymore.github.io/2018/08/14/HashMap/)介绍过了。
@@ -1503,357 +1562,8 @@ void foo(Set s) {
 ## 常用方法
 继承了HashSet的方法
 
+
 # Set总结
 * `Set`不包含重复元素
 * `HashSet`是无序的(迭代元素的时候不会按照插入元素的顺序进行迭代)，`TreeSet`和`LinkedHashSet`是有序的
-
-# PriorityQueue
-无边界的优先级队列的实现，队列里面的元素按照自然顺序顺序或者用户自定义的Comparator规则进行排序。
-它不允许插入null元素，不是线程安全的。
-
-## 成员变量
-```angularjs
-    private static final int DEFAULT_INITIAL_CAPACITY = 11;
-
-    /**
-     * Priority queue represented as a balanced binary heap: the two
-     * children of queue[n] are queue[2*n+1] and queue[2*(n+1)].  The
-     * priority queue is ordered by comparator, or by the elements'
-     * natural ordering, if comparator is null: For each node n in the
-     * heap and each descendant d of n, n <= d.  The element with the
-     * lowest value is in queue[0], assuming the queue is nonempty.
-     */
-    transient Object[] queue; // non-private to simplify nested class access
-
-    /**
-     * The number of elements in the priority queue.
-     */
-    private int size = 0;
-
-    /**
-     * The comparator, or null if priority queue uses elements'
-     * natural ordering.
-     */
-    private final Comparator<? super E> comparator;
-
-    /**
-     * The number of times this priority queue has been
-     * <i>structurally modified</i>.  See AbstractList for gory details.
-     */
-    transient int modCount = 0; // non-private to simplify nested class access
-    
-    /**
-     * The maximum size of array to allocate.
-     * Some VMs reserve some header words in an array.
-     * Attempts to allocate larger arrays may result in
-     * OutOfMemoryError: Requested array size exceeds VM limit
-     */
-    private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;    
-```
-
-## 构造函数
-```angularjs
-    /**
-     * Creates a {@code PriorityQueue} with the default initial
-     * capacity (11) that orders its elements according to their
-     * {@linkplain Comparable natural ordering}.
-     */
-    public PriorityQueue() {
-        this(DEFAULT_INITIAL_CAPACITY, null);
-    }
-
-    /**
-     * Creates a {@code PriorityQueue} with the specified initial
-     * capacity that orders its elements according to their
-     * {@linkplain Comparable natural ordering}.
-     *
-     * @param initialCapacity the initial capacity for this priority queue
-     * @throws IllegalArgumentException if {@code initialCapacity} is less
-     *         than 1
-     */
-    public PriorityQueue(int initialCapacity) {
-        this(initialCapacity, null);
-    }
-
-    /**
-     * Creates a {@code PriorityQueue} with the default initial capacity and
-     * whose elements are ordered according to the specified comparator.
-     *
-     * @param  comparator the comparator that will be used to order this
-     *         priority queue.  If {@code null}, the {@linkplain Comparable
-     *         natural ordering} of the elements will be used.
-     * @since 1.8
-     */
-    public PriorityQueue(Comparator<? super E> comparator) {
-        this(DEFAULT_INITIAL_CAPACITY, comparator);
-    }
-
-    /**
-     * Creates a {@code PriorityQueue} with the specified initial capacity
-     * that orders its elements according to the specified comparator.
-     *
-     * @param  initialCapacity the initial capacity for this priority queue
-     * @param  comparator the comparator that will be used to order this
-     *         priority queue.  If {@code null}, the {@linkplain Comparable
-     *         natural ordering} of the elements will be used.
-     * @throws IllegalArgumentException if {@code initialCapacity} is
-     *         less than 1
-     */
-    public PriorityQueue(int initialCapacity,
-                         Comparator<? super E> comparator) {
-        // Note: This restriction of at least one is not actually needed,
-        // but continues for 1.5 compatibility
-        if (initialCapacity < 1)
-            throw new IllegalArgumentException();
-        this.queue = new Object[initialCapacity];
-        this.comparator = comparator;
-    }
-
-    /**
-     * Creates a {@code PriorityQueue} containing the elements in the
-     * specified collection.  If the specified collection is an instance of
-     * a {@link SortedSet} or is another {@code PriorityQueue}, this
-     * priority queue will be ordered according to the same ordering.
-     * Otherwise, this priority queue will be ordered according to the
-     * {@linkplain Comparable natural ordering} of its elements.
-     *
-     * @param  c the collection whose elements are to be placed
-     *         into this priority queue
-     * @throws ClassCastException if elements of the specified collection
-     *         cannot be compared to one another according to the priority
-     *         queue's ordering
-     * @throws NullPointerException if the specified collection or any
-     *         of its elements are null
-     */
-    @SuppressWarnings("unchecked")
-    public PriorityQueue(Collection<? extends E> c) {
-        if (c instanceof SortedSet<?>) {
-            SortedSet<? extends E> ss = (SortedSet<? extends E>) c;
-            this.comparator = (Comparator<? super E>) ss.comparator();
-            initElementsFromCollection(ss);
-        }
-        else if (c instanceof PriorityQueue<?>) {
-            PriorityQueue<? extends E> pq = (PriorityQueue<? extends E>) c;
-            this.comparator = (Comparator<? super E>) pq.comparator();
-            initFromPriorityQueue(pq);
-        }
-        else {
-            this.comparator = null;
-            initFromCollection(c);
-        }
-    }
-
-    /**
-     * Creates a {@code PriorityQueue} containing the elements in the
-     * specified priority queue.  This priority queue will be
-     * ordered according to the same ordering as the given priority
-     * queue.
-     *
-     * @param  c the priority queue whose elements are to be placed
-     *         into this priority queue
-     * @throws ClassCastException if elements of {@code c} cannot be
-     *         compared to one another according to {@code c}'s
-     *         ordering
-     * @throws NullPointerException if the specified priority queue or any
-     *         of its elements are null
-     */
-    @SuppressWarnings("unchecked")
-    public PriorityQueue(PriorityQueue<? extends E> c) {
-        this.comparator = (Comparator<? super E>) c.comparator();
-        initFromPriorityQueue(c);
-    }
-
-    /**
-     * Creates a {@code PriorityQueue} containing the elements in the
-     * specified sorted set.   This priority queue will be ordered
-     * according to the same ordering as the given sorted set.
-     *
-     * @param  c the sorted set whose elements are to be placed
-     *         into this priority queue
-     * @throws ClassCastException if elements of the specified sorted
-     *         set cannot be compared to one another according to the
-     *         sorted set's ordering
-     * @throws NullPointerException if the specified sorted set or any
-     *         of its elements are null
-     */
-    @SuppressWarnings("unchecked")
-    public PriorityQueue(SortedSet<? extends E> c) {
-        this.comparator = (Comparator<? super E>) c.comparator();
-        initElementsFromCollection(c);
-    }
-```
-
-## 常用方法
-* public boolean add(E e)
-
-* public boolean offer(E e) 
-往队尾插入一个元素
-
-* public E peek()
-获取队头的元素
-
-* public boolean remove(Object o)
-
-* public boolean contains(Object o)
-
-* public Iterator<E> iterator()
-
-* public void clear()
-
-* public E poll() 
-移除队头的元素（队列是FIFO）
-
-* public Comparator<? super E> comparator()
-
-# ArrayBlockingQueue
-有边界的阻塞队列，底层是数组实现的，该类位于concurrent包下，是线程安全的，不允许插入null元素。因为它是有边界的，
-因此在元素填满队列之后再往里面添加元素将会发生阻塞，直到有空余的位置可以插入元素，往空队列取出元素的时候同理。
-
-## 成员变量
-```angularjs
-    /** The queued items */
-    final Object[] items;
-
-    /** items index for next take, poll, peek or remove */
-    int takeIndex;
-
-    /** items index for next put, offer, or add */
-    int putIndex;
-
-    /** Number of elements in the queue */
-    int count;
-
-    /*
-     * Concurrency control uses the classic two-condition algorithm
-     * found in any textbook.
-     */
-
-    /** Main lock guarding all access */
-    final ReentrantLock lock;
-
-    /** Condition for waiting takes */
-    private final Condition notEmpty;
-
-    /** Condition for waiting puts */
-    private final Condition notFull;
-
-    /**
-     * Shared state for currently active iterators, or null if there
-     * are known not to be any.  Allows queue operations to update
-     * iterator state.
-     */
-    transient Itrs itrs = null;
-```
-
-## 构造函数
-```angularjs
-
-    /**
-     * Creates an {@code ArrayBlockingQueue} with the given (fixed)
-     * capacity and default access policy.
-     *
-     * @param capacity the capacity of this queue
-     * @throws IllegalArgumentException if {@code capacity < 1}
-     */
-    public ArrayBlockingQueue(int capacity) {
-        this(capacity, false);
-    }
-
-    /**
-     * Creates an {@code ArrayBlockingQueue} with the given (fixed)
-     * capacity and the specified access policy.
-     *
-     * @param capacity the capacity of this queue
-     * @param fair if {@code true} then queue accesses for threads blocked
-     *        on insertion or removal, are processed in FIFO order;
-     *        if {@code false} the access order is unspecified.
-     * @throws IllegalArgumentException if {@code capacity < 1}
-     */
-    public ArrayBlockingQueue(int capacity, boolean fair) {
-        if (capacity <= 0)
-            throw new IllegalArgumentException();
-        this.items = new Object[capacity];
-        lock = new ReentrantLock(fair);
-        notEmpty = lock.newCondition();
-        notFull =  lock.newCondition();
-    }
-
-    /**
-     * Creates an {@code ArrayBlockingQueue} with the given (fixed)
-     * capacity, the specified access policy and initially containing the
-     * elements of the given collection,
-     * added in traversal order of the collection's iterator.
-     *
-     * @param capacity the capacity of this queue
-     * @param fair if {@code true} then queue accesses for threads blocked
-     *        on insertion or removal, are processed in FIFO order;
-     *        if {@code false} the access order is unspecified.
-     * @param c the collection of elements to initially contain
-     * @throws IllegalArgumentException if {@code capacity} is less than
-     *         {@code c.size()}, or less than 1.
-     * @throws NullPointerException if the specified collection or any
-     *         of its elements are null
-     */
-    public ArrayBlockingQueue(int capacity, boolean fair,
-                              Collection<? extends E> c) {
-        this(capacity, fair);
-
-        final ReentrantLock lock = this.lock;
-        lock.lock(); // Lock only for visibility, not mutual exclusion
-        try {
-            int i = 0;
-            try {
-                for (E e : c) {
-                    checkNotNull(e);
-                    items[i++] = e;
-                }
-            } catch (ArrayIndexOutOfBoundsException ex) {
-                throw new IllegalArgumentException();
-            }
-            count = i;
-            putIndex = (i == capacity) ? 0 : i;
-        } finally {
-            lock.unlock();
-        }
-    }
-```
-
-## 常用方法
-* public boolean add(E e)
-往队尾插入一个元素，如果队列已满则抛出IllegalStateException
-
-* public boolean offer(E e)
-往队尾插入一个元素，如果队列已满则立即返回false
-
-* public boolean offer(E e, long timeout, TimeUnit unit)
-
-* public void put(E e) 
-往队尾插入一个元素，如果队列已满则发生阻塞直到成功插入元素
-
-* public E poll()
-取出队头元素，如果队列为空则立即返回null
-
-* public E poll(long timeout, TimeUnit unit)
-
-* public E take()
-取出队头元素，如果队列为空则发生阻塞一直到成功取出元素为止
-
-* public E peek()
-获取队头元素（不移除），队列为空则返回null
-
-* public int size()
-
-* public int remainingCapacity()
-
-* public boolean remove(Object o)
-
-* public boolean contains(Object o)
-
-* public void clear()
-
-* public Iterator<E> iterator()
-
-# ConcurrentLinkedQueue
- 
-
 

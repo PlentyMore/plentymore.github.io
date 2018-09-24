@@ -3,7 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="2849d94c-b219-4436-a5c0-e464d2e4e1ea" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/_posts/Collection-Framework.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/Collection-Framework-1.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/Collection-Framework-1.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/Collection-Framework-1.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/Collection-Framework-2.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/Collection-Framework-2.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/_posts/Red-Black-Tree.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/_posts/Red-Black-Tree.md" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -18,7 +20,7 @@
     <session id="1255394909">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="27" />
+          <entry key="project.closed" value="33" />
           <entry key="project.open.time.1" value="1" />
           <entry key="project.open.time.11" value="3" />
           <entry key="project.open.time.12" value="4" />
@@ -28,14 +30,14 @@
           <entry key="project.open.time.2" value="1" />
           <entry key="project.open.time.20" value="3" />
           <entry key="project.open.time.21" value="1" />
-          <entry key="project.open.time.22" value="1" />
-          <entry key="project.open.time.23" value="3" />
+          <entry key="project.open.time.22" value="2" />
+          <entry key="project.open.time.23" value="5" />
           <entry key="project.open.time.24" value="1" />
-          <entry key="project.open.time.25" value="1" />
-          <entry key="project.open.time.26" value="3" />
+          <entry key="project.open.time.25" value="3" />
+          <entry key="project.open.time.26" value="5" />
           <entry key="project.open.time.6" value="1" />
           <entry key="project.open.time.7" value="1" />
-          <entry key="project.opened" value="28" />
+          <entry key="project.opened" value="35" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -49,7 +51,7 @@
           <entry key="jpg" value="7" />
           <entry key="js" value="1" />
           <entry key="json" value="4" />
-          <entry key="md" value="66" />
+          <entry key="md" value="72" />
           <entry key="yml" value="18" />
         </counts>
       </usages-collector>
@@ -61,7 +63,7 @@
           <entry key="Image" value="7" />
           <entry key="JSON" value="4" />
           <entry key="JavaScript" value="1" />
-          <entry key="Markdown" value="66" />
+          <entry key="Markdown" value="72" />
           <entry key="PLAIN_TEXT" value="6" />
           <entry key="YAML" value="18" />
         </counts>
@@ -70,7 +72,7 @@
         <counts>
           <entry key="css" value="5" />
           <entry key="ejs" value="43" />
-          <entry key="md" value="38121" />
+          <entry key="md" value="45798" />
           <entry key="yml" value="203" />
         </counts>
       </usages-collector>
@@ -79,8 +81,8 @@
           <entry key="CSS" value="5" />
           <entry key="EJS" value="43" />
           <entry key="HTML" value="83" />
-          <entry key="JavaScript" value="170" />
-          <entry key="Markdown" value="37868" />
+          <entry key="JavaScript" value="217" />
+          <entry key="Markdown" value="45498" />
           <entry key="YAML" value="203" />
         </counts>
       </usages-collector>
@@ -89,11 +91,11 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/source/_posts/Generics.md">
+        <entry file="file://$PROJECT_DIR$/source/_posts/Red-Black-Tree.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="182">
-                <caret line="7" selection-start-line="7" selection-end-line="7" selection-end-column="41" />
+              <first_editor relative-caret-position="74">
+                <caret line="113" column="16" selection-start-line="113" selection-start-column="16" selection-end-line="113" selection-end-column="16" />
               </first_editor>
               <second_editor />
             </state>
@@ -101,11 +103,11 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/source/_posts/Red-Black-Tree.md">
+        <entry file="file://$PROJECT_DIR$/source/_posts/Regex.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="8086">
-                <caret line="311" column="3" selection-start-line="311" selection-start-column="3" selection-end-line="311" selection-end-column="3" />
+              <first_editor relative-caret-position="491">
+                <caret line="102" column="22" selection-start-line="102" selection-start-column="22" selection-end-line="102" selection-end-column="22" />
               </first_editor>
               <second_editor />
             </state>
@@ -116,8 +118,32 @@
         <entry file="file://$PROJECT_DIR$/source/_posts/Collection-Framework-1.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="208">
-                <caret line="8" selection-start-line="8" selection-end-line="8" selection-end-column="40" />
+              <first_editor relative-caret-position="104">
+                <caret line="4" column="17" selection-start-line="4" selection-start-column="17" selection-end-line="4" selection-end-column="17" />
+              </first_editor>
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/source/_posts/Collection-Framework-2.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="104">
+                <caret line="4" column="17" selection-start-line="4" selection-start-column="17" selection-end-line="4" selection-end-column="17" />
+              </first_editor>
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/source/_posts/sslibev.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="491">
+                <caret line="129" column="18" selection-start-line="129" selection-start-column="18" selection-end-line="129" selection-end-column="18" />
               </first_editor>
               <second_editor />
             </state>
@@ -125,34 +151,13 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/source/_posts/Collection-Framework-2.md">
+        <entry file="file://$PROJECT_DIR$/source/_posts/JVM-Basic.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="260">
-                <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+              <first_editor relative-caret-position="104">
+                <caret line="4" column="9" lean-forward="true" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="9" />
               </first_editor>
               <second_editor />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/source/_posts/File-I-O-NIO.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor relative-caret-position="260">
-                <caret line="10" selection-start-line="10" selection-end-line="10" selection-end-column="40" />
-              </first_editor>
-              <second_editor />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/themes/Anisina/layout/page.ejs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="78">
-              <caret line="3" column="13" selection-start-line="3" selection-start-column="13" selection-end-line="3" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -170,20 +175,23 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/themes/Anisina/layout/m_page.ejs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5486">
-              <caret line="211" column="29" selection-start-line="211" selection-start-column="29" selection-end-line="211" selection-end-column="29" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/source/_posts/Hashtable.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
               <first_editor relative-caret-position="156">
                 <caret line="6" column="12" selection-start-line="6" selection-start-column="4" selection-end-line="6" selection-end-column="15" />
+              </first_editor>
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/source/_posts/HashMap.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="78">
+                <caret line="3" selection-start-line="3" selection-end-line="4" selection-end-column="17" />
               </first_editor>
               <second_editor />
             </state>
@@ -242,10 +250,12 @@
         <option value="$PROJECT_DIR$/themes/Anisina/layout/m_page.ejs" />
         <option value="$PROJECT_DIR$/source/_posts/HashMap.md" />
         <option value="$PROJECT_DIR$/source/_posts/Hashtable.md" />
-        <option value="$PROJECT_DIR$/source/_posts/Red-Black-Tree.md" />
         <option value="$PROJECT_DIR$/_config.yml" />
         <option value="$PROJECT_DIR$/source/_posts/Collection-Framework.md" />
         <option value="$PROJECT_DIR$/source/_posts/Collection-Framework(1).md" />
+        <option value="$PROJECT_DIR$/source/_posts/JVM-Basic.md" />
+        <option value="$PROJECT_DIR$/source/_posts/Red-Black-Tree.md" />
+        <option value="$PROJECT_DIR$/source/_posts/Collection-Framework-1.md" />
         <option value="$PROJECT_DIR$/source/_posts/Collection-Framework-2.md" />
       </list>
     </option>
@@ -277,6 +287,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -316,7 +327,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -383,12 +393,19 @@
       <workItem from="1535301479174" duration="29000" />
       <workItem from="1536479996843" duration="10247000" />
       <workItem from="1536553382727" duration="17813000" />
-      <workItem from="1536633186464" duration="17152000" />
+      <workItem from="1536633186464" duration="17452000" />
+      <workItem from="1536899436867" duration="6215000" />
+      <workItem from="1537017331249" duration="6754000" />
+      <workItem from="1537075455426" duration="604000" />
+      <workItem from="1537083413096" duration="10461000" />
+      <workItem from="1537199449832" duration="1695000" />
+      <workItem from="1537272500651" duration="9080000" />
+      <workItem from="1537804599234" duration="4718000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="218528000" />
+    <option name="totallyTimeSpent" value="258355000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="25" width="1366" height="743" extended-state="6" />
@@ -405,7 +422,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.4988831" weight="0.806874" />
+      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.4988831" weight="0.5237316" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50111693" side_tool="true" weight="0.3535188" />
       <window_info anchor="bottom" id="Version Control" order="10" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -426,9 +443,6 @@
     </ignored-roots>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/themes/landscape/layout/_partial/archive-post.ejs">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/themes/landscape/layout/_partial/archive.ejs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-108" />
@@ -526,26 +540,6 @@
         <state split_layout="SPLIT">
           <first_editor relative-caret-position="156">
             <caret line="6" column="10" selection-start-line="6" selection-start-column="10" selection-end-line="6" selection-end-column="10" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/source/_posts/Regex.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="2652">
-            <caret line="102" column="22" selection-start-line="102" selection-start-column="22" selection-end-line="102" selection-end-column="22" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/source/_posts/sslibev.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="3354">
-            <caret line="129" column="18" selection-start-line="129" selection-start-column="18" selection-end-line="129" selection-end-column="18" />
           </first_editor>
           <second_editor />
         </state>
@@ -701,31 +695,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/source/_posts/HashMap.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="936">
-            <caret line="36" column="7" selection-start-line="36" selection-start-column="7" selection-end-line="36" selection-end-column="7" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/source/_posts/Generics.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
           <first_editor relative-caret-position="182">
             <caret line="7" selection-start-line="7" selection-end-line="7" selection-end-column="41" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/source/_posts/Red-Black-Tree.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="8086">
-            <caret line="311" column="3" selection-start-line="311" selection-start-column="3" selection-end-line="311" selection-end-column="3" />
           </first_editor>
           <second_editor />
         </state>
@@ -748,6 +722,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/themes/Anisina/layout/m_page.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5486">
+          <caret line="211" column="29" selection-start-line="211" selection-start-column="29" selection-end-line="211" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_config.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="728">
+          <caret line="28" selection-start-line="28" selection-end-line="28" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/source/_posts/I-O-Streams.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -755,13 +743,6 @@
             <caret line="6" selection-start-line="6" selection-end-line="6" />
           </first_editor>
           <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/themes/Anisina/layout/m_page.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5486">
-          <caret line="211" column="29" selection-start-line="211" selection-start-column="29" selection-end-line="211" selection-end-column="29" />
         </state>
       </provider>
     </entry>
@@ -775,18 +756,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/_config.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="728">
-          <caret line="28" selection-start-line="28" selection-end-line="28" />
+    <entry file="file://$PROJECT_DIR$/source/_posts/HashMap.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="78">
+            <caret line="3" selection-start-line="3" selection-end-line="4" selection-end-column="17" />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/source/_posts/Collection-Framework-1.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="208">
-            <caret line="8" selection-start-line="8" selection-end-line="8" selection-end-column="40" />
+          <first_editor relative-caret-position="104">
+            <caret line="4" column="17" selection-start-line="4" selection-start-column="17" selection-end-line="4" selection-end-column="17" />
           </first_editor>
           <second_editor />
         </state>
@@ -795,8 +779,48 @@
     <entry file="file://$PROJECT_DIR$/source/_posts/Collection-Framework-2.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="260">
-            <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+          <first_editor relative-caret-position="104">
+            <caret line="4" column="17" selection-start-line="4" selection-start-column="17" selection-end-line="4" selection-end-column="17" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/Red-Black-Tree.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="74">
+            <caret line="113" column="16" selection-start-line="113" selection-start-column="16" selection-end-line="113" selection-end-column="16" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/Regex.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="491">
+            <caret line="102" column="22" selection-start-line="102" selection-start-column="22" selection-end-line="102" selection-end-column="22" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/sslibev.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="491">
+            <caret line="129" column="18" selection-start-line="129" selection-start-column="18" selection-end-line="129" selection-end-column="18" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/_posts/JVM-Basic.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="104">
+            <caret line="4" column="9" lean-forward="true" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="9" />
           </first_editor>
           <second_editor />
         </state>

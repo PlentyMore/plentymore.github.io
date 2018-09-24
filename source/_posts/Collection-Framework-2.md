@@ -1,6 +1,8 @@
 ---
 title: Collection-Framework(2)
 date: 2018-09-12 00:29:50
+header-img: https://i.imgur.com/RAwKwAj.jpg
+cdn: 'header-off'
 tags:
     - Container
     - Collection

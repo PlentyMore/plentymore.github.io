@@ -1,6 +1,8 @@
 ---
 title: Collection Framework(1)
 date: 2018-09-09 16:01:13
+header-img: https://i.imgur.com/RAwKwAj.jpg
+cdn: 'header-off'
 tags:
     - Container
     - Collection

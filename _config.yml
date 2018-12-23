@@ -6,12 +6,12 @@
 title: PLTM # your blog title name
 subtitle:
 author: plentymore # 作者
-language: 
-timezone: 
+language:
+timezone:
 
 # custom Site settings
 # more detail check out docs
-SEOTitle: PTLM blog 
+SEOTitle: PTLM blog
 header-img: /images/3.jpg
 email: plentymorea@gmail.com
 description: "BLOG"
@@ -31,15 +31,15 @@ permalink_defaults:
 # RSS:
 github_username: plentymore
 twitter_username: plentymorea
-facebook_username:  
-linkedin_username:  
+facebook_username:
+linkedin_username:
 
 # Build settings
 anchorjs: false                        # if you want to customize anchor. check out line:181 of `post.html`
 
 
-# Disqus settings 
-disqus_username: 
+# Disqus settings
+disqus_username:
 
 # Duoshuo settings
 duoshuo_username:  # 你的多说帐号
@@ -58,7 +58,7 @@ ga_track_id: UA-123175280-1
 ga_domain: plentymore.github.io
 
 # Sidebar settings
-sidebar-about-description: CV工程师 # 个人描述
+sidebar-about-description: 猛男 orz # 个人描述
 sidebar-avatar: https://avatars3.githubusercontent.com/u/30522768?s=400&u=a2ce54d7c63789391a0ba32b17792b7a21d64fbb&v=4    # use absolute URL
 
 
@@ -140,7 +140,7 @@ deploy:
 
 
 # img CDN path
-cdn-url: http://oia87mqfw.bkt.clouddn.com # 你的CDN地址
+cdn-url: # 你的CDN地址
 
 # Qiniu imageView2 API
 # More info http://developer.qiniu.com/code/v6/api/kodo-api/image/imageview2.html
@@ -153,10 +153,10 @@ post-default-img: /images/3.jpg #博文默认的图片
 post-default-img-mobile: https://i.imgur.com/RAwKwAj.jpg #移动端显示的图片
 
 # search api , set your custom key
-swiftype_key: 
+swiftype_key:
 
 
-# archive page title 
+# archive page title
 archive:
     title: archives
     description: 可以根据归档日期检索所有文件

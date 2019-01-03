@@ -14,7 +14,7 @@ SpringMVC的原理是把`DispatcherServlet`作为中央Servlet来处理请求（
 一般将`DispatcherServlet`的servletMapping设置成`/`，这会覆盖Tomcat配置`DefaultServlet`的servletMapping，`DefaultServlet`使用来将web根目录下的静态资源返回给客户端的，默认等等servletMapping是`/`，因此我们将`DispatcherServlet`的servletMapping也设置成`/`，会覆盖`DefaultServlet`的servletMapping（实际上就是将`DefaultServlet`的servletMapping移除），然后`DefaultServlet`就不能匹配到任何路径了，所以我们就无法将web根目录下的静态资源返回给客户端了。
 
 如果我们还需要像`DefaultServlet`一样将web根目录下的静态资源返回给客户端，可以启用`DefaultServletHttpRequestHandler`这个handler，它匹配的路径为`/*`，它会把请求获取web目录下的静态资源的请求转发给`DefaultServlet`处理（`DefaultServlet`没有了servletMapping，但是我们依然可以通过`ServletContext`的getNamedDispatcher来根据名称获取到`DefaultServlet`的`RequestDispatcher`，然后将请求转发给它处理）。只需要实现`WebMvcConfigure`接口的configureDefaultServletHandling方法，然后调用方法的参数的enable方法，就可以启用`DefaultServletHttpRequestHandler`了
-```
+```java
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
     }
@@ -31,7 +31,7 @@ m.html页面放在web应用根目录下，如果放在WEB-INF目录下，是不�
 
 ## 将各种resolver和属性绑定到request
 在`DispatcherServlet`将请求分发给handler处理之前，它会把各种resolver（LocaleResolve, ThemeResolver等）还有一些重要的属性绑定到request，以便在后续处理中(主要是让handler和view对象使用)能使用这些resolver和属性处理请求。具体可以看它的doService方法
-```
+```java
 	@Override
 	protected void doService(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logRequest(request);
@@ -70,7 +70,7 @@ m.html页面放在web应用根目录下，如果放在WEB-INF目录下，是不�
 ## 解析Multipart
 如果这个请求是一个Multipart请求（某个请求头的值含有multipart字样），就使用`MultipartResolver`把请求转换成`MultipartHttpServletRequest`，具体过程可以看`DispatcherServlet`的checkMultipart方法
 
-```
+```java
 	/**
 	 * Convert the request into a multipart request, and make multipart resolver available.
 	 * <p>If no multipart resolver is set, simply use the existing request.
@@ -109,7 +109,7 @@ m.html页面放在web应用根目录下，如果放在WEB-INF目录下，是不�
 	}
 ```
 如果没有配置`MultipartResolver`，就将请求原样返回，不作任何转换，这是因为真正的转换是调用`MultipartResolver`的resolveMultipart进行的，没有`MultipartResolver`，就无法转换了。默认情况下`MultipartResolver`是没有被配置的，因此不能处理Multipart请求，需要我们自己去配置。Spring模块中有两个具体的`MultipartResolver`类，分别为`CommonsMultipartResolver`和`StandardServletMultipartResolver`，一般我们会选择配置`CommonsMultipartResolver`，因为它配置比较简单，只需要在配置类中声明一个id为multipartResolver的Bean就行了（还要添加相应的依赖包，比如Apache Commons IO）。
-```
+```java
     @Bean
     MultipartResolver multipartResolver(){
         return new CommonsMultipartResolver();
@@ -118,7 +118,7 @@ m.html页面放在web应用根目录下，如果放在WEB-INF目录下，是不�
 
 ## 根据请求路径找到匹配的handler
 将会调用`DispatcherServlet`的getHandler方法来寻找所以匹配的handler
-```
+```java
 	/**
 	 * Return the HandlerExecutionChain for this request.
 	 * <p>Tries all handler mappings in order.
@@ -139,7 +139,7 @@ m.html页面放在web应用根目录下，如果放在WEB-INF目录下，是不�
 	}
 ```
 getHandler方法的返回类型为`HandlerExecutionChain`
-```
+```java
 public class HandlerExecutionChain {
 
 	private final Object handler;
@@ -156,7 +156,7 @@ public class HandlerExecutionChain {
 `HandlerExecutionChain`里面存放了一个handler，还有多个`HandlerInterceptor`，说明一个请求路径可能匹配最多一个handler，但是能匹配多个`HandlerInterceptor`。
 
 getHandler方法具体是怎样将请求路径和对应的handler还有`HandlerExecutionChain`匹配起来的，这是一个重点，从`DispatcherServlet`的getHandler方法中可以看到是遍历handlerMappings变量，然后调用`HandlerMapping`实例的getHandler方法。那么handlerMappings变量里面都有哪些`HandlerMapping`实例呢？我们可以去看`DispatcherServlet`的initHandlerMappings方法
-```
+```java
 	private void initHandlerMappings(ApplicationContext context) {
 		this.handlerMappings = null;
 
@@ -197,7 +197,7 @@ getHandler方法具体是怎样将请求路径和对应的handler还有`HandlerE
 需要注意的是，添加了@EnableWebMvc注解后，在`WebMvcConfigurationSupport`类中，会配置5个实现了`HandlerMapping`类型的Bean
 
 第一个Bean为requestMappingHandlerMapping
-```
+```java
 	/**
 	 * Return a {@link RequestMappingHandlerMapping} ordered at 0 for mapping
 	 * requests to annotated controllers.
@@ -211,7 +211,7 @@ getHandler方法具体是怎样将请求路径和对应的handler还有`HandlerE
 ```
 
 第二个Bean为viewControllerHandlerMapping
-```
+```java
 	/**
 	 * Return a handler mapping ordered at 1 to map URL paths directly to
 	 * view names. To configure view controllers, override
@@ -229,7 +229,7 @@ getHandler方法具体是怎样将请求路径和对应的handler还有`HandlerE
 ```
 
 第三个Bean为beanNameHandlerMapping
-```
+```java
 	/**
 	 * Return a {@link BeanNameUrlHandlerMapping} ordered at 2 to map URL
 	 * paths to controller bean names.
@@ -245,7 +245,7 @@ getHandler方法具体是怎样将请求路径和对应的handler还有`HandlerE
 ```
 
 第四个Bean为resourceHandlerMapping
-```
+```java
 	/**
 	 * Return a handler mapping ordered at Integer.MAX_VALUE-1 with mapped
 	 * resource handlers. To configure resource handling, override
@@ -264,7 +264,7 @@ getHandler方法具体是怎样将请求路径和对应的handler还有`HandlerE
 ```
 
 第五个Bean为defaultServletHandlerMapping
-```
+```java
 	 /**
 	 * Return a handler mapping ordered at Integer.MAX_VALUE with a mapped
 	 * default servlet handler. To configure "default" Servlet handling,
@@ -285,7 +285,7 @@ getHandler方法具体是怎样将请求路径和对应的handler还有`HandlerE
 从上面的图中可以看出来，是`SimpleUrlHandlerMapping`类型
 
 其中，第一个Bean的Order的值设置成了0，因此优先级最高，所以默认先调用`RequestMappingHandlerMapping`的getHandler方法获取相应的handler，然而这个类里面并没有这个方法，说明是从父类继承的，最终在`AbstractHandlerMapping`类中发现了这个方法
-```
+```java
 	public final HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
 		// 调用getHandlerInternal方法获取handler，这个方法需要子类实现
 		Object handler = getHandlerInternal(request);
@@ -308,11 +308,11 @@ getHandler方法具体是怎样将请求路径和对应的handler还有`HandlerE
 	}
 ```
 可以看到还需要调用getHandlerInternal方法获取handler
-```
+```java
 protected abstract Object getHandlerInternal(HttpServletRequest request) throws Exception;
 ```
 getHandlerInternal是抽象方法，说明是留给子类实现了，所以这里又使用了模板方法模式，`AbstractHandlerMapping`的直接子类`AbstractHandlerMethodMapping<T>`实现了这个方法
-```
+```java
 	@Override
 	protected HandlerMethod getHandlerInternal(HttpServletRequest request) throws Exception {
 		String lookupPath = getUrlPathHelper().getLookupPathForRequest(request);
@@ -328,7 +328,7 @@ getHandlerInternal是抽象方法，说明是留给子类实现了，所以这�
 	}
 ```
 getHandlerInternal大概的逻辑是，根据请求的路径，即lookupPath，调用lookupHandlerMethod找到对应的`HandlerMethod`，`HandlerMethod`又是什么东西？？？
-```
+```java
 /**
  * Encapsulates information about a handler method consisting of a
  * {@linkplain #getMethod() method} and a {@linkplain #getBean() bean}.
@@ -339,7 +339,7 @@ getHandlerInternal大概的逻辑是，根据请求的路径，即lookupPath，�
  * (e.g. lazy-init bean, prototype bean). Use {@link #createWithResolvedBean()}
  * to obtain a {@code HandlerMethod} instance with a bean instance resolved
  * through the associated {@link BeanFactory}.
- *
+ */
 public class HandlerMethod {
 
 	private final Object bean;
@@ -369,7 +369,7 @@ public class HandlerMethod {
 	...... //主要存放了上面的几个成员变量
 ```
 简单来说就是一个方法 + 方法所属对象的组合，举个例子
-```
+```java
 @Controller
 public class IndexController{
 	@GetMaping
@@ -382,7 +382,7 @@ public class IndexController{
 所以这个Bean将会是上面的`HandlerMethod`的bean变量的值
 
 然后来看看lookupHandlerMethod方法
-```
+```java
 	@Nullable
 	protected HandlerMethod lookupHandlerMethod(String lookupPath, HttpServletRequest request) throws Exception {
 		List<Match> matches = new ArrayList<>();
@@ -426,7 +426,7 @@ public class IndexController{
 实际上就是把mappingRegistry变量（类型为`MappingRegistry`）里面的urlLookup变量（类型为`MultiValueMap<String, T>`）的值通过lookupPath（即请求路径）取出来，`MultiValueMap`是一个键对应多个值的一种特殊Map，因此能够得到多个值，然后在用这些值创建`Match`的实例，放到`Match`列表中，如果`Match`列表有多个`Match`元素，则从中选出一个best-matching（最匹配）的一个，那`Match`又是什么东西（感觉HandlerMapping应该单独再写一篇博客来总结，内容实在太多了），实际上它就是把上面的`MultiValueMap<String, T>`类型里面的T类型的元素和`HandlerMethod`绑定起来，方便选出最匹配的`Match`，最后返回最匹配的`Match`的`HandlerMethod`变量。所以最终最多只会选出一个`HandlerMethod`，也就是一个请求只能匹配到一个handler
 
 到这里终于匹配完相应的handler了，让我们回到`AbstractHandlerMapping`的getHandler方法，现在它已经匹配到相应的handler了，之后它会调用getHandlerExecutionChain方法获取`HandlerExecutionChain`，下面来看getHandlerExecutionChain方法，这个方法也是在`AbstractHandlerMapping`类里面
-```
+```java
 	protected HandlerExecutionChain getHandlerExecutionChain(Object handler, HttpServletRequest request) {
 		HandlerExecutionChain chain = (handler instanceof HandlerExecutionChain ?
 				(HandlerExecutionChain) handler : new HandlerExecutionChain(handler));
@@ -450,7 +450,7 @@ public class IndexController{
 
 ## 获取对应的HandlerAdapter
 `HandlerAdapter`是调用getHandlerAdapter方法获取的，这个方法在`DispatcherServlet`里面
-```
+```java
 	protected HandlerAdapter getHandlerAdapter(Object handler) throws ServletException {
 		if (this.handlerAdapters != null) {
 			for (HandlerAdapter adapter : this.handlerAdapters) {
@@ -466,7 +466,7 @@ public class IndexController{
 方法很简单，就是遍历`DispatcherServlet`预先配置好的handlerAdapters，如果遍历到的`HandlerAdapter`支持处理前面匹配到的handler,那么就直接返回这个`HandlerAdapter`。
 
 所以关键要看`DispatcherServlet`是怎样初始化handlerAdapters的。handlerAdapters的初始化是调用`DispatcherServlet`的initHandlerAdapters方法完成的
-```
+```java
 	private void initHandlerAdapters(ApplicationContext context) {
 		this.handlerAdapters = null;
 
@@ -507,7 +507,7 @@ public class IndexController{
 可以看到它的逻辑和初始化`HandlerMapping`是类似的，都是找到实现了某个接口等所有Bean，如果这样的Bean存在，则把它们排序后放到列表中，如果不存在，则采用默认的配置(默认的配置在DispatcherServlet.properties文件中，相应的值为org.springframework.web.servlet.HandlerMapping=org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping,org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping)。
 
 在添加`@EnableWebMvc`注解后，在`WebMvcConfigurationSupport`类中，会配置多个实现了`HandlerMapping`接口的Bean
-```
+```java
     @Bean
 	public RequestMappingHandlerAdapter requestMappingHandlerAdapter() {
 		RequestMappingHandlerAdapter adapter = createRequestMappingHandlerAdapter();
@@ -538,7 +538,7 @@ public class IndexController{
 
 ```
 可以看到配置的`HandlerAdapter`具体实现类为`RequestMappingHandlerAdapter`
-```
+```java
 /**
  * Extension of {@link AbstractHandlerMethodAdapter} that supports
  * {@link RequestMapping} annotated {@code HandlerMethod RequestMapping} annotated {@code HandlerMethods}.
@@ -555,7 +555,7 @@ public class IndexController{
 
 ![Imgur](https://i.imgur.com/79hCOpf.png)
 
-```
+```java
 	/**
 	 * Returns a {@link HttpRequestHandlerAdapter} for processing requests
 	 * with {@link HttpRequestHandler HttpRequestHandlers}.
@@ -580,7 +580,7 @@ public class IndexController{
 获取到了`HandlerAdapter`之后，就可以调用它的handle方法调用handler了，不过由于拦截器（`HandlerInterceptor`）的preHandle方法是要在handler调用之前执行的，所以首先要把`HandlerExecutionChain`里面的所有拦截器的preHandle方法执行一遍。
 
 我们回到`DispatcherHandler`的doDispatch方法，可以看到是调用`HandlerExecutionChain`的applyPreHandle方法执行拦截器的preHandle方法的，所以我们来看`HandlerExecutionChain`的applyPreHandle方法
-```
+```java
 	/**
 	 * Apply preHandle methods of registered interceptors.
 	 * @return {@code true} if the execution chain should proceed with the
@@ -618,7 +618,7 @@ public class IndexController{
 
 ## 调用handler
 终于到了真正调用handler这一步了，还是在`DispatcherHandler`的doDispatch方法里面，可以看到是调用`HandlerAdapter`的handle方法来调用handler的，假设我们前面获取到的handler是`HandlerMethod`类型的，则我们的`HandlerAdapter`将会是`RequestMappingHandlerAdapter`，所以我们来看到`RequestMappingHandlerAdapter`的handler方法，然后发现这个类里面没有这个方法，所以这个方法是从它的父类`AbstractHandlerMethodAdapter`继承的，`AbstractHandlerMethodAdapter`的handle方法如下：
-```
+```java
 	@Override
 	@Nullable
 	public final ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -632,7 +632,7 @@ public class IndexController{
 ```
 
 可以看到具体的实现其实是在handleInternal里面，而这是一个抽象方法，需要子类实现，`RequestMappingHandlerAdapter`实现了这个方法
-```
+```java
 	@Override
 	protected ModelAndView handleInternal(HttpServletRequest request,
 			HttpServletResponse response, HandlerMethod handlerMethod) throws Exception {
@@ -673,7 +673,7 @@ public class IndexController{
 	}
 ```
 然后重点看invokeHandlerMethod方法，这个方法返回一个`ModelAndView`，以便后面进行视图解析和渲染等操作
-```
+```java
 	@Nullable
 	protected ModelAndView invokeHandlerMethod(HttpServletRequest request,
 			HttpServletResponse response, HandlerMethod handlerMethod) throws Exception {
@@ -734,7 +734,7 @@ public class IndexController{
 
 ## 调用拦截器的postHandle方法
 调用完`HandlerAdapter`的handle方法之后，handle已经执行完成了，并返回了相应的`ModelAndView`对象。因为拦截器的postHandle方法是在handler执行完之后再执行的，因此后面将会执行拦截器的postHandler方法，在`DispatcherServlet`的doDispatch方法中，可以看到将会调用`HandlerExecutionChain`的applyPostHandle方法执行拦截器的postHandler方法（前面还有一个applyDefaultViewName被我跳过了，这个是用来解析默认的视图名称的）
-```
+```java
 	void applyPostHandle(HttpServletRequest request, HttpServletResponse response, @Nullable ModelAndView mv)
 			throws Exception {
 
@@ -751,7 +751,7 @@ public class IndexController{
 
 ## 异常处理
 如果上面的步骤抛出了异常，就返回异常相关的`ModelAndView`，具体处理流程如下（在`DispatchreServlet`的processDispatchResult方法中）：
-```
+```java
 		boolean errorView = false;
 
 		if (exception != null) {
@@ -771,7 +771,7 @@ public class IndexController{
 
 ## 解析和渲染视图
 如果前面返回的`ModelAndView`不为空，则调用`DispatcherServler`的render准备进行视图渲染
-```
+```java
 	/**
 	 * Render the given ModelAndView.
 	 * <p>This is the last stage in handling a request. It may involve resolving the view by name.
@@ -828,7 +828,7 @@ public class IndexController{
 
 ### 解析视图
 下面来看resolveViewName方法（在`DispatcherServlet`里面）：
-```
+```java
 	protected View resolveViewName(String viewName, @Nullable Map<String, Object> model,
 			Locale locale, HttpServletRequest request) throws Exception {
 
@@ -846,7 +846,7 @@ public class IndexController{
 如果视图解析器不为空，则使用调用视图解析器的resolveViewName方法解析视图。那么视图解析器是怎么初始化的呢？和前面的`HandlerMapping`还有`HandlerAdapter`一样，也是先查找相应类型的Bean（这里是`ViewResolver`类型），如果找到的话就添加到viewResolvers变量里面，如果没有找到则使用默认的视图解析器（DispatcherServler.properties文件里面定义的）。
 
 再次去看`WebMvcConfigurationSupport`这个类，看它有没有配置`ViewResolver`类型的Bean，发现配置了一个mvcViewResolver，具体类型为`ViewResolverComposite`
-```
+```java
 
 	/**
 	 * Register a {@link ViewResolverComposite} that contains a chain of view resolvers
@@ -896,7 +896,7 @@ public class IndexController{
 ![Imgur](https://i.imgur.com/CDGQmGy.png)
 
 这个`InternalResourceViewResolver`是什么时候加进去的呢？？？回到配置mvcViewResolver这个Bean的代码，可以发现：
-```
+```java
 if (names.length == 1) {
     registry.getViewResolver().add(new InternalResourceViewResolver());
 }
@@ -904,18 +904,18 @@ if (names.length == 1) {
 上面创建了一个`InternalResourceViewResolver`实例并添加到了registry的ViewResolver列表中，registry是`ViewResolverRegistry`类型的，它里面有一个viewResolvers变量（类型为`List<ViewResolver>`），所以前面创建的`InternalResourceViewResolver`实例会被添加到viewResolvers变量里面，然后，`composite.setViewResolvers(registry.getViewResolvers());`这句会把这个实例添加到`ViewResolverComposite`实例的视图解析器列表中，也就是把`InternalResourceViewResolver`这个视图解析器存放到`ViewResolverComposite`这个视图解析器里面。
 
 初始化`ViewResolver`的过程大概就是这样了，下面回到`DispatcherServlet`的resolveViewName方法，
-```
+```java
 for (ViewResolver viewResolver : this.viewResolvers)
 ```
 所以上面的viewResolvers默认情况下应该只有一个元素，也就是`ViewResolverComposite`的实例，后面
-```
+```java
 View view = viewResolver.resolveViewName(viewName, locale);
 ```
 调用的resolveViewName方法也就是`ViewResolverComposite`的resolveViewName方法，然后代理给`InternalResourceViewResolver`执行，也就是说最终将执行`InternalResourceViewResolver`的resolveViewName方法。
 
 
 去查看`InternalResourceViewResolver`的resolveViewName方法，发现方法不存在，因此这个方法应该是从父类继承的，这里很容易想到它应该是用了模板方法模式。一般跟踪之后，最终可以发现它会返回一个类型为`InternalResourceView`的视图对象（其实和前面分析过的也运用了模板方法模式的过程是类似的，一路跟踪下去就可以发现它的套路了）
-```
+```java
 	@Override
 	protected AbstractUrlBasedView buildView(String viewName) throws Exception {
 		InternalResourceView view = (InternalResourceView) super.buildView(viewName);
@@ -932,11 +932,11 @@ View view = viewResolver.resolveViewName(viewName, locale);
 ### 渲染视图
 从上面可以知道我们得到了一个类型为`InternalResourceView`的视图对象，然后我们就可以调用`View`的render渲染视图了。
 回到回到`DispatcherServlet`的render方法，在调用完resolveViewName方法后，如果返回的视图不为空，则
-```
+```java
 view.render(mv.getModelInternal(), request, response);
 ```
 调用返回的视图的render方法渲染视图，因为我们得到的是`InternalResourceView`对象，所以我们可以去看`InternalResourceView`的render方法，然而它并没有这个方法，说明这个方法是从父类继承的，又双叒叕是这个套路（模板方法模式）。经过一番跟踪，可以发现最终的渲染逻辑在`InternalResourceView`类的renderMergedOutputModel方法里面
-```
+```java
 	/**
 	 * Render the internal resource given the specified model.
 	 * This includes setting the model as request attributes.
@@ -983,7 +983,7 @@ view.render(mv.getModelInternal(), request, response);
 
 ## 调用拦截器的afterCompletion方法
 渲染完视图之后，还没有结束，还要执行拦截器的afterCompletion方法（所以拦截器的afterCompletion方法是在视图渲染完成之后执行的）。回到`DispatcherServlet`的processDispatchResult方法，可以看到在最后，会调用`HandlerExecutionChain`的triggerAfterCompletion来执行拦截器的afterCompletion方法。查看`HandlerExecutionChain`的triggerAfterCompletion方法
-```
+```java
 	void triggerAfterCompletion(HttpServletRequest request, HttpServletResponse response, @Nullable Exception ex)
 			throws Exception {
 

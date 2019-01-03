@@ -10,7 +10,7 @@ tags:
 ## 创建线程
 Java创建线程有两种方式
 * 实现Runnable接口<br>
-```angularjs
+```java
 Thread t = new Thread(new Runnable() {
     @Override
     public void run() {
@@ -19,7 +19,7 @@ Thread t = new Thread(new Runnable() {
 });
 ```
 * 继承Thread类<br>
-```angularjs
+```java
 class MyThread extends Thread{
         @Override
         public void run() {
@@ -32,7 +32,7 @@ Thead t = new MyThread();
 ## 启动线程
 启动线程需要调用Thread的start方法，这样才能真正的启动一个新的线程，
 直接调用run方法的话相当于在主线程调用一个方法，并不能启动一个新的线程。
-```angularjs
+```java
 t.start(); //这样就能启动了一个新的线程
 ```
 
@@ -51,7 +51,7 @@ t.start(); //这样就能启动了一个新的线程
 >An interrupt is an indication to a thread that it should stop what it is doing and do something else. It's up to the programmer to decide exactly how a thread responds to an interrupt, but it is very common for the thread to terminate. This is the usage emphasized in this lesson.
 
 中断表明线程应该停止当前正在执行的任务并转去执行其他任务，这取决于开发者的实现，通常的做法是在线程收到中断信号时终止该线程。
-```angularjs
+```java
 Thread t = new Thread(new Runnable() {
     @Override
     public void run() {
@@ -69,7 +69,7 @@ Thread t = new Thread(new Runnable() {
 >A thread sends an interrupt by invoking interrupt on the Thread object for the thread to be interrupted. For the interrupt mechanism to work correctly, the interrupted thread must support its own interruption.
 
 可以通过调用线程的interrupt方法向该线程发送中断信号
-```angularjs
+```java
 public static void main(String[] args){
     Thread t = new Thread(new Runnable(){  
     @Override
@@ -83,7 +83,7 @@ public static void main(String[] args){
 ```
 
 中断机制能正常运作的前提是该线程能正确地处理中断信号，比如：
-```angularjs
+```java
 for (int i = 0; i < importantInfo.length; i++) {
     // Pause for 4 seconds
     try {
@@ -104,7 +104,7 @@ Thread.sleep()有可能会抛出中断异常，当捕获到该异常的时候，
 
 当没有调用sleep这些会抛出中断异常的方法的时候，需要反复调用Thread.interrupted()
 方法使得线程能够响应中断。
-```angularjs
+```java
 for (int i = 0; i < inputs.length; i++) {
     heavyCrunch(inputs[i]);
     if (Thread.interrupted()) {
@@ -120,7 +120,7 @@ for (int i = 0; i < inputs.length; i++) {
 下面讲解一下几个检查这个标志的方法。
 * ### Thread.interrupted<br>
 该方法为Thread类的静态方法，先来看看这个方法的实现：<br>
-```angularjs
+```java
 public static boolean interrupted() {
      return currentThread().isInterrupted(true);
 }
@@ -128,7 +128,7 @@ public static boolean interrupted() {
 currentThread()将返回当前正在运行的线程，所以这个isInterrupted方法是Thread类的方法。
 
 接下来看isInterrupted方法的实现：<br>
-```angularjs
+```java
 private native boolean isInterrupted(boolean ClearInterrupted);
 ```
 这个方法是个本地方法，看具体的实现比较麻烦，我们直接看它的文档:
@@ -144,7 +144,7 @@ private native boolean isInterrupted(boolean ClearInterrupted);
 回到上面的interrupted方法，这个方法调用了isInterrupted(true)，可以看到它将重置中断状态。
 所以调用Thread.interrupted()将获取当前线程的中断状态，接着重置中断状态。
 
-```angularjs
+```java
 Thread.interrupted(); //将得到false, 因为线程没有被中断
 Thread.currentThread().interrupt(); //中断线程
 Thread.interrupted(); //将得到true，因为线程被中断了，然后重置中断状态
@@ -158,7 +158,7 @@ Thread.interrupted(); //将得到true，因为线程又被中断了，然后重�
 
 * ### Thread.isInterrupted<br>
 该方法为Thread类的实例方法，看该方法的实现：<br>
-```angularjs
+```java
 public boolean isInterrupted() {
     return isInterrupted(false);
 }
@@ -168,7 +168,7 @@ public boolean isInterrupted() {
 
 因此，调用这个方法，只返回线程的中断状态，而不修改中断状态，因此调用这个方法不会改变线程的中断状态
 
-```angularjs
+```java
 Thread.currentThread().isInterrupted(); //将得到false, 因为线程没有被中断
 Thread.currentThread().interrupt(); //中断线程
 Thread.currentThread().isInterrupted()//将得到true，因为线程被中断了
@@ -179,7 +179,7 @@ Thread.currentThread().isInterrupted() //同上
 >The non-static isInterrupted method, which is used by one thread to query the interrupt status of another, does not change the interrupt status flag
 
 文档上说这个方法是用来在一个线程里面查询另一个线程是否被中断的，因此该方法不重置线程的中断状态<br>
-```angularjs
+```java
 Thread t1 = ...;
 if((new Date()).getMonth() == 2){
    t1.interrupt();

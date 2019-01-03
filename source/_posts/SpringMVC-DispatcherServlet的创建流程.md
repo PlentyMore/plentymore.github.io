@@ -16,7 +16,7 @@ tags:
 
 
 先来看`AbstractDispatcherServletInitializer`类，它重写了父类的onStartup方法
-```
+```java
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
 		super.onStartup(servletContext);
@@ -24,7 +24,7 @@ tags:
 	}
 ```
 在它重写的onStartup方法中，和父类相比，增加了注册DispatcherServlet的逻辑，即增加了registerDispatcherServlet方法
-```
+```java
 	protected void registerDispatcherServlet(ServletContext servletContext) {
 		String servletName = getServletName();  // 默认返回dispatcher
 		Assert.hasLength(servletName, "getServletName() must not return null or empty");
@@ -65,7 +65,7 @@ tags:
 	}
 ```
 registerDispatcherServlet方法将调用createServletApplicationContext方法来创建`WebApplicationContext `，这个方法是个抽象方法，它的子类`AbstractAnnotationConfigDispatcherServletInitializer`重写了这个方法（出现了！模板方法模式）
-```
+```java
 	@Override
 	protected WebApplicationContext createServletApplicationContext() {
 		AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
@@ -81,7 +81,7 @@ registerDispatcherServlet方法将调用createServletApplicationContext方法来
 `AbstractAnnotationConfigDispatcherServletInitializer`的createServletApplicationContext方法调用了getServletConfigClasses方法，这个方法也是抽象方法，需要它的子类来实现（就是我们自己创建的类，继承了`AbstractAnnotationConfigDispatcherServletInitializer`，又出现了！模板方法模式）
 
 这样一路看下来发现，getRootConfigClasses方法好像没被调用？这不是配置rootApplicationContext的吗？怎么没有被调用？？？其实已经在`AbstractAnnotationConfigDispatcherServletInitializer`的父类的父类`AbstractContextLoaderInitializer`里面调用了
-```
+```java
     @Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
 		// 这个方法会调用到getRootConfigClasses方法获取rootWebApplicationContext的配置类
@@ -106,7 +106,7 @@ registerDispatcherServlet方法将调用createServletApplicationContext方法来
 ```
 
 创建完servletAppContext之后（rootApplicationContext在之前已经创建完了，具体看onStartUp方法），就创建DispatcherServlet的实例了，将调用createDispatcherServlet方法进行创建
-```
+```java
 	protected FrameworkServlet createDispatcherServlet(WebApplicationContext servletAppContext) {
 		return new DispatcherServlet(servletAppContext);
 	}
@@ -116,7 +116,7 @@ registerDispatcherServlet方法将调用createServletApplicationContext方法来
 可以看到`DispatcherServlet`继承了`FrameworkServlet`，`FrameworkServlet`继承了`HttpServletBean`，`HttpServletBean`继承了`HttpServlet`，因此DispatcherServlet是一个Servlet。
 
 `DispatcherServlet`的构造函数
-```
+```java
 	public DispatcherServlet() {
 		super();
 		setDispatchOptionsRequest(true);
@@ -127,7 +127,7 @@ registerDispatcherServlet方法将调用createServletApplicationContext方法来
 	}
 ```
 上面创建`DispatcherServlet`的实例用的而第二个构造函数，这个构造函数调用了`FrameworkServlet`的构造函数
-```
+```java
 	public FrameworkServlet(WebApplicationContext webApplicationContext) {
 		this.webApplicationContext = webApplicationContext;
 	}
@@ -137,7 +137,7 @@ registerDispatcherServlet方法将调用createServletApplicationContext方法来
 ？？？那么究竟是在什么时候设置的呢？一般都会觉得是在构造器里面有一个initXXX的方法会把这些东西设置好，然后这里并没有这样做，而是巧妙地利用了Servlet的生命周期进行这些属性设置（不要忘了DispatcherServlet也是一个Servlet），回想一下Servlet的生命周期，首先，创建Servlet的时候，Servlet容器会调用它的init方法，然后，移除Servlet的时候，会调用它的destroy方法，处理请求的时候，会调用它的service方法，其中init和destroy方法仅仅会被调用最多一次，service则会被调用任意次（每一处理请求都会调用）。
 
 `FrameworkServlet`继承了`HttpServletBean`，`HttpServletBean`继承了`HttpServlet`。然后我们来看`HttpServletBean`的init方法
-```
+```java
 	@Override
 	public final void init() throws ServletException {
 
@@ -164,7 +164,7 @@ registerDispatcherServlet方法将调用createServletApplicationContext方法来
 	}
 ```
 这个方法在Servlet被容器创建的之后会（在Servlet开始处理请求之前必须要被执行）被执行。在最后面发现了一个可疑的initServletBean方法
-```
+```java
 	/**
 	 * Subclasses may override this to perform custom initialization.
 	 * All bean properties of this servlet will have been set before this
@@ -176,7 +176,7 @@ registerDispatcherServlet方法将调用createServletApplicationContext方法来
 	}
 ```
 竟然什么也没做，看了下方法上面的注释，发现是留给子类实现的，它子类是`FrameworkServlet`，好像快发现些什么了，赶紧去看`FrameworkServlet`的initServletBean方法
-```
+```java
 	@Override
 	protected final void initServletBean() throws ServletException {
 		getServletContext().log("Initializing Spring " + getClass().getSimpleName() + " '" + getServletName() + "'");
@@ -208,7 +208,7 @@ registerDispatcherServlet方法将调用createServletApplicationContext方法来
 	}
 ```
 然后又发现两个可疑的方法，initWebApplicationContext和initFrameworkServlet，先来看initWebApplicationContext，从名字上看，是用来初始化WebApplicationContext的
-```
+```java
 	/**
 	 * Initialize and publish the WebApplicationContext for this servlet.
 	 * <p>Delegates to {@link #createWebApplicationContext} for actual creation
@@ -271,7 +271,7 @@ registerDispatcherServlet方法将调用createServletApplicationContext方法来
 	}
 ```
 重点看onRefresh方法
-```
+```java
 	/**
 	 * Template method which can be overridden to add servlet-specific refresh work.
 	 * Called after successful context refresh.
@@ -284,7 +284,7 @@ registerDispatcherServlet方法将调用createServletApplicationContext方法来
 	}
 ```
 看了一下注释，发现也是让子类实现的，也就是将会由`DispatcherServlet`实现，于是马上去看它的实现
-```
+```java
 	/**
 	 * This implementation calls {@link #initStrategies}.
 	 */
@@ -294,7 +294,7 @@ registerDispatcherServlet方法将调用createServletApplicationContext方法来
 	}
 ```
 只调用了一个initStrategies方法，说明设置DispatcherServlet的各种默认视图解析器、主题解析器的逻辑应该就在这里了
-```
+```java
 	protected void initStrategies(ApplicationContext context) {
 		initMultipartResolver(context);
 		initLocaleResolver(context);
@@ -311,7 +311,7 @@ registerDispatcherServlet方法将调用createServletApplicationContext方法来
 
 
 然后回到`FrameworkServlet`的initFrameworkServlet方法
-```
+```java
 	/**
 	 * This method will be invoked after any bean properties have been set and
 	 * the WebApplicationContext has been loaded. The default implementation is empty;
@@ -329,7 +329,7 @@ registerDispatcherServlet方法将调用createServletApplicationContext方法来
 这里的Servlet容器为Tomcat
 
 用注解的方式注册Servlet到Servlet容器中，需要Servlet3.0+的版本，因为这是3.0版本的新特性，关键是`ServletContainerInitializer`接口，这个接口的文档可以点[这里](https://docs.oracle.com/javaee/7/api/javax/servlet/ServletContainerInitializer.html)查看
-```
+```java
 public interface ServletContainerInitializer {
     public void onStartup(Set<Class<?>> c, ServletContext ctx)
         throws ServletException; 
@@ -342,7 +342,7 @@ public interface ServletContainerInitializer {
 ![Imgur](https://i.imgur.com/UAf1oeQ.png)
 ![Imgur](https://i.imgur.com/u6sVuBe.png)
 
-```
+```java
 @HandlesTypes(WebApplicationInitializer.class)
 public class SpringServletContainerInitializer implements ServletContainerInitializer {
 
@@ -394,7 +394,7 @@ public class SpringServletContainerInitializer implements ServletContainerInitia
 在onStartup方法中，只选择类型为`WebApplicationInitializer`的具体类，然后创建这些类的实例，接着调用这些类的onStartup方法。
 
 `WebApplicationInitializer`在spring-web模块中，它的作用类似与Servlet的`ServletContainerInitializer`接口，都是用来配置`ServletContext`的
-```
+```java
 public interface WebApplicationInitializer {
 
 	/**
@@ -411,7 +411,7 @@ public interface WebApplicationInitializer {
 ```
 
 `AbstractContextLoaderInitializer`类实现了这个接口，它是个抽象类
-```
+```java
 public abstract class AbstractContextLoaderInitializer implements WebApplicationInitializer {
 
 	/** Logger available to subclasses. */
@@ -447,7 +447,7 @@ public abstract class AbstractContextLoaderInitializer implements WebApplication
 ```
 在onStartup方法里面，调用了registerContextLoaderListener方法，这个方法首先创建了rootAppContext（所有Servlet共享的`WebApplicationContext`），然后这个rootAppContext作为参数用来创建ContextLoaderListener的实例，然后将这个实例添加到servletContext的listeners中。
 `ContextLoaderListener`实现了`ServletContextListener`接口
-```
+```java
 public interface ServletContextListener extends EventListener {
 
     public void contextInitialized(ServletContextEvent sce);
@@ -491,7 +491,7 @@ public class ContextLoaderListener extends ContextLoader implements ServletConte
 contextInitialized将在filters 或者 servlets开始被初始化之前（web应用启动的时候）执行，contextDestroyed将在所有servlets 和 filters被销毁之后（web应用关闭的时候）执行。
 
 contextInitialized方法调用了initWebApplicationContext方法，说明在在filters 或者 servlets开始被初始化之前将会初始化WebApplicationContext，因此在初始化filters 或者 servlets的时候WebApplicationContext是可用的。
-```
+```java
 public WebApplicationContext initWebApplicationContext(ServletContext servletContext) {
 	    // 这时候rootWebApplicationContext应该还没有被初始化并绑定到servletContext属性中
 	    // 因为这个方法是由AbstractContextLoaderInitializer的onStartup方法调用的，因此应该在最前面执行

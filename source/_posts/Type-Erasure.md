@@ -40,7 +40,7 @@ class文件
 
 接下来就可以通过class文件观察类型擦除了
 源文件代码为：
-```angularjs
+```java
 public class Cla<T> {
     private T t;
     public Cla(){}
@@ -62,7 +62,7 @@ public class Cla<T> {
 }
 ```
 运行`javap -v -c Cla.class`后得到：
-```angularjs
+```
 Classfile /home/plentymore/Downloads/basicjava/target/classes/com/pltm/basicjava/gc/Cla.class
   Last modified Aug 3, 2018; size 1149 bytes
   MD5 checksum d095b63ee57fb71c1fa4f47904c8693e
@@ -232,7 +232,7 @@ SourceFile: "Cla.java"
 ```
 
 我们重点观察这里
-```angularjs
+```
          0: new           #3                  // class com/pltm/basicjava/gc/Cla
          3: dup
          4: invokespecial #4                  // Method "<init>":()V
@@ -259,7 +259,7 @@ SourceFile: "Cla.java"
 ```
 
 再看看其他地方，比如这里
-```angularjs
+```java
 public void setT(T);
     descriptor: (Ljava/lang/Object;)V
     //可以发现T被替换成了Object类型，其他地方也一样
@@ -267,13 +267,16 @@ public void setT(T);
 
 ## Erasure of Generic Types
 * ### 类型参数无边界时
-```angular2html
+```java
 class GenClass<T>{
     private T data;
     public void setData(T d){this.data = data;} 
     public T getData(){return this.data;}
 }
+```
 类型擦除后，将变成：
+
+```java
 class GenClass{
     private Object data;
     public void setData(Object d){this.data = data;} 
@@ -281,13 +284,16 @@ class GenClass{
 }
 ```
 * ### 类型参数有边界时
-```angular2html
+```java
 class GenBounded<T extends Number>{
     private T data;
     public void setData(T data){this.data = data;}
     public T getData(){return this.data;}
 }
+```
+
 类型擦除后，将变成：
+```java
 class GenBounded{
     private Number data;
     public void setData(Number data){this.data = data;}
@@ -297,7 +303,7 @@ class GenBounded{
 
 ### 使用泛型类时
 
-```angular2html
+```java
 public static void main(String[] args){
     GenBounded<Integer> gb = new GenBounded<>();
     gb.setData(1);
@@ -313,7 +319,7 @@ public static void main(String[] args){
 
 ## Erasure of Generic Methods
 * ### 类型参数无边界时
-```angular2html
+```java
 public static void <T> method(T[] arrays){
     for(T a:arrays){}
 }
@@ -323,7 +329,7 @@ public static void method(Object[] arrays){
 }
 ```
 * ### 类型参数有边界时
-```angular2html
+```java
 public static <T extend Number> T methodBounded(T number){
     return number;
 }
@@ -334,7 +340,7 @@ public static Number methodBounded(Number number){
 ```
 
 ## 类型擦除导致的问题
-```angular2html
+```java
 class GenClass<T>{
     private T data;
     public void setData(T data){this.data = data;}
@@ -350,8 +356,10 @@ public static void main(){
     genClass.setData(1);
     String str = sub.getData();
 }
+```
 
 类型擦除后：
+```java
 class GenClass<Object>{
     private Object data;
     public void setData(Object data){this.data = data;}
@@ -378,7 +386,7 @@ Integer类型的对象，最终将Integer类型转换成String类型时将抛出
 这里仍然用上面的GenClass类进行讲解
 
 假设没有桥接方法，类型擦除后，GenClass类变成了这样子：
-```angularjs
+```java
 class GenClass<Object>{
     private Object data;
     public void setData(Object data){this.data = data;}
@@ -387,7 +395,7 @@ class GenClass<Object>{
 ```
 
 SubGenClass类变成了这样子：
-```angularjs
+```java
 class SubGenClass extend GenClass<String>{
     public void setData(String s){super.setData(s)}
     public String getData(){return this.data;}  
@@ -397,7 +405,7 @@ class SubGenClass extend GenClass<String>{
 这样的话，SubGenClass的setData和getData方法就没有重写到其父类GenClass的
 setData和getData方法，因为这两个类在类型擦除之后方法签名不一致了，这样就失去了多态性
 什么是多态性，举个例子：
-```angularjs
+```java
 //Animal为Bird和Cat的父类
 Animal a;
 Bird b = new Bird();
@@ -409,7 +417,7 @@ a = c;
 a.eat();//这里将调用Cat的eat方法
 ```
 再回到上面的SubGenClass，__没有桥接方法时__，当我们这样子尝试使用多态特性时候：
-```angularjs
+```java
 GenClass<Integer> gen;
 SubGenClass subGen = new SubClass();
 gen = subGen;
@@ -430,12 +438,13 @@ GenClass的setData方法经过类型擦擦后变成了setData(Object),导致SubG
 因此GenSubClass并不能成功重写GenClass的setData方法,所以上面将直接调用GenClass的setData方法
 
 编译器添加的桥街方法如下：
-```angularjs
+```java
 public void setData(Object s){
   setData((Integer) s)
-}//桥街方法也为Object类型，这样SubGenClass的setData方法签名就和GenClass的一样了
-//setData(Object)里面调用了原来的setData(Integer)方法
-//这样就成功地重写了setData方法，保留了多态性
+}
+// 桥街方法也为Object类型，这样SubGenClass的setData方法签名就和GenClass的一样了
+// setData(Object)里面调用了原来的setData(Integer)方法
+// 这样就成功地重写了setData方法，保留了多态性
 ```
 
 桥接方法是编译器自动添加的，无需开发者手动添加，我们可以通过`javap -c 文件名.class`查看
@@ -444,11 +453,11 @@ public void setData(Object s){
 
 ## 堆污染
 当一个泛型类的引用指向一个原生态类型的对象时，就导致堆污染
-```angularjs
+```java
 List<String> list = new ArrayList();//将发生堆污染
 ```
 堆污染可能会导致类型转换错误，看下面的例子：
-```angularjs
+```java
 public void set(List<String> l){
   l.set("str");
 }

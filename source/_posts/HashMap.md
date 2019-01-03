@@ -28,7 +28,7 @@ HashMap主要由一张哈希表组成，这张表是一个Node<K,V>类型的数�
 从上面的图可以看到Node转换成了TreeNode，即所谓的红黑树结构。
 
 ## HashMap的静态成员变量
-```angularjs
+```java
     /**
      * The default initial capacity - MUST be a power of two.
      */
@@ -91,7 +91,7 @@ HashMap主要由一张哈希表组成，这张表是一个Node<K,V>类型的数�
 将链表转换成红黑树时表容量（桶数量）的最小值，该值为64，就是说只有容量大于等于64时才有可能会将链表转换成红黑树，__仅仅是链表长度大于8是不会将链表转换成红黑树的__。
 
 ## HashMap的实例域
-```angularjs
+```java
 /* ---------------- Fields -------------- */
 
     /**
@@ -140,14 +140,16 @@ HashMap主要由一张哈希表组成，这张表是一个Node<K,V>类型的数�
      */
     final float loadFactor;
 ```
+
 ### table
  `Node<K,V>[] table`
  
  Node类型的数组，代表一张哈希表，table数组的每一个元素代表一个桶，数组长度长度即桶的个数，可以存放Node类型和TreeNode类型的元素。
  
  Node为HashMap的静态内部类，实现了Map.Map.Entry<K,V>接口，其具体实现如下：
- ```angularjs
-static class Node<K,V> implements Map.Entry<K,V> {
+
+```java
+    static class Node<K,V> implements Map.Entry<K,V> {
         final int hash;  //该节点的哈希值
         final K key;  //键
         V value;  //值
@@ -190,13 +192,12 @@ static class Node<K,V> implements Map.Entry<K,V> {
             return false;
         }
     }
-
 ```
- 
+
  TreeNode为HashMap的静态内部类，继承了LinkedHashMap.Entry<K,V>类，而LinkedHashMap.Entry<K,V>
  继承了HashMap.Node<K,V>类，即上面的Node类，因此实际上TreeNode为Node的子类，所以table数组也可以存放TreeNode类型的元素。
  
- ```angularjs
+```java
 /**
      * Entry for Tree bins. Extends LinkedHashMap.Entry (which in turn
      * extends Node) so can be used as extension of either regular or
@@ -237,7 +238,7 @@ table数组重新分配更大的空间。计算公式为：threshold = capacity 
 float类型，为该表的负载因子，表示该表的桶使用率最多可以达到多少。
 
 ## put
-```angularjs
+```java
 public V put(K key, V value) {
         return putVal(hash(key), key, value, false, true);
 }
@@ -245,7 +246,7 @@ public V put(K key, V value) {
 
 put方法的实现接收一个键和一个值，该方法调用了putVal方法
 
-```angularjs
+```java
 /**
      * Implements Map.put and related methods
      *
@@ -321,7 +322,7 @@ put方法的实现接收一个键和一个值，该方法调用了putVal方法
 
 接下来看看上面提到的一些其他的方法，比如resize方法，resize方法的实现如下：
 
-```angularjs
+```java
 /**
      * Initializes or doubles table size.  If null, allocates in
      * accord with initial capacity target held in field threshold.
@@ -437,7 +438,7 @@ threshold中存放的值是初始容量值，这个值是构造函数中指定�
 
 再看看treeifyBin方法，treeifyBin方法的实现如下：
 
-```angularjs
+```java
     /**
      * Replaces all linked nodes in bin at index for given hash unless
      * table is too small, in which case resizes instead.  当表太小时只对表进行扩容
@@ -471,7 +472,7 @@ TreeifyBIn方法的主要操作如下：
 该索引位置存放的元素为链表的第一个元素）所在的链表转换成红黑树。
 
 ## get
-```angularjs
+```java
 public V get(Object key) {
         Node<K,V> e;
         return (e = getNode(hash(key), key)) == null ? null : e.value;
@@ -480,7 +481,7 @@ public V get(Object key) {
 
 get方法接受一个任意类型的Key，该方法调用了getNode方法，getNode方法的实现如下：
 
-```angularjs
+```java
 /**
      * Implements Map.get and related methods
      *
@@ -525,7 +526,7 @@ get方法接受一个任意类型的Key，该方法调用了getNode方法，getN
 5. 没有查找到，则返回null
 
 ## remove
-```angularjs
+```java
 public V remove(Object key) {
         Node<K,V> e;
         return (e = removeNode(hash(key), key, null, false, true)) == null ?
@@ -534,7 +535,7 @@ public V remove(Object key) {
 ```
 
 该remove方法接收一个任意类型的参数，当键相等的时候就移除相对应的元素，还有另一个remove方法，它接受两个参数，当键和值都分别相等时才移除相应的元素
-```angularjs
+```java
 @Override
     public boolean remove(Object key, Object value) {
         return removeNode(hash(key), key, value, true, true) != null;
@@ -542,7 +543,7 @@ public V remove(Object key) {
 ```
 两个remove方法均调用了removeNode，removeNode的具体实现如下：
 
-```angularjs
+```java
     /**
      * Implements Map.remove and related methods
      *
@@ -615,7 +616,7 @@ public V remove(Object key) {
 
 
 ## clear
-```angularjs
+```java
 /**
      * Removes all of the mappings from this map.
      * The map will be empty after this call returns.

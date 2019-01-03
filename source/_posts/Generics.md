@@ -23,7 +23,7 @@ tags:
 >The type parameter section, delimited by angle brackets (<>), follows the class name. It specifies the type parameters (also called type variables) T1, T2, ..., and Tn.
 
 例子：
-```angular2html
+```java
 class GenClass<T>{
     T data;
     public void setData(T data);
@@ -54,7 +54,7 @@ class GenClass<T>{
 如果一个类不是泛型类，比如`class A{}`，它是不存在原生态类型这个概念的
 
 ## 原生态类型
-```angular2html
+```java
 class A<T>{public void set(T t){/**/}}
 A a = new A();//没有<>，这样就是原生态类型
 A<Integer> a1 = new A<Integer>();//有<>,这样就是泛型类型
@@ -69,7 +69,7 @@ a3.set(1);//合法，但编译器会发出警告。
 ## Unchecked Error Messages
 当你在代码中混合使用原生态类型和泛型时，
 比如这样子：
-```angular2html
+```java
 public class WarningDemo {
     public static void main(String[] args){
         Box<Integer> bi;
@@ -81,7 +81,7 @@ public class WarningDemo {
 }
 ```
 编译器就会发出这样的警告信息：
-```angular2html
+```java
 Note: Example.java uses unchecked or unsafe operations.
 Note: Recompile with -Xlint:unchecked for details.
 ```
@@ -92,7 +92,7 @@ Note: Recompile with -Xlint:unchecked for details.
 * 不能实例化类型参数<br>`void <T> fun(T t){new T()//错误}`
 * 静态域不能声明为参数化类型<br>`class A<T>{static T t;//错误}`
 * 不能对参数化类型使用instanceof操作符或对没有使用通配符的类型参数进行类型转换<br>
-```angularjs
+```java
 func(List<E> lists){
   for(E l:lists){
     if(l instanceof List<String>//错误)
@@ -112,7 +112,7 @@ func1(){
 ```
 * 不能实例化参数化类型的数组<br>`new ArrayList<String>[2] //错误`
 * 不能创建、捕捉、抛出参数化类型的异常
-```angularjs
+```java
 // Extends Throwable indirectly
 class MathException<T> extends Exception { /* ... */ }    // compile-time error
 
@@ -136,7 +136,7 @@ class Parser<T extends Exception> {
 }
 ```
 * 同一个类中不能有两个类型擦除后方法签名相同的方法<br>
-```angularjs
+```java
 class A{
   public void func(List<String> l){}
   public void func(List<Integer> l){}

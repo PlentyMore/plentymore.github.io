@@ -16,7 +16,7 @@ tags:
 它不允许插入null元素，不是线程安全的。
 
 ## 成员变量
-```angularjs
+```java
     private static final int DEFAULT_INITIAL_CAPACITY = 11;
 
     /**
@@ -56,7 +56,7 @@ tags:
 ```
 
 ## 构造函数
-```angularjs
+```java
     /**
      * Creates a {@code PriorityQueue} with the default initial
      * capacity (11) that orders its elements according to their
@@ -214,7 +214,7 @@ tags:
 因此在元素填满队列之后再往里面添加元素将会发生阻塞，直到有空余的位置可以插入元素，往空队列取出元素的时候同理。
 
 ## 成员变量
-```angularjs
+```java
     /** The queued items */
     final Object[] items;
 
@@ -250,7 +250,7 @@ tags:
 ```
 
 ## 构造函数
-```angularjs
+```java
 
     /**
      * Creates an {@code ArrayBlockingQueue} with the given (fixed)
@@ -361,7 +361,7 @@ tags:
 可自定义边界范围的阻塞队列，底层基于链表实现，是线程安全的，不允许存放null
 
 ## 成员变量
-```angularjs
+```java
     /** The capacity bound, or Integer.MAX_VALUE if none */
     private final int capacity;
 
@@ -394,7 +394,7 @@ tags:
 ```
 
 ## 构造函数
-```angularjs
+```java
 
     /**
      * Creates a {@code LinkedBlockingQueue} with a capacity of
@@ -488,7 +488,7 @@ tags:
 无边界的非阻塞队列，底层基于链表，线程安全，不允许存放null元素。
 
 ## 成员变量
-```angularjs
+```java
 
     /**
      * A node from which the first live (non-deleted) node (if any)
@@ -520,7 +520,7 @@ tags:
 ```
 
 ## 构造函数
-```angularjs
+```java
 
     /**
      * Creates a {@code ConcurrentLinkedQueue} that is initially empty.
@@ -595,7 +595,7 @@ tags:
 双向队列，底层基于数组实现，大小可以动态变化，因此没有容量限制，不是线程安全的，
 
 ## 成员变量
-```angularjs
+```java
     /**
      * The array in which the elements of the deque are stored.
      * The capacity of the deque is the length of this array, which is
@@ -630,7 +630,7 @@ tags:
 ```
 
 ## 构造函数
-```angularjs
+```java
 
     /**
      * Constructs an empty array deque with an initial capacity
@@ -761,7 +761,7 @@ operations, all of which run in linear time.
 `removeLastOccurrence`，`contains`，`iterator`，`iterator.remove`等方法和其它聚集操作需要线性时间O(n)
 
 ## 成员变量
-```angularjs
+```java
     /**
      * Pointer to first node.
      * Invariant: (first == null && last == null) ||
@@ -794,7 +794,7 @@ operations, all of which run in linear time.
 ```
 
 ## 构造函数
-```angularjs
+```java
     /**
      * Creates a {@code LinkedBlockingDeque} with a capacity of
      * {@link Integer#MAX_VALUE}.
@@ -954,7 +954,7 @@ operations, all of which run in linear time.
 基于链表的无边界非阻塞双向队列，是线程安全的。
 
 ## 成员变量
-```angularjs
+```java
     /**
      * A node from which the first node on list (that is, the unique node p
      * with p.prev == null && p.next != p) can be reached in O(1) time.
@@ -989,7 +989,7 @@ operations, all of which run in linear time.
 ```
 
 ## 构造方法
-```angularjs
+```java
     /**
      * Constructs an empty deque.
      */

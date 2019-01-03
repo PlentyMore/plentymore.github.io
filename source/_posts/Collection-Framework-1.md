@@ -35,7 +35,7 @@ ArrayList实现了List接口，并且实现了该接口的所有可选操作（`
 在没有被正确同步的情况下，该机制有可能会失效。
 
 ## 成员变量
-```angularjs
+```java
     /**
      * Default initial capacity. 默认容量为10
      */
@@ -70,7 +70,7 @@ ArrayList实现了List接口，并且实现了该接口的所有可选操作（`
 ```
 
 ## 构造方法
-```angularjs
+```java
 
     /**
      * Constructs an empty list with the specified initial capacity.
@@ -165,7 +165,7 @@ ArrayList实现了List接口，并且实现了该接口的所有可选操作（`
 可以说它是`ArrayList`的线程安全的版本。
 
 ## 成员变量
-```angularjs
+```java
     /**
      * The array buffer into which the components of the vector are
      * stored. The capacity of the vector is the length of this array buffer,
@@ -198,7 +198,7 @@ ArrayList实现了List接口，并且实现了该接口的所有可选操作（`
 ```
 
 ## 构造函数
-```angularjs
+```java
 
     /**
      * Constructs an empty vector with the specified initial capacity and
@@ -337,7 +337,7 @@ ArrayList实现了List接口，并且实现了该接口的所有可选操作（`
 LinkedList实现了List和Deque接口，它允许存放任何类型的对象，包括null，该类不是线程安全的。
 使用索引去访问存储的元素时，将从第一个节点开始遍历到相对应的节点，而不是直接通过索引就能取出元素，因为底层结构改变了，
 变成了一个个通过next和prev变量相连接的Node，Node的结构如下：
-```angularjs
+```java
     private static class Node<E> {
         E item;
         Node<E> next;
@@ -352,7 +352,7 @@ LinkedList实现了List和Deque接口，它允许存放任何类型的对象，�
 ```
 
 ## 成员变量
-```angularjs
+```java
     transient int size = 0;  //存储的元素个数
 
     /**
@@ -371,7 +371,7 @@ LinkedList实现了List和Deque接口，它允许存放任何类型的对象，�
 ```
 
 ## 构造方法
-```angularjs
+```java
     /**
      * Constructs an empty list.
      */
@@ -480,7 +480,7 @@ LinkedList实现了List和Deque接口，它允许存放任何类型的对象，�
 因此开销非常大，一般只用来遍历和查找元素，如果要频繁地增加或改动元素则不应该使用该类。它允许插入null元素。
 
 ## 成员变量
-```angularjs
+```java
     /** The lock protecting all mutators */
     final transient ReentrantLock lock = new ReentrantLock();
 
@@ -489,7 +489,7 @@ LinkedList实现了List和Deque接口，它允许存放任何类型的对象，�
 ```
 
 ## 构造方法
-```angularjs
+```java
     /**
      * Creates an empty list.
      */
@@ -545,7 +545,7 @@ LinkedList实现了List和Deque接口，它允许存放任何类型的对象，�
 `HashMap`不是线程安全的，它可以存放null键值对
 
 ## 构造函数
-```angularjs
+```java
 
     /**
      * Constructs an empty <tt>HashMap</tt> with the specified initial
@@ -649,7 +649,7 @@ LinkedList实现了List和Deque接口，它允许存放任何类型的对象，�
 它一般用来复制Map对象，并能保证复制后的对象的元素顺序和复制前的对象一致。
 
 ## 构造方法
-```angularjs
+```java
     /**
      * Constructs an empty insertion-ordered <tt>LinkedHashMap</tt> instance
      * with the specified initial capacity and load factor.
@@ -727,7 +727,7 @@ LinkedList实现了List和Deque接口，它允许存放任何类型的对象，�
 它不能存放null键值对。
 
 ## 构造方法
-```angularjs
+```java
 
     /**
      * Constructs a new, empty hashtable with the specified initial
@@ -832,6 +832,7 @@ LinkedList实现了List和Deque接口，它允许存放任何类型的对象，�
 * public synchronized V replace(K key, V value) 
 
 # TreeMap
+
 `TreeMap`是以红黑色为底层结构的Map借口实现类，功能和其他的Map实现了基本一致。该类不是线程安全的，
 要在多线程中使用它需要使用外部同步。它不能存放为null的键，但可以存放为null的值
 
@@ -843,7 +844,8 @@ This implementation provides guaranteed log(n) time cost for the
  一般通过自然顺序进行排序，如果在构造函数中提供了自定义的Comparator，则按照自定义的Comparator进行排序。
  
  ## 成员变量
- ```angularjs
+
+```java
     /**
      * The comparator used to maintain order in this tree map, or
      * null if it uses the natural ordering of its keys.
@@ -863,10 +865,12 @@ This implementation provides guaranteed log(n) time cost for the
      * The number of structural modifications to the tree.
      */
     private transient int modCount = 0;
+
 ```
 
 ## 构造函数
-```angularjs
+
+```java
     /**
      * Constructs a new, empty tree map, using the natural ordering of its
      * keys.  All keys inserted into the map must implement the {@link
@@ -1028,7 +1032,7 @@ This implementation provides guaranteed log(n) time cost for the
 它不允许存放null键值对。
 
 ## 成员变量
-```angularjs
+```java
     /* ---------------- Constants -------------- */
 
     /**
@@ -1188,7 +1192,7 @@ This implementation provides guaranteed log(n) time cost for the
 ```
 
 ## 构造函数
-```angularjs
+```java
 
     /**
      * Creates a new, empty map with the default initial table size (16).
@@ -1294,7 +1298,7 @@ This implementation provides guaranteed log(n) time cost for the
 `HashSet`不保证迭代顺序，它不是线程安全的，允许添加null元素
 
 ## 成员变量
-```angularjs
+```java
     private transient HashMap<E,Object> map;
 
     // Dummy value to associate with an Object in the backing Map
@@ -1302,7 +1306,7 @@ This implementation provides guaranteed log(n) time cost for the
 ```
 
 ## 构造方法
-```angularjs
+```java
     /**
      * Constructs a new, empty set; the backing <tt>HashMap</tt> instance has
      * default initial capacity (16) and load factor (0.75).
@@ -1391,7 +1395,7 @@ This implementation provides guaranteed log(n) time cost for the
 `add`，`remove`，`contains`等基本操作的时间复杂度均为log(n)，它不是线程安全的。
 
 ## 成员变量
-```angularjs
+```java
     /**
      * The backing map.
      */
@@ -1403,7 +1407,7 @@ This implementation provides guaranteed log(n) time cost for the
 ```
 
 ## 构造函数
-```angularjs
+```java
     /**
      * Constructs a set backed by the specified navigable map.
      */
@@ -1499,7 +1503,7 @@ This implementation provides guaranteed log(n) time cost for the
 # LinkedHashSet
 `LinkedHashSet`的迭代是有序的（通过它的iterator方法得到的迭代器迭代元素的顺序和插入元素的时间顺序一致），
 它继承了`HashMap`类并实现了`Set`接口，一般用来复制一个Set对象，并且要保持复制后的元素顺序和原来的Set对象一致，比如：
-```angularjs
+```java
 void foo(Set s) {
     Set copy = new LinkedHashSet(s);
     ...
@@ -1510,7 +1514,7 @@ void foo(Set s) {
 没有自己的成员变量
 
 ## 构造器
-```angularjs
+```java
 
     /**
      * Constructs a new, empty linked hash set with the specified initial

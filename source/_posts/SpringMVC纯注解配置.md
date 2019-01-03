@@ -10,7 +10,7 @@ tags:
 最近复习了一下SpringMVC，相关文档是[Web on Servlet Stack](https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html)，发现里面似乎没有一个VAN♂全使用Java注解的使用SpringMVC开发的Web应用的完整例子（例子倒是有，不过太分散了，每隔几个章节贴一点代码），搜索官网里面的guides也没有搜到，有的话大概也是用Spring Boot的，而我想要的是只用Spring Framework的，自己手动配置的例子。于是只好从文档上面把零碎的代码片段搜集起来组成的一个完整例子了。
 
 ## 需要的依赖
-```
+```xml
 <!-- https://mvnrepository.com/artifact/org.springframework/spring-webmvc -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -32,7 +32,7 @@ tags:
 ![Imgur](https://i.imgur.com/7a3mM3j.png)
 
 `WebInit.java`
-```
+```java
 public class WebInit extends AbstractAnnotationConfigDispatcherServletInitializer {
     protected Class<?>[] getRootConfigClasses() {
         return new Class[]{WebConfig.class};
@@ -50,7 +50,7 @@ public class WebInit extends AbstractAnnotationConfigDispatcherServletInitialize
 这个类很关键，它利用了Servlet3.0+的一个[新特性](http://docs.jboss.org/jbossas/javadoc/7.1.2.Final/javax/servlet/ServletContainerInitializer.html)，`ServletContainerInitializer`，实现这个接口就可以在应用启动阶段在代码里面注册自己的servlets, filters, 和listeners，利用这个特性就可以连web.xml都省掉了，所以这个web应用一个xml文件都不需要。spring-web对于这个接口实现类是`ServletContainerInitializer`，可以在spring-web模块下面的META-INF/services目录看到一个名为javax.servlet.ServletContainerInitializer的文件，里面的内容为org.springframework.web.SpringServletContainerInitializer
 
 `WebConfig.java`
-```
+```java
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "com.pltm.springmvc")
@@ -62,7 +62,7 @@ public class WebConfig {
 `RequestMappingHandlerAdapter`等一大堆Bean，这些Bean的作用看名字就可以猜到大概了，少了这些Bean，你的Controller里面的handler(就是你用@RequestMapping这样的注解标注了的方法)是不会被解析的，最后会导致返回tomcat的404页面，控制台上会输出`org.springframework.web.servlet.DispatcherServlet.noHandlerFound No mapping for GET /`这样的WARNING级别的日志。
 
 `IndexController.java`
-```
+```java
 @RestController
 @RequestMapping("/")
 public class IndexController {
@@ -116,7 +116,7 @@ spring-mvc里面有几种特定类型的Bean，你只需要自定义一个这些
 我们把所有请求都匹配到DiapatcherServlet这个Servlet，然后让它把请求进行一番操作后，再根据请求路径调用匹配的handler（我们写的Controller里面有@RequestMapping标注的方法，还有拦截器的方法，过滤器等），然后再经过一番操作后把结果发回给客户端。那么它具体是怎么操作的呢？文档上面有讲到这个[过程](https://docs.spring.io/spring/docs/5.1.3.RELEASE/spring-framework-reference/web.html#mvc-servlet-sequence)。
 
 1. 首先找到WebApplicationContext，然后绑定到请求的一个属性里面，这样我们的Controller和其他的拦截器过滤器等就可以获取到WebApplicationContext并使用了，属性的名称可以通过DispatcherServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE这个静态变量找到，所以我们可以通过request.getAttribute(DispatcherServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE)获取到绑定的WebApplicationContext
-```
+```java
 @RestController
 @RequestMapping("/")
 public class IndexController {
@@ -147,7 +147,7 @@ org.springframework.web.servlet.DispatcherServlet.CONTEXT
 6. 最后，如果返回的`ModelAndView`不为空，将会渲染视图，否则，不渲染视图，返回的不是model的原因可能是因为拦截器的前置处理和后置处理拦截了请求然后直接返回了。
 
 上面的步骤讲得比较粗糙，很多细节都没有体现，整个流程的逻辑在DiapatcherServlet的doService方法里面可以看到，因此要深入了解可以直接看对应的代码
-```
+```java
 	@Override
 	protected void doService(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logRequest(request);
@@ -196,7 +196,7 @@ org.springframework.web.servlet.DispatcherServlet.CONTEXT
 	}
 ```
 其中doDispatch方法的实现如下：
-```
+```java
 	protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		HttpServletRequest processedRequest = request;
 		HandlerExecutionChain mappedHandler = null;
@@ -283,7 +283,8 @@ org.springframework.web.servlet.DispatcherServlet.CONTEXT
 		}
 	}
 ```
-```
+
+```java
 	private void processDispatchResult(HttpServletRequest request, HttpServletResponse response,
 			@Nullable HandlerExecutionChain mappedHandler, @Nullable ModelAndView mv,
 			@Nullable Exception exception) throws Exception {

@@ -8,7 +8,7 @@ tags:
 
 ## 默认的视图解析器
 spring-mvc默认的视图解析器为`InternalResourceViewResolver`，它是在`DispatcherServlet`里面的某个方法中初始化的
-```
+```java
 	/**
 	 * Initialize the ViewResolvers used by this class.
 	 * <p>If no ViewResolver beans are defined in the BeanFactory for this
@@ -50,7 +50,7 @@ spring-mvc默认的视图解析器为`InternalResourceViewResolver`，它是在`
 	}
 ```
 可以看到当没有配置自定义的视图解析器的时候，会调用getDefaultStrategies获取默认的视图解析器
-```
+```java
 	/**
 	 * Create a List of default strategy objects for the given strategy interface.
 	 * <p>The default implementation uses the "DispatcherServlet.properties" file (in the same
@@ -98,7 +98,7 @@ spring-mvc默认的视图解析器为`InternalResourceViewResolver`，它是在`
 ![Imgur](https://i.imgur.com/hGXx7Lo.png)
 
 `InternalResourceViewResolver`需要根据视图名解析出`View`，而它解析出的`View`的实现类是`InternalResourceView`，它通过buildView方法创建`View`
-```
+```java
     @Override
 	protected AbstractUrlBasedView buildView(String viewName) throws Exception {
 		// 将调用父类的buildView方法，也就是AbstractUrlBasedView的buildView方法
@@ -112,7 +112,7 @@ spring-mvc默认的视图解析器为`InternalResourceViewResolver`，它是在`
 ```
 
 `AbstractUrlBaseView`的buildView方法
-```
+```java
 	/**
 	 * Creates a new View instance of the specified view class and configures it.
 	 * Does <i>not</i> perform any lookup for pre-defined View instances.
@@ -160,7 +160,7 @@ spring-mvc默认的视图解析器为`InternalResourceViewResolver`，它是在`
 ```
 
 上面的buildView方法创建了一个`InternalResourceView`实例，并设置了相关的信息。然后接下来看`DispatcherServlet`的processDispatchResult方法
-```
+```java
 // Did the handler return a view to render?
 // mv为ModelAndView实例，完整的方法代码可以查看源码
 		if (mv != null && !mv.wasCleared()) {
@@ -171,7 +171,7 @@ spring-mvc默认的视图解析器为`InternalResourceViewResolver`，它是在`
 		}
 ```
 可以看到，如果调用了相应的handler之后返回的ModelAndView不为空，则说明要渲染视图，会调用render方法进行渲染，接下来看render方法
-```
+```java
 	/**
 	 * Render the given ModelAndView.
 	 * <p>This is the last stage in handling a request. It may involve resolving the view by name.
@@ -225,7 +225,7 @@ spring-mvc默认的视图解析器为`InternalResourceViewResolver`，它是在`
 	}
 ```
 可以看到将调用resolveViewName方法根据视图名解析出相应的视图，然后如果解析到有视图，就调用`View`的render方法渲染视图。首先看resolveView方法
-```
+```java
 	@Nullable
 	protected View resolveViewName(String viewName, @Nullable Map<String, Object> model,
 			Locale locale, HttpServletRequest request) throws Exception {
@@ -244,7 +244,7 @@ spring-mvc默认的视图解析器为`InternalResourceViewResolver`，它是在`
 	}
 ```
 然后看到render方法，这里假设没有配置自定义的视图解析器，因此调用的一定是`InternalResourceView`的render方法，而这个方法是从父类的父类继承的，然后实际上调用的将会是AbstractView的render方法
-```
+```java
 	@Override
 	public void render(@Nullable Map<String, ?> model, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -263,7 +263,7 @@ spring-mvc默认的视图解析器为`InternalResourceViewResolver`，它是在`
 	}
 ```
 可以看到该方法用到了模板方法模式，`InternalResourceView`实现了renderMergedOutputModel方法
-```
+```java
 	/**
 	 * Render the internal resource given the specified model.
 	 * This includes setting the model as request attributes.
@@ -308,7 +308,7 @@ spring-mvc默认的视图解析器为`InternalResourceViewResolver`，它是在`
 	}
 ```
 可以看到上面的方法使用`RequestDispatcher`处理请求（include或者forward），`RequestDispatcher`由Servlet容器实现，比如Tomcat，可以在Tomcat源码里面查看其具体实现。假设有如下的`Controller`
-```
+```java
 @Controller
 @RequestMapping("/html")
 public class HtmlController {
@@ -320,7 +320,7 @@ public class HtmlController {
 }
 ```
 然后在浏览器输入`http://host:port/html`并访问，接着会调用simpleHtml方法，结束调用后会返回`ModelAndView`，`ModelAndView`不为空，调用render方法渲染视图，然后最终会调用`RequestDispatcher`的forward方法转发上面的地址为"/WEB-INF/views/simple.jsp"的请求（可以在IDE里面设断点调试，就会发现流程和这里讲的一样），然后因为Tomcat默认配置了一个用于解析jsp的Servlet，这个Servlet匹配的路径为所有以.jsp/.jspx结尾的路径
-```
+```xml
     <servlet>
         <servlet-name>jsp</servlet-name>
         <servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>

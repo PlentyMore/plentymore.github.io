@@ -30,7 +30,7 @@ tags:
 需要注意的是，红黑树的所有叶子节点都是空节点，不包含数据，且都是黑色的，这些节点可以是概念上存在（不占用内存，用null表示），也可以是真实存在（占用内存，用一个真正的节点表示）。
 
 ## 左旋
-```angularjs
+```java
 void rotate_left(struct node* n) {
  struct node* nnew = n->right;  //将要左旋的节点的右孩子存储到nnew变量中
  assert(nnew != LEAF); // since the leaves of a red-black tree are empty, they cannot become internal nodes
@@ -57,7 +57,7 @@ void rotate_left(struct node* n) {
 6. 将要左旋的节点的父亲节点设置成第1步说的右孩子节点
 
 结合上面的步骤分析一下JDK1.8中HashMap中红黑树的左旋代码：
-```angularjs
+```java
 //红黑树节点的结构
 static final class TreeNode<K,V> extends LinkedHashMap.Entry<K,V> {
         TreeNode<K,V> parent;  // red-black tree links
@@ -97,7 +97,7 @@ static <K,V> TreeNode<K,V> rotateLeft(TreeNode<K,V> root,
 ```
 
 ## 右旋
-```angularjs
+```java
 void rotate_right(struct node* n) {
  struct node* nnew = n->left;  //将要右旋的节点的右孩子存储到nnew变量中
  assert(nnew != LEAF); // since the leaves of a red-black tree are empty, they cannot become internal nodes
@@ -113,7 +113,7 @@ void rotate_right(struct node* n) {
 而右旋则是判断左孩子是否存在，然后将左孩子的右孩子变成右旋节点的左孩子。
 步骤和左旋一样，就是方向反过来，这里也不再赘述。
 下面再分析一下JDK1.8的HashMap中的右旋方法：
-```angularjs
+```java
 static <K,V> TreeNode<K,V> rotateRight(TreeNode<K,V> root,
                                                TreeNode<K,V> p) {
             TreeNode<K,V> l, pp, lr;
@@ -242,7 +242,7 @@ static <K,V> TreeNode<K,V> rotateRight(TreeNode<K,V> root,
 ### JDK1.8 balanceInsertion
 
 JDK1.8 HashMap中红黑树按的平衡插入方法（节点实际上已插入，该方法只是调整树的结构使树满足红黑树的约束条件）：
-```angularjs
+```java
 static <K,V> TreeNode<K,V> balanceInsertion(TreeNode<K,V> root,
                                                     TreeNode<K,V> x) {
             x.red = true;  //插入的节点默认为红色

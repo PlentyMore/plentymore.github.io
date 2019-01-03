@@ -18,7 +18,7 @@ Hashtable可以算是历史遗留类，它的实现比较简单，通过同步�
 就是说同一时刻只有一个线程能读取或者放入键值对。
 
 ## Hashtable的静态成员变量
-```angularjs
+```java
 /**
      * The maximum size of array to allocate.
      * Some VMs reserve some header words in an array.
@@ -32,7 +32,7 @@ Hashtable可以算是历史遗留类，它的实现比较简单，通过同步�
 Hashtable的哈希表的最大容量，即数组table的最大长度，值为Integer.MAX-8。
 
 ## Hashtable的实例域
-```angularjs
+```java
     /**
      * The hash table data.
      */
@@ -85,7 +85,7 @@ Hashtable的哈希表的最大容量，即数组table的最大长度，值为Int
 `Entry<?,?>[] table`
 
 Entry类型的数组，代表一张哈希表，Entry的具体结构如下：
-```angularjs
+```java
 /**
      * Hashtable bucket collision list entry
      */
@@ -131,7 +131,7 @@ int类型，哈希表被修改的次数，比如放入元素、移除元素都�
 ## Hashtable的构造方法
 Hashtable有4个构造方法
 
-```angularjs
+```java
     /**
      * Constructs a new, empty hashtable with the specified initial
      * capacity and the specified load factor.
@@ -195,7 +195,7 @@ Hashtable有4个构造方法
 ```
 
 ## put
-```angularjs
+```java
     /**
      * Maps the specified <code>key</code> to the specified
      * <code>value</code> in this hashtable. Neither the key nor the
@@ -250,7 +250,7 @@ Hashtable有4个构造方法
 如果没有这样的元素，则调用addEntry方法将键值对插入。
 
 接下来看看addEntry方法的实现：
-```angularjs
+```java
 private void addEntry(int hash, K key, V value, int index) {
         modCount++;
 
@@ -282,7 +282,7 @@ private void addEntry(int hash, K key, V value, int index) {
 因此Hashtable的插入是在链表的头部插入，而HashMap是在尾部。
 
 rehash方法的实现如下：
-```angularjs
+```java
     /**
      * Increases the capacity of and internally reorganizes this
      * hashtable, in order to accommodate and access its entries more
@@ -334,7 +334,7 @@ rehash方法的实现如下：
 比如原来是table[x]->1->2->3，移动之后会变成table[y]->3->2->1
 
 ## get
-```angularjs
+```java
     /**
      * Returns the value to which the specified key is mapped,
      * or {@code null} if this map contains no mapping for the key.
@@ -369,7 +369,7 @@ rehash方法的实现如下：
 没有了从红黑树中查找元素的过程。
 
 ## remove
-```angularjs
+```java
     /**
      * Removes the key (and its corresponding value) from this
      * hashtable. This method does nothing if the key is not in the hashtable.
@@ -406,7 +406,7 @@ rehash方法的实现如下：
 remove方法的实现也比较简单，首先查找key，找到相同的key后就进行删除元素的操作。
 
 ## clear
-```angularjs
+```java
     /**
      * Clears this hashtable so that it contains no keys.
      */

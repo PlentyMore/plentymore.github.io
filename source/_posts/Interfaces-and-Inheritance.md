@@ -8,10 +8,10 @@ tags:
 >In the Java programming language, an interface is a _reference type_, similar to a class, that can contain only __constants__, __method signatures__, __default methods__, __static methods__, and __nested types__. Method bodies exist only for default methods and static methods. Interfaces cannot be instantiated—they can only be implemented by classes or extended by other interfaces. Extension is discussed later in this lesson.
 
 接口中可以有instance fields，但只能为常量(final
-```
-//假设两个接口具有相同的成员变量（均为effectively final)
+```java
+// 假设两个接口具有相同的成员变量（均为effectively final)
 public interface Bike {
-   //不能改变a的值，改变后a就不是effectively final了 
+   // 不能改变a的值，改变后a就不是effectively final了 
    int a = 10;
 }
 public interface Car {
@@ -19,8 +19,8 @@ public interface Car {
 }
 public class TestInterface implements Car,Bike{
     public void f(){
-    //直接访问a提示Reference to 'a' is ambiguous
-   //只能通过Car.a或Bike.a访问
+    // 直接访问a提示Reference to 'a' is ambiguous
+   // 只能通过Car.a或Bike.a访问
     System.out.print(Car.a);
     }
 }
@@ -30,7 +30,7 @@ public class TestInterface implements Car, Bike {
     public TestInterface() {
     }
     public void f() {
-        //a已经被替换成字面值
+        // a已经被替换成字面值
         System.out.print(10);
     }
 }
@@ -87,8 +87,8 @@ public interface OperateCar {
 ### Interface Methods
 >Default methods and abstract methods in interfaces are inherited like instance methods. However, when the supertypes of a class or interface provide multiple default methods with the same signature, the Java compiler follows inheritance rules to resolve the name conflict. These rules are driven by the following two principles:
 * __Instance methods are preferred over interface default methods.__（实例方法优先级高于接口默认方法）
-```
-Consider the following classes and interfaces:
+```java
+// Consider the following classes and interfaces:
 
 public class Horse {
     public String identifyMyself() {
@@ -114,8 +114,8 @@ public class Pegasus extends Horse implements Flyer, Mythical {
 }
 ```
 * __Methods that are already overridden by other candidates are ignored. This circumstance can arise when supertypes share a common ancestor.__（被重写的父接口的默认方法将被忽略，将调用重写后的子接口方法）
-```
-Consider the following interfaces and classes:
+```java
+// Consider the following interfaces and classes:
 
 public interface Animal {
     default public String identifyMyself() {
@@ -137,13 +137,13 @@ public class Dragon implements EggLayer, FireBreather {
 }
 ```
 如果两个相互独立的默认方法冲突了，比如
-```
+```java
 interface A{default void a(){}}
 interface B {default void a(){} }
 class C implements A,B{}
 ```
  或者一个默认方法与另一个抽象方法冲突了
-```
+```java
 interface A{abstract void a();}
 interface B{default void a(){};}
 class C implements A,B{}
@@ -152,7 +152,7 @@ class C implements A,B{}
 >If two or more independently defined default methods conflict, or a default method conflicts with an abstract method, then the Java compiler produces a compiler error. You must explicitly override the supertype methods.
 
 >Consider the example about computer-controlled cars that can now fly. You have two interfaces (OperateCar and FlyCar) that provide default implementations for the same method, (startEngine):
-```
+```java
 public interface OperateCar {
     // ...
     default public int startEngine(EncryptedKey key) {
@@ -167,7 +167,7 @@ public interface FlyCar {
 }
 ```
 >A class that implements both OperateCar and FlyCar must override the method startEngine. You could invoke any of the of the default implementations with the super keyword.
-```
+```java
 public class FlyingCar implements OperateCar, FlyCar {
     // ...
     public int startEngine(EncryptedKey key) {
@@ -180,7 +180,7 @@ public class FlyingCar implements OperateCar, FlyCar {
 
 从父类中继承的实例方法会重写接口中的方法（实例方法与接口抽象方法签名相同）
 >Inherited instance methods from classes can override abstract interface methods. Consider the following interfaces and classes:
-```
+```java
 public interface Mammal {
     String identifyMyself();
 }

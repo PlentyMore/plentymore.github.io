@@ -13,7 +13,7 @@ tags:
 3. 运行`reboot`重启机器
 4. 重启完毕后，运行`uname -r`查看内核版本，版本大于等于4.9就可以了
 5. 运行`lsmod | grep bbr`,输出结果没有bbr字样的就继续执行下面的操作:<br>
-```
+```bash
 modprobe tcp_bbr
 echo "tcp_bbr" >> /etc/modules-load.d/modules.conf
 echo "net.core.default_qdisc=fq" >> /etc/sysctl.conf
@@ -21,7 +21,7 @@ echo "net.ipv4.tcp_congestion_control=bbr" >> /etc/sysctl.conf
 sysctl -p
 ```
 接着运行下面两个命令：
-```angularjs
+```bash
 sysctl net.ipv4.tcp_available_congestion_control
 sysctl net.ipv4.tcp_congestion_control
 ```
@@ -30,7 +30,7 @@ bbr已经成功启动
 
 ## 优化server
 将以下内容加入到/etc/sysctl.conf文件中
-```angularjs
+```properties
 # max open files
 fs.file-max = 51200
 # max read buffer
@@ -76,7 +76,7 @@ net.ipv4.tcp_mtu_probing = 1
 ## 安装docker
 可以直接看[官方文档](https://docs.docker.com/install/linux/docker-ce/ubuntu/)<br>
 这里我将官方文档的教程命令CV过来了方便操作。（下面的命令是Ubuntu16.04及以上版本的）
-```angularjs
+```bash
 sudo apt-get remove docker docker-engine docker.io
 sudo apt-get update
 sudo apt-get install \
@@ -97,7 +97,7 @@ sudo apt-get install docker-ce
 ## 安装docker-compose
 可以直接看[官方文档](https://docs.docker.com/compose/install/)<br>
 同样的我也将命令CV过来了。
-```angularjs
+```bash
 sudo curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 ```
@@ -106,7 +106,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 ## 编写docker-compose.yml文件
 随便新建一个目录，比如`mkdir server`，然后进入该目录<br>
 然后`vi docker-compose.yml`把下面的内容CV过去，根据需要修改就行了
-```angularjs
+```dockerfile
 version: "3"
 services:
   sslibev:
@@ -125,7 +125,7 @@ ports那里，`"2333:2333"`前面的2333可以修改为你客户端要链接的�
 要改后面的端口的话同时也需要修改`- SERVER_PORT=2333`这里的端口，改成一样的就行，端口改太小会提示没有权限。
 
 改前面的端口，需要同时修改两行，比如改成443,就要这样子：
-```angularjs
+```dockerfile
 ports:
       - "443:2333"
       - "443:2333/udp"

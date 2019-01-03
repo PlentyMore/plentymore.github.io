@@ -13,7 +13,7 @@ tags:
 
 非Spring管理的对象，这里指的是我们自己new的对象，比如`Dog dog = new Dog()`，这个dog对象的生命周期不是由Spring管理的，而是我们自己创建的对象，根据文档的说法，我们只要在类上面加上`@Configurable`注解，就可以让Spring来配置这些非Spring管理的对象了，即为它们注入需要的依赖（实际上还有很多额外的工作要做）。下面有个例子
 
-```
+```java
 // Account类，使用new操作符号手动创建，不交由Spring Container管理
 @Configurable(autowire = Autowire.BY_TYPE)
 public class Account {
@@ -33,7 +33,7 @@ public class Account {
 被`@Configuration`标注的类，能够被Spring配置，然后当我们手动创建`Account`对象的时候(`Account acc = new Account()`)，Spring将会用创建一个`Account`的Bean，然后这个Bean能被Spring正常地注入需要的属性，接着Spring使用这个Bean来设置我们刚刚创建的
 `Account`对象（acc）的属性，最后返回的对象的属性就和Bean的一样了。
 
-```
+```java
 // 配置类，使用注解的方式创建Bean
 @Configuration
 @EnableLoadTimeWeaving
@@ -51,7 +51,7 @@ public class Config {
 }
 ```
 
-```
+```java
 public class Dog {
     private int id;
     private String name;
@@ -59,7 +59,7 @@ public class Dog {
 }
 ```
 
-```
+```java
 // 启动类
 @ComponentScan
 public class App {
@@ -96,7 +96,7 @@ public class App {
 首先，如果仅仅有`@Configuration`注解，是不起任何作用的，因此我们这时候手动创建`Account`对象的话，将会输出null。因为起到关键作用的时候`AnnotationBeanConfigurerAspect `这个类（它是使用aspect定义的，而不是class，因为我还没用过aspectj编程，所以还不太了解），而这个类的实例在添加`@EnableSpringConfigured`注解后将会被Spring创建，然后Spring将会结合LWT技术调用这个对象里面的方法对我们手动创建的`Account`对象的属性进行处理。
 
 
-```
+```java
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
@@ -106,7 +106,7 @@ public @interface EnableSpringConfigured {
 }
 ```
 
-```
+```java
 @Configuration
 public class SpringConfiguredConfiguration {
 
@@ -128,7 +128,7 @@ public class SpringConfiguredConfiguration {
 从上可以看到，一个AnnotationBeanConfigurerAspect类型的Bean将会被Spring Container创建和管理，因此它就是让`@Configurable`注解起作用的核心。
 
 
-```
+```java
 public aspect AnnotationBeanConfigurerAspect extends AbstractInterfaceDrivenDependencyInjectionAspect
 		implements BeanFactoryAware, InitializingBean, DisposableBean{
       //类的实现就不贴了，从它实现的接口也可以猜到一些东西

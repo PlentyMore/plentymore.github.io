@@ -7,7 +7,7 @@ tags:
 
 Mybatis的延迟加载（lazyLoading）看起来似乎有丶东西，使用延迟加载，能让内层的查询（嵌套查询）语句在你需要获得内层的数据的时候再执行，默认触发内层查询的方法是resultMap对应的类对象(一般都是List)的四个方法（equals,clone,hashCode,toString）被调用的时候执行内层查询，你可以通过`lazyLoadTriggerMethods`属性设置触发内层查询的方法，[文档](http://www.mybatis.org/mybatis-3/configuration.html#settings)里面初略地提了一下。实际上调用任何以`get`或者`set`开头的方法也会触发延迟加载。
 
-```
+```java
 public class Article {
 
     private int id;
@@ -29,7 +29,7 @@ public class Article {
 ```
 比如上面的`Article`对象，每一篇文章都有一个作者，因此里面有一个`Author`属性
 
-```
+```java
 public class Author {
 
     private int id;
@@ -44,7 +44,7 @@ public class Author {
 这个例子使用Intellij IDEA运行，用mybatis-spring和Spring框架进行整合，并且用了Spring的事务管理，数据库是mysql。
 
 ### 需要的依赖
-```
+```xml
 <!-- https://mvnrepository.com/artifact/org.springframework/spring-core -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -100,7 +100,7 @@ mytabis-spring用到了spring-jdbc，所以需要引入这个依赖
 ![Imgur](https://i.imgur.com/YuOEW8T.png)
 
 `MybatisConfig.java`
-```
+```java
 @Configuration
 @MapperScan(basePackages = {"com.pltm.mybatis.mysql.mapper"})
 @EnableTransactionManagement
@@ -137,7 +137,7 @@ public class MybatisConfig {
 ```
 
 `ArticleMapper.java`
-```
+```java
 public interface ArticleMapper {
 
     public List<Article> listArticles();
@@ -147,7 +147,7 @@ public interface ArticleMapper {
 }
 ```
 `ArticleRepository`
-```
+```java
 @Repository
 @Transactional
 public class ArticleReopsitory {
@@ -162,7 +162,7 @@ public class ArticleReopsitory {
 }
 ```
 `Bootstrap.java`这个类是用来写个静态方法让应用能跑起来的
-```
+```java
 @ComponentScan
 public class Bootstrap {
 
@@ -178,7 +178,7 @@ public class Bootstrap {
 ```
 
 `ArticleMapper.xml`
-```
+```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
@@ -217,7 +217,7 @@ public class Bootstrap {
 
 ### 表结构
 article表
-```
+```mysql
 create table article
 (
 	id int auto_increment
@@ -234,7 +234,7 @@ create table article
 上面的modify_time的时间戳默认值也是有[丶](https://stackoverflow.com/questions/9192027/invalid-default-value-for-create-date-timestamp-field)东西的，>`TIMESTAMP has a range of '1970-01-01 00:00:01' UTC to '2038-01-19 03:14:07' UTC`，燃鹅我当时设置成1970-01-01 00:00:01也是不行，反复试探发现要设置大一点才ok
 
 author表
-```
+```mysql
 create table author
 (
 	id int auto_increment
@@ -269,7 +269,7 @@ create table author
 
 ### 延迟加载的实现
 具体实现就是用Javassist或者cglib来创建一个增强类，然后这个增强类在它的代理对象的相应的方法执行时，会判断执行的方法是不是在lazyLoadTriggerMethods中存在（默认是equals,clone,hashCode,toString这四个方法），下面是用Javassist实现的一小段代码，完整代码可以查看`JavassistProxyFactory`类：
-```
+```java
 if (lazyLoader.size() > 0 && !FINALIZE_METHOD.equals(methodName)) {
               // 如果执行的方法是lazyLoadTriggerMethods里面的方法，会触发延迟查询语句的执行
               // 如果设置了aggressiveLazyLoading为ture也会触发嵌套查询语句的执行
@@ -290,7 +290,7 @@ if (lazyLoader.size() > 0 && !FINALIZE_METHOD.equals(methodName)) {
             }
 ```
 另一种实现在`CglibProxyFactory`类里面可以看到，和上面的是类似的。两者都实现了`ProxyFactory`接口：
-```
+```java
 public interface ProxyFactory {
 
   void setProperties(Properties properties);

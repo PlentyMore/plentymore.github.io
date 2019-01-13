@@ -70,7 +70,7 @@ Spring的异步功能的主要是用Spring AOP和线程池实现的，简单地�
 具体的就不再介绍了，对Spring AOP和线程池有一定的了解再去看源码大概就能看懂了，具体代码主要在spring-context模块下，还有部分AOP的代码在spring-aop模块下
 
 ### Spring线程池
-Spring有自己实现的线程池，具体代码在spring-context模块的org.springframework.schedule.concurrent包，还有spring-core模块的or.springframework.core.task包下。当然也可以直接使用JDK实现的线程池。
+Spring有自己实现的线程池，具体代码在spring-context模块的org.springframework.schedule.concurrent包，还有spring-core模块的org.springframework.core.task包下。当然也可以直接使用JDK实现的线程池。
 
 Spring实现的线程池是基于`TaskExecutor`接口的，这个接口继承了JDK的`Executor`接口，至于为什么要有这个接口，文档上的解释是
 >This interface remains separate from the standard Executor interface mainly for backwards compatibility with JDK 1.4 in Spring 2.x.
@@ -104,7 +104,7 @@ public interface TaskExecutor extends Executor {
 `@EnableAsync`注解里面使用`@Import`注解导入了`AsyncConfigurationSelector`类，该类实现了`ImportSelector`接口，后面在解析`@Configuration`配置类，处理`@Import`注解那一步的时候，会实例化`AsyncConfigurationSelector`，接着最终会调用到`AsyncConfigurationSelector`实现的selectImports方法，这个方法可能返回`ProxyAsyncConfiguration`类的全限定名或者`org.springframework.scheduling.aspectj.AspectJAsyncConfiguration`或者`null`，如果不是`null`的话，后面会解析这些类上面的注解（两个类都是配置类，即类上面有`@Configuration注解`），然后将读取到的`BeanDefinitino`注册到`BeanFactory`。
 
 ### 解析`@Import`注解
-在上面给出的例子中，会在调用`AbstractApplicationContext`的invokeBeanFactoryPostProcessors方法这一步的时候解析`@Import`注解，具体是调用`ConfigurationClassPostProcessor`的postProcessBeanDefinitionRegistry方法时候，这个方法会使用`ConfigurationClassParser`的processConfigurationClass方法解析配置类（有`Configuration`注解的类），具体的解析步骤如下：
+在上面给出的例子中，会在调用`AbstractApplicationContext`的invokeBeanFactoryPostProcessors方法这一步的时候解析`@Import`注解，具体是调用`ConfigurationClassPostProcessor`的postProcessBeanDefinitionRegistry方法，这个方法会使用`ConfigurationClassParser`的processConfigurationClass方法解析配置类（有`Configuration`注解的类），具体的解析步骤如下：
 1. 递归地解析内部类
 2. 解析`@PropertySource`注解
 3. 解析`@ComponentScan`注解

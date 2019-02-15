@@ -20,6 +20,13 @@ keyword: pltm # seo key words
 favicon: /images/favicon.png
 # custom end
 
+
+# sitemap
+sitemap:
+  path: sitemap.xml
+baidusitemap: 
+  path: baidusitemap.xml
+
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: https://plentymore.github.io/

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BLOG">
+    <meta name="keyword" content="pltm">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <!-- google-site-verification -->
+    <meta name="google-site-verification" content="fgG59EBWTLiWni3UcgCPhkEPiVDNCnLeaocoTWjctOg" />
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="alternate" type="application/atom+xml" title="PLTM" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Spring @EnableAsync 注解原理｜PTLM blog
+        
+    </title>
+
+    <link rel="canonical" href="https://plentymore.github.io/2018/12/29/Spring-EnableAsync-注解原理/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+    <!-- Google AdSense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+             google_ad_client: "ca-pub-1771277850135880",
+             enable_page_level_ads: true
+          });
+    </script>
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    PLTM
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+                        
+							
+								
+							
+						
+                    
+					
+					
+						<li>
+							<a href="/about">About</a>
+						</li>
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="/images/3.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Spring @EnableAsync 注解原理</h1>
+                    
+                    <span class="meta">
+                         作者 plentymore
+                        <span>
+                          日期 2018-12-29
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/Tags/#Spring"
+                           title="Spring">Spring</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Spring @EnableAsync 注解原理
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p><code>@EnableAsync</code>注解是用来开启Spring的异步功能的，一般在方法上加上<code>@Async</code>注解，就可以让这个方法变成一个异步方法（其实就是用线程池的其中一个线程来运行这个方法），前提是要使用<code>@EnableAsync</code>注解开启Spring的异步功能。Spring的异步功能使用起来非常简单，但是这个<code>@EnableAsync</code>究竟是怎样工作的呢？一般情况下都是这些<code>@EnableXXX</code>注解里面有一个<code>@Import</code>注解，然后这个<code>@Import</code>注解会导入一个类，这个被导入的类一般是个配置类（类上面有<code>@Configuration</code>注解），然后里面配置了需要用到的类的Bean，比如<code>@EnableWebMvc</code><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Retention</span>(value=RUNTIME)</span><br><span class="line"><span class="meta">@Target</span>(value=TYPE)</span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Import</span>(value=DelegatingWebMvcConfiguration.class)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> EnableWebMvc&#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>@EnableWebMvc</code>使用<code>@Import</code>导入了<code>DelegatingWebMvcConfiguration</code>类，该类是一个配置类，里面配置了需要用到的类的Bean（包括它自身和它的父类<code>WebMvcConfigurationSupport</code>配置的），这个配置类能够被<code>ConfigurationClassPostProcessor</code>这个<code>BeanFactoryProcessor</code>解析处理，然后把解析到Bean注册到Spring IoC容器。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DelegatingWebMvcConfiguration</span> <span class="keyword">extends</span> <span class="title">WebMvcConfigurationSupport</span></span>&#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="使用例子"><a href="#使用例子" class="headerlink" title="使用例子"></a>使用例子</h2><p>首先来看看<code>@EnableAsync</code>注解怎样使用，下面将列举一个简单的使用例子。</p>
+<p><code>MyService.java</code><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyService</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Async</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">asyncFunction</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(;;)&#123;</span><br><span class="line">            System.out.println(<span class="string">"异步方法执行中..."</span>);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在<code>MyService</code>类上面，有一个<code>@Service</code>注解，你也可以使用其它的注解代替，比如<code>@Commponent</code>。该类的方法使用了<code>@Async</code>注解标注，表示这是一个异步方法，方法里面做的事情很简单，就是每隔1s输出一些内容，可以看到这是一个没有终止条件的循环，目的是为了观察这个方法是不是真的异步执行了，因为如果该方法是异步执行的话，那程序应该能继续执行后面的代码，如果没有异步执行，而是直接在主线程里面执行的话，程序将会一直在执行这个循环里面的代码，无法执行后面的代码。</p>
+<p><code>TestAsync.java</code><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@ComponentScan</span></span><br><span class="line"><span class="meta">@EnableAsync</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestAsync</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        AnnotationConfigApplicationContext ctx = <span class="keyword">new</span> AnnotationConfigApplicationContext(TestAsync.class);</span><br><span class="line">        MyService myService = ctx.getBean(MyService.class);</span><br><span class="line">        myService.asyncFunction();</span><br><span class="line">        System.out.println(<span class="string">"上面的方法是异步方法吗？"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>TestAsync</code>类用来存放main方法，还用来进行一些配置，在这个方法里面创建<code>ApplicationContext</code>，并使用它获取<code>MyService</code>类的Bean实例，接着使用这个实例调用它的asyncFunction方法，如果这个方法异步执行了，那么<code>System.out.println(&quot;上面的方法是异步方法吗？&quot;)</code>这句代码应该能顺利执行，否则这句代码将用于不会被执行。运行main方法，程序的执行结果如下：<br><img src="https://i.imgur.com/u0f4l4T.png" alt="Imgur"></p>
+<p>可以看到<code>System.out.println(&quot;上面的方法是异步方法吗？&quot;)</code>这句顺利执行了，说明asyncFunction方法是异步执行的。</p>
+<h2 id="异步方法主要原理"><a href="#异步方法主要原理" class="headerlink" title="异步方法主要原理"></a>异步方法主要原理</h2><p>Spring的异步功能的主要是用Spring AOP和线程池实现的，简单地说，<code>ctx.getBean(MyService.class)</code>这里返回实例其实不是<code>MyService</code>类的实例，而是一个代理/增强类（<code>MyService</code>类的子类）的实例，然后调用asyncFunction方法的时候实际上调用的是这个代理/增强类的实例的asyncFunction方法，代理/增强类的asyncFunction方法会使用把方法交给线程池执行，线程池会使用新的线程来执行这个方法，因此主线程可以继续执行后面的代码，而不会卡在asyncFunction方法的死循环。</p>
+<p>在<code>myService.asyncFunction()</code>这句上面设置一个断点，执行到这里的时候可以看到myService变量指向的不是<code>MyService</code>实例，而是Cglib动态创建的类的实例（这个类是<code>MyService</code>的子类，父类引用可以指向子类，因此myService能指向它）<br><img src="https://i.imgur.com/2cPJ9Fh.png" alt="Imgur"></p>
+<p>具体的就不再介绍了，对Spring AOP和线程池有一定的了解再去看源码大概就能看懂了，具体代码主要在spring-context模块下，还有部分AOP的代码在spring-aop模块下</p>
+<h3 id="Spring线程池"><a href="#Spring线程池" class="headerlink" title="Spring线程池"></a>Spring线程池</h3><p>Spring有自己实现的线程池，具体代码在spring-context模块的org.springframework.schedule.concurrent包，还有spring-core模块的org.springframework.core.task包下。当然也可以直接使用JDK实现的线程池。</p>
+<p>Spring实现的线程池是基于<code>TaskExecutor</code>接口的，这个接口继承了JDK的<code>Executor</code>接口，至于为什么要有这个接口，文档上的解释是</p>
+<blockquote>
+<p>This interface remains separate from the standard Executor interface mainly for backwards compatibility with JDK 1.4 in Spring 2.x.</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">TaskExecutor</span> <span class="keyword">extends</span> <span class="title">Executor</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Execute the given &#123;<span class="doctag">@code</span> task&#125;.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;The call might return immediately if the implementation uses</span></span><br><span class="line"><span class="comment">	 * an asynchronous execution strategy, or might block in the case</span></span><br><span class="line"><span class="comment">	 * of synchronous execution.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> task the &#123;<span class="doctag">@code</span> Runnable&#125; to execute (never &#123;<span class="doctag">@code</span> null&#125;)</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@throws</span> TaskRejectedException if the given task was not accepted</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable task)</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果使用<code>@EnableAsync</code>注解开启了Spring的异步功能，Spring会按照如下的方式查找相应的线程池用于执行异步方法：</p>
+<ol>
+<li>查找实现了<code>TaskExecutor</code>接口的Bean实例</li>
+<li>如果上面没有找到，则查找名称为<code>taskExecutor</code>并且实现了<code>Executor</code>接口的Bean实例</li>
+<li>如果还是没有找到，则使用<code>SimpleAsyncTaskExecutor</code>，该实现每次都会创建一个新的线程执行任务</li>
+</ol>
+<p>上面的1,2步的Bean实例都是需要自己配置的，可以使用Spring实现的线程池，使用Spring实现的线程池不需要配置Bean的名称，也可以使用JDK实现的线程池，但是需要配置Bean名称为<code>taskExecutor</code></p>
+<h2 id="EnableAsync注解原理"><a href="#EnableAsync注解原理" class="headerlink" title="@EnableAsync注解原理"></a>@EnableAsync注解原理</h2><p><code>@EnableAsync</code>注解里面使用<code>@Import</code>注解导入了<code>AsyncConfigurationSelector</code>类，该类实现了<code>ImportSelector</code>接口，后面在解析<code>@Configuration</code>配置类，处理<code>@Import</code>注解那一步的时候，会实例化<code>AsyncConfigurationSelector</code>，接着最终会调用到<code>AsyncConfigurationSelector</code>实现的selectImports方法，这个方法可能返回<code>ProxyAsyncConfiguration</code>类的全限定名或者<code>org.springframework.scheduling.aspectj.AspectJAsyncConfiguration</code>或者<code>null</code>，如果不是<code>null</code>的话，后面会解析这些类上面的注解（两个类都是配置类，即类上面有<code>@Configuration注解</code>），然后将读取到的<code>BeanDefinitino</code>注册到<code>BeanFactory</code>。</p>
+<h3 id="解析-Import注解"><a href="#解析-Import注解" class="headerlink" title="解析@Import注解"></a>解析<code>@Import</code>注解</h3><p>在上面给出的例子中，会在调用<code>AbstractApplicationContext</code>的invokeBeanFactoryPostProcessors方法这一步的时候解析<code>@Import</code>注解，具体是调用<code>ConfigurationClassPostProcessor</code>的postProcessBeanDefinitionRegistry方法，这个方法会使用<code>ConfigurationClassParser</code>的processConfigurationClass方法解析配置类（有<code>Configuration</code>注解的类），具体的解析步骤如下：</p>
+<ol>
+<li>递归地解析内部类</li>
+<li>解析<code>@PropertySource</code>注解</li>
+<li>解析<code>@ComponentScan</code>注解</li>
+<li>解析<code>@Import</code>注解</li>
+<li>解析<code>@ImportResource</code>注解</li>
+<li>解析<code>@Bean</code>注解，这个注解在类方法上</li>
+<li>解析类实现的接口上的默认方法（不是很懂这一步，推测是因为接口上的默认方法可能是<code>@Bean</code>方法）</li>
+<li>如果有父类，则直接返回父类，这样会继续回到第1步，然后开始解析父类。返回<code>null</code>，表示解析已经完成</li>
+</ol>
+<p>因为<code>@EnableAsync</code>里面起到关键作用的是<code>@Import</code>注解，所以重点看第4步，解析<code>@Import</code>注解。</p>
+<p>将会调用<code>ConfigurationClassParser</code>的processImports方法解析<code>@Import注解</code><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">processImports</span><span class="params">(ConfigurationClass configClass, SourceClass currentSourceClass,</span></span></span><br><span class="line"><span class="function"><span class="params">        Collection&lt;SourceClass&gt; importCandidates, <span class="keyword">boolean</span> checkForCircularImports)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// importCandidates是使用@Import注解导入的类，也就是该注解的值</span></span><br><span class="line">    <span class="comment">// 在本例中，值为AsyncConfigurationSelector</span></span><br><span class="line">    <span class="keyword">if</span> (importCandidates.isEmpty()) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (checkForCircularImports &amp;&amp; isChainedImportOnStack(configClass)) &#123;</span><br><span class="line">        <span class="keyword">this</span>.problemReporter.error(<span class="keyword">new</span> CircularImportProblem(configClass, <span class="keyword">this</span>.importStack));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.importStack.push(configClass);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">for</span> (SourceClass candidate : importCandidates) &#123;</span><br><span class="line">                <span class="comment">// 检测有没有实现ImportSelector接口</span></span><br><span class="line">                <span class="keyword">if</span> (candidate.isAssignable(ImportSelector.class)) &#123;</span><br><span class="line">                    <span class="comment">// Candidate class is an ImportSelector -&gt; delegate to it to determine imports</span></span><br><span class="line">                    Class&lt;?&gt; candidateClass = candidate.loadClass();</span><br><span class="line">                    <span class="comment">// 实例化candidateClass，即实例化@Import导入的类</span></span><br><span class="line">                    ImportSelector selector = BeanUtils.instantiateClass(candidateClass, ImportSelector.class);</span><br><span class="line">                    <span class="comment">// 调用各种Aware接口方法，比如BeanNameAare，BeanFactoryAware</span></span><br><span class="line">                    ParserStrategyUtils.invokeAwareMethods(</span><br><span class="line">                            selector, <span class="keyword">this</span>.environment, <span class="keyword">this</span>.resourceLoader, <span class="keyword">this</span>.registry);</span><br><span class="line">                    <span class="comment">// 如果实现了DeferredImportSelector接口 ，则进行相应的处理</span></span><br><span class="line">                    <span class="keyword">if</span> (selector <span class="keyword">instanceof</span> DeferredImportSelector) &#123;</span><br><span class="line">                        <span class="keyword">this</span>.deferredImportSelectorHandler.handle(</span><br><span class="line">                                configClass, (DeferredImportSelector) selector);</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">// 否则直接调用`ImportSelector`的selectImports方法</span></span><br><span class="line">                        String[] importClassNames = selector.selectImports(currentSourceClass.getMetadata());</span><br><span class="line">                        <span class="comment">// 将上面选出的importClassNames用来创建SouceClass实例</span></span><br><span class="line">                        Collection&lt;SourceClass&gt; importSourceClasses = asSourceClasses(importClassNames);</span><br><span class="line">                        <span class="comment">// 递归处理创建的SourceClass实例，使得ImportSelector导入的类能够被处理</span></span><br><span class="line">                        processImports(configClass, currentSourceClass, importSourceClasses, <span class="keyword">false</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// 检测有没有实现ImportBeanDefinitionRegistrar接口</span></span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (candidate.isAssignable(ImportBeanDefinitionRegistrar.class)) &#123;</span><br><span class="line">                    <span class="comment">// Candidate class is an ImportBeanDefinitionRegistrar -&gt;</span></span><br><span class="line">                    <span class="comment">// delegate to it to register additional bean definitions</span></span><br><span class="line">                    Class&lt;?&gt; candidateClass = candidate.loadClass();</span><br><span class="line">                    <span class="comment">// 实例化candidateClass，它实现了ImportBeanDefinitionRegistrar接口</span></span><br><span class="line">                    ImportBeanDefinitionRegistrar registrar =</span><br><span class="line">                            BeanUtils.instantiateClass(candidateClass, ImportBeanDefinitionRegistrar.class);</span><br><span class="line">                    <span class="comment">// 调用各种Aware接口方法        </span></span><br><span class="line">                    ParserStrategyUtils.invokeAwareMethods(</span><br><span class="line">                            registrar, <span class="keyword">this</span>.environment, <span class="keyword">this</span>.resourceLoader, <span class="keyword">this</span>.registry);</span><br><span class="line">                    <span class="comment">// 调用ImportBeanDefinitionRegistrar的addImportBeanDefinitionRegistrar方法</span></span><br><span class="line">                    configClass.addImportBeanDefinitionRegistrar(registrar, currentSourceClass.getMetadata());</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// 如果没有实现上面的两个接口，则当成普通的配置类进行处理</span></span><br><span class="line">                <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">// Candidate class not an ImportSelector or ImportBeanDefinitionRegistrar -&gt;</span></span><br><span class="line">                    <span class="comment">// process it as an @Configuration class</span></span><br><span class="line">                    <span class="keyword">this</span>.importStack.registerImport(</span><br><span class="line">                            currentSourceClass.getMetadata(), candidate.getMetadata().getClassName());</span><br><span class="line">                    <span class="comment">// 这里使得后面新创建的configClass能够被当成配置类处理</span></span><br><span class="line">                    processConfigurationClass(candidate.asConfigClass(configClass));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (BeanDefinitionStoreException ex) &#123;</span><br><span class="line">            <span class="keyword">throw</span> ex;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (Throwable ex) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> BeanDefinitionStoreException(</span><br><span class="line">                    <span class="string">"Failed to process import candidates for configuration class ["</span> +</span><br><span class="line">                    configClass.getMetadata().getClassName() + <span class="string">"]"</span>, ex);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">this</span>.importStack.pop();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>processImports方法的主要步骤如下：</p>
+<ul>
+<li>检查candidateClass有没有实现<code>ImportSelector</code>接口<br>– 实例化candidateClass<br>– 调用candidateClass实现的各种Aware接口的方法<br>– 如果candidateClass实现了<code>DeferredImportSelector</code>，则使用deferredImportSelectorHandler进行相应的处理，否则调用candidateClass实现的<code>ImportSelector</code>接口的selectImports方法，该方法会返回需要导入的具体类的全限定名称，可能会返回多个类，一般是配置类，然后将这些类封装成SourceClass，然后调用processImports递归地进行处理</li>
+<li>检查candidateClass有没有实现<code>ImportBeanDefinitionRegistrar</code><br>– 实例化candidateClass<br>– 调用candidateClass实现的各种Aware接口的方法<br>– 将实例化的candidateClass添加到当前的配置类（<code>ConfigurationClass</code>）的importBeanDefinitionRegistrars里面</li>
+<li>candidateClass没有实现上面的接口，则把candidateClass当成配置类处理(和处理被<code>@Configuration</code>注解标注的类一样的步骤)</li>
+</ul>
+<p><code>@EnableAsync</code>注解里面的<code>@Import</code>导入的类为<code>AsyncConfigurationSelector</code>，在上面的使用案例中，它的selectImports方法最终会返回”org.springframework.scheduling.annotation.ProxyAsyncConfiguration”，调用asSourceClasses能根据类的全限定名创建其对应的SourceClass，得到SourceClass后就能调用processConfigurationClass方法将其当成配置类进行处理，processConfigurationClass的主要步骤在前面有提到。</p>
+<h2 id="ProxyAsyncConfiguration"><a href="#ProxyAsyncConfiguration" class="headerlink" title="ProxyAsyncConfiguration"></a>ProxyAsyncConfiguration</h2><p><code>ProxyAsyncConfiguration</code>是<code>AsyncConfigurationSelector</code>的selectImports方法返回的配置类，它被一个<code>@Configuration</code>注解标注了，因此会被当成一个配置类进行解析。该类配置了一个Bean<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 名称为"org.springframework.context.annotation.internalAsyncAnnotationProcessor"</span></span><br><span class="line"><span class="comment">// Bean的类型为AsyncAnnotationBeanPostProcessor</span></span><br><span class="line"><span class="meta">@Bean</span>(name = TaskManagementConfigUtils.ASYNC_ANNOTATION_PROCESSOR_BEAN_NAME)</span><br><span class="line"><span class="meta">@Role</span>(BeanDefinition.ROLE_INFRASTRUCTURE)</span><br><span class="line"><span class="function"><span class="keyword">public</span> AsyncAnnotationBeanPostProcessor <span class="title">asyncAdvisor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Assert.notNull(<span class="keyword">this</span>.enableAsync, <span class="string">"@EnableAsync annotation metadata was not injected"</span>);</span><br><span class="line">    AsyncAnnotationBeanPostProcessor bpp = <span class="keyword">new</span> AsyncAnnotationBeanPostProcessor();</span><br><span class="line">    bpp.configure(<span class="keyword">this</span>.executor, <span class="keyword">this</span>.exceptionHandler);</span><br><span class="line">    Class&lt;? extends Annotation&gt; customAsyncAnnotation = <span class="keyword">this</span>.enableAsync.getClass(<span class="string">"annotation"</span>);</span><br><span class="line">    <span class="keyword">if</span> (customAsyncAnnotation != AnnotationUtils.getDefaultValue(EnableAsync.class, <span class="string">"annotation"</span>)) &#123;</span><br><span class="line">        bpp.setAsyncAnnotationType(customAsyncAnnotation);</span><br><span class="line">    &#125;</span><br><span class="line">    bpp.setProxyTargetClass(<span class="keyword">this</span>.enableAsync.getBoolean(<span class="string">"proxyTargetClass"</span>));</span><br><span class="line">    bpp.setOrder(<span class="keyword">this</span>.enableAsync.&lt;Integer&gt;getNumber(<span class="string">"order"</span>));</span><br><span class="line">    <span class="keyword">return</span> bpp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个Bean的类形为<code>AsyncAnnotationBeanPostProcessor</code>，它实现了<code>BeanPostProcessor</code>接口，该接口是Spring的拓展点之一，它提供了一些回调方法，能够让你提供自定义实例化Bean的逻辑还有解析依赖的逻辑，具体介绍可以查看<a href="https://docs.spring.io/spring/docs/5.1.3.RELEASE/spring-framework-reference/core.html#beans-factory-extension-bpp" target="_blank" rel="noopener">文档</a></p>
+<h2 id="AsyncAnnotationBeanPostProcessor"><a href="#AsyncAnnotationBeanPostProcessor" class="headerlink" title="AsyncAnnotationBeanPostProcessor"></a>AsyncAnnotationBeanPostProcessor</h2><p>它实现了<code>BeanPostProcessor</code>接口，它实现这个接口的作用是为了让被<code>@Async</code>注解标注的方法或者类的方法能够异步执行，通过添加相应的<code>AsyncAnnotationAdvisor</code>到代理上（创建的代理类）实现。除了<code>BeanPostProcessor</code>接口以外，它还实现了很多其它的接口，比如<code>BeanFactoryAware</code>接口，具体如下图：<br><img src="https://i.imgur.com/S6JLb7U.png" alt="Imgur"></p>
+<p>该类实现<code>BeanFactory</code>接口的一个很重要的目的就是设置Advisor，也就是设置<code>AsyncAnnotationAdvisor</code><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setBeanFactory</span><span class="params">(BeanFactory beanFactory)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.setBeanFactory(beanFactory);</span><br><span class="line">    <span class="comment">// 这里创建了一个Advisor实例，具体类型为AsyncAnnotationAdvisor</span></span><br><span class="line">    AsyncAnnotationAdvisor advisor = <span class="keyword">new</span> AsyncAnnotationAdvisor(<span class="keyword">this</span>.executor, <span class="keyword">this</span>.exceptionHandler);</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.asyncAnnotationType != <span class="keyword">null</span>) &#123;</span><br><span class="line">        advisor.setAsyncAnnotationType(<span class="keyword">this</span>.asyncAnnotationType);</span><br><span class="line">    &#125;</span><br><span class="line">    advisor.setBeanFactory(beanFactory);</span><br><span class="line">    <span class="comment">// 设置Advisor为AsyncAnnotationAdvisor</span></span><br><span class="line">    <span class="keyword">this</span>.advisor = advisor;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>该类还可以配置要使用的<code>Executor</code>和<code>AsyncUncaughtExceptionHandler</code>，前者为具体要使用的线程池，后者是用来处理没有返回值的异步方法抛出的异常（因为被异步调用的方法抛出的异常不能被调用者捕捉到，所以只能用这个handler处理抛出的异常）<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">        @Nullable Supplier&lt;Executor&gt; executor, @Nullable Supplier&lt;AsyncUncaughtExceptionHandler&gt; exceptionHandler)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.executor = executor;</span><br><span class="line">    <span class="keyword">this</span>.exceptionHandler = exceptionHandler;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="postProcessAfterInitialization方法"><a href="#postProcessAfterInitialization方法" class="headerlink" title="postProcessAfterInitialization方法"></a>postProcessAfterInitialization方法</h3><p><code>AsyncAnnotationBeanPostProcessor</code>的父类的父类<code>AbstractAdvisingBeanPostProcessor</code>实现了<code>BeanPostProcessor</code>的postProcessAfterInitialization方法，通过这个方法就可以在Bean实例化后创建一个该Bean的proxy(所以在上面的例子中，使用beanFactory获取<code>MyService</code>的Bean实例后得到的不是<code>MyService</code>的Bean实例，而是一个代理类proxy)，然后用这个proxy让相应的方法能够异步执行。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">postProcessAfterInitialization</span><span class="params">(Object bean, String beanName)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 如果advisor为空或者bean为AopInfrastructureBean类型，则直接返回bean，不进行任何处理</span></span><br><span class="line">    <span class="comment">// advisor为空的情况下，没有Advice，也没有Pointcut，所以无法处理bean</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.advisor == <span class="keyword">null</span> || bean <span class="keyword">instanceof</span> AopInfrastructureBean) &#123;</span><br><span class="line">        <span class="comment">// Ignore AOP infrastructure such as scoped proxies.</span></span><br><span class="line">        <span class="keyword">return</span> bean;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 如果bean为Advised类型，则往该Advised里面添加Advisor</span></span><br><span class="line">    <span class="comment">// ProxyFactory实现了Advised接口，ProxyFacrory是用来创建proxy的</span></span><br><span class="line">    <span class="keyword">if</span> (bean <span class="keyword">instanceof</span> Advised) &#123;</span><br><span class="line">        Advised advised = (Advised) bean;</span><br><span class="line">        <span class="comment">// 因为这是一个Advised实例，所以可以认为ProxyFactory已经被创建好了</span></span><br><span class="line">        <span class="comment">// 接下来只要把Advisor添加到ProxyFactory上就可以了</span></span><br><span class="line">        <span class="keyword">if</span> (!advised.isFrozen() &amp;&amp; isEligible(AopUtils.getTargetClass(bean))) &#123;</span><br><span class="line">            <span class="comment">// Add our local Advisor to the existing proxy's Advisor chain...</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.beforeExistingAdvisors) &#123;</span><br><span class="line">                advised.addAdvisor(<span class="number">0</span>, <span class="keyword">this</span>.advisor);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                advised.addAdvisor(<span class="keyword">this</span>.advisor);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> bean;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 检验该bean是否能被该processor的Advisor(具体类型为AsyncAnnotationAdvisor)增强</span></span><br><span class="line">    <span class="comment">// 这里实际上会调用子类的isEligible方法，然后子类再调用该类的isEligible方法和和其它的一些逻辑</span></span><br><span class="line">    <span class="keyword">if</span> (isEligible(bean, beanName)) &#123;</span><br><span class="line">        <span class="comment">// 创建ProxyFactory，将会使用这个factory来创建proxy</span></span><br><span class="line">        ProxyFactory proxyFactory = prepareProxyFactory(bean, beanName);</span><br><span class="line">        <span class="comment">// 如果proxyTargetClass为false(默认为false)，则使用基于接口的动态代理</span></span><br><span class="line">        <span class="comment">// 如果发现没有相应的接口，则设置proxyTargetClass为true，变成基于类的动态代理(Cglib)</span></span><br><span class="line">        <span class="keyword">if</span> (!proxyFactory.isProxyTargetClass()) &#123;</span><br><span class="line">            <span class="comment">// 因为proxyTargetClass为false，只能使用基于接口的动态代理，所以这里检查有没有相应的接口</span></span><br><span class="line">            evaluateProxyInterfaces(bean.getClass(), proxyFactory);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 把Advisor(具体类是AsyncAnnotationAdvisor)绑定到factory(创建proxy的时候会绑定到proxy)</span></span><br><span class="line">        proxyFactory.addAdvisor(<span class="keyword">this</span>.advisor);</span><br><span class="line">        <span class="comment">// 执行自定义的proxyFactory处理逻辑，customizeProxyFactory方法应该由子类重写</span></span><br><span class="line">        customizeProxyFactory(proxyFactory);</span><br><span class="line">        <span class="comment">// 用factory创建proxy</span></span><br><span class="line">        <span class="keyword">return</span> proxyFactory.getProxy(getProxyClassLoader());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// No proxy needed.</span></span><br><span class="line">    <span class="keyword">return</span> bean;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>重点留意isEligible方法，<code>AsyncAnnotationBeanPostProcessor</code>就是使用isEligible方法来判断某个Bean实例是否应该被处理的，即是否要创建某个Bean实例的proxy。需要注意的是这里实际调用的是<code>AbstractBeanFactoryAwareAdvisingPostProcessor</code>的isEligible方法<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">protected boolean isEligible(Object bean, String beanName) &#123;</span><br><span class="line">    return (!AutoProxyUtils.isOriginalInstance(beanName, bean.getClass()) &amp;&amp;</span><br><span class="line">            super.isEligible(bean, beanName));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>它调用了<code>AutoProxyUtils</code>的isOriginalInstance方法，这是用来检测Bean的名称是不是以<code>.ORIGINAL</code>开头的，如果是的话，将不会为该Bean实例创建代理。它还调用了父类（<code>AbstractAdvisingBeanPostProcessor</code>）的isEligible方法：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">isEligible</span><span class="params">(Object bean, String beanName)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> isEligible(bean.getClass());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">isEligible</span><span class="params">(Class&lt;?&gt; targetClass)</span> </span>&#123;</span><br><span class="line">    Boolean eligible = <span class="keyword">this</span>.eligibleBeans.get(targetClass);</span><br><span class="line">    <span class="keyword">if</span> (eligible != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> eligible;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.advisor == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    eligible = AopUtils.canApply(<span class="keyword">this</span>.advisor, targetClass);</span><br><span class="line">    <span class="keyword">this</span>.eligibleBeans.put(targetClass, eligible);</span><br><span class="line">    <span class="keyword">return</span> eligible;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>具体的判断逻辑就是，调用<code>AopUtils</code>的canApply方法，这个方法会用<code>Advisor</code>也就是<code>AsyncAnnotationAdvisor</code>来进行判断</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">canApply</span><span class="params">(Advisor advisor, Class&lt;?&gt; targetClass, <span class="keyword">boolean</span> hasIntroductions)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (advisor <span class="keyword">instanceof</span> IntroductionAdvisor) &#123;</span><br><span class="line">        <span class="keyword">return</span> ((IntroductionAdvisor) advisor).getClassFilter().matches(targetClass);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// AsyncAnnotationAdvisor实现了PointcutAdvisor</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (advisor <span class="keyword">instanceof</span> PointcutAdvisor) &#123;</span><br><span class="line">        PointcutAdvisor pca = (PointcutAdvisor) advisor;</span><br><span class="line">        <span class="keyword">return</span> canApply(pca.getPointcut(), targetClass, hasIntroductions);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// It doesn't have a pointcut so we assume it applies.</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最终会使用<code>AsyncAnnotationAdvisor</code>里面的<code>Pointcut</code>（具体为多个<code>AnnotationMatchingPointcut</code>的并集，<code>ComposablePointcut</code>）来判断。</p>
+<h2 id="AsyncAnnotationAdvisor"><a href="#AsyncAnnotationAdvisor" class="headerlink" title="AsyncAnnotationAdvisor"></a>AsyncAnnotationAdvisor</h2><p>它是一个<code>Advisor</code>（AOP里面的术语），它的作用是让被<code>@Async</code>标注的方法或者类的所有方法能够被异步执行，即变成异步方法，它里面有一个<code>Pointcut</code>，这个<code>Pointcut</code>表示所有需要异步执行的（默认是方法或者类上面有<code>@Async</code>注解的方法）。还有一个<code>Advice</code>，表示要增强的功能，在这里就是使用<code>Executor</code>来执行异步方法。</p>
+<h3 id="Pointcut"><a href="#Pointcut" class="headerlink" title="Pointcut"></a>Pointcut</h3><p><code>AsyncAnnotationAdvisor</code>里面的<code>Pointcut</code>的构建过程如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> Pointcut <span class="title">buildPointcut</span><span class="params">(Set&lt;Class&lt;? extends Annotation&gt;&gt; asyncAnnotationTypes)</span> </span>&#123;</span><br><span class="line">    ComposablePointcut result = <span class="keyword">null</span>;</span><br><span class="line">    <span class="comment">// 一开始的asyncAnnotationType只有Async，如果classpath里面有javax.ejb.Asynchronous的话，</span></span><br><span class="line">    <span class="comment">// 也会加上它</span></span><br><span class="line">    <span class="keyword">for</span> (Class&lt;? extends Annotation&gt; asyncAnnotationType : asyncAnnotationTypes) &#123;</span><br><span class="line">        Pointcut cpc = <span class="keyword">new</span> AnnotationMatchingPointcut(asyncAnnotationType, <span class="keyword">true</span>);</span><br><span class="line">        Pointcut mpc = <span class="keyword">new</span> AnnotationMatchingPointcut(<span class="keyword">null</span>, asyncAnnotationType, <span class="keyword">true</span>);</span><br><span class="line">        <span class="keyword">if</span> (result == <span class="keyword">null</span>) &#123;</span><br><span class="line">            result = <span class="keyword">new</span> ComposablePointcut(cpc);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            result.union(cpc);</span><br><span class="line">        &#125;</span><br><span class="line">        result = result.union(mpc);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (result != <span class="keyword">null</span> ? result : Pointcut.TRUE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>返回的<code>Pointcut</code>具体类型为<code>ComposablePointcut</code>或者<code>TruePointcut</code>（这个表示所有的连接点都是切点，即不进行筛选）。默认情况下返回的<code>Pointcut</code>能够筛选出方法上或者类上有<code>@Async</code>（如果classpath里面有javax.ejb.Asynchronous，也能筛选出有<code>Asynchronous</code>注解的）注解的连接点（Joinpoint）</p>
+<h3 id="Advice"><a href="#Advice" class="headerlink" title="Advice"></a>Advice</h3><p><code>AsyncAnnotationAdvisor</code>里面的<code>Advice</code>的构建过程如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> Advice <span class="title">buildAdvice</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">        @Nullable Supplier&lt;Executor&gt; executor, @Nullable Supplier&lt;AsyncUncaughtExceptionHandler&gt; exceptionHandler)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    AnnotationAsyncExecutionInterceptor interceptor = <span class="keyword">new</span> AnnotationAsyncExecutionInterceptor(<span class="keyword">null</span>);</span><br><span class="line">    <span class="comment">// 把Executor和exceptionHandler绑定到Adcice，使得在Advice里面能够用到</span></span><br><span class="line">    interceptor.configure(executor, exceptionHandler);</span><br><span class="line">    <span class="keyword">return</span> interceptor;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>返回的<code>Advice</code>具体类型为<code>AnnotationAsyncExecutionInterceptor</code>，它表示具体要增强的功能，所以使得方法能够异步执行的逻辑就在这个类里面了，所以接下来重点看这个类。</p>
+<p><img src="https://i.imgur.com/nkVtbl0.png" alt="Imgur"></p>
+<p><code>AnnotationAsyncExecutionInterceptor</code>只有一个getExecutorQualifier方法<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="meta">@Nullable</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> String <span class="title">getExecutorQualifier</span><span class="params">(Method method)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Maintainer's note: changes made here should also be made in</span></span><br><span class="line">    <span class="comment">// AnnotationAsyncExecutionAspect#getExecutorQualifier</span></span><br><span class="line">    <span class="comment">// 获取方法上的@Async注解</span></span><br><span class="line">    Async async = AnnotatedElementUtils.findMergedAnnotation(method, Async.class);</span><br><span class="line">    <span class="comment">// 如果方法上没有没有@Async注解，则到方法所属的类上查找该注解</span></span><br><span class="line">    <span class="keyword">if</span> (async == <span class="keyword">null</span>) &#123;</span><br><span class="line">        async = AnnotatedElementUtils.findMergedAnnotation(method.getDeclaringClass(), Async.class);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 返回@Async注解上的值，这个值用于指定使用哪个Executor来执行方法</span></span><br><span class="line">    <span class="keyword">return</span> (async != <span class="keyword">null</span> ? async.value() : <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>该方法返回<code>@Async</code>注解的值，这个值为需要使用的<code>Executor</code>的Bean名称。这里并没有看到使用<code>Executor</code>执行方法的逻辑，所以在它的父类<code>AsyncExecutionInterceptor</code>上面看看能不能找到。</p>
+<p><code>AsyncExecutionInterceptor</code>上面有一个invoke方法<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(<span class="keyword">final</span> MethodInvocation invocation)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">    <span class="comment">// 获取要执行的方法所属的类</span></span><br><span class="line">    Class&lt;?&gt; targetClass = (invocation.getThis() != <span class="keyword">null</span> ? AopUtils.getTargetClass(invocation.getThis()) : <span class="keyword">null</span>);</span><br><span class="line">    <span class="comment">// 获取要最具体的方法，比如invocation.getMethod返回的可能是接口上面的方法，</span></span><br><span class="line">    <span class="comment">// targetClass是实现了该接口的类，这时候应该返回targetClass上的方法</span></span><br><span class="line">    Method specificMethod = ClassUtils.getMostSpecificMethod(invocation.getMethod(), targetClass);</span><br><span class="line">    <span class="comment">// 查找桥接方法，桥接是为了解决类型擦除问题编译器自动添加的方法</span></span><br><span class="line">    <span class="keyword">final</span> Method userDeclaredMethod = BridgeMethodResolver.findBridgedMethod(specificMethod);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 决定使用哪一个Executor执行方法，</span></span><br><span class="line">    <span class="comment">// 将会用到AnnotationAsyncExecutionInterceptor重写的getExecutorQualifier方法</span></span><br><span class="line">    AsyncTaskExecutor executor = determineAsyncExecutor(userDeclaredMethod);</span><br><span class="line">    <span class="keyword">if</span> (executor == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(</span><br><span class="line">                <span class="string">"No executor specified and no default executor set on AsyncExecutionInterceptor either"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 创建一个Callable对象</span></span><br><span class="line">    Callable&lt;Object&gt; task = () -&gt; &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// invocation实现了Joinpoint接口，因此它也是一个joinpoint</span></span><br><span class="line">            <span class="comment">// 调用proceed方法表示让该连接点的代码继续向后执行</span></span><br><span class="line">            Object result = invocation.proceed();</span><br><span class="line">            <span class="keyword">if</span> (result <span class="keyword">instanceof</span> Future) &#123;</span><br><span class="line">                <span class="keyword">return</span> ((Future&lt;?&gt;) result).get();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (ExecutionException ex) &#123;</span><br><span class="line">            handleError(ex.getCause(), userDeclaredMethod, invocation.getArguments());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (Throwable ex) &#123;</span><br><span class="line">            handleError(ex, userDeclaredMethod, invocation.getArguments());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">// 将上面创建的Callable对象传给doSubmit方法，该方法将调用Executor的execute方法执行任务</span></span><br><span class="line">    <span class="comment">// 也有可能调用submit方法</span></span><br><span class="line">    <span class="keyword">return</span> doSubmit(task, executor, invocation.getMethod().getReturnType());</span><br></pre></td></tr></table></figure></p>
+<p><code>AsyncExecutionInterceptor</code>的invoke方法的主要步骤如下：</p>
+<ol>
+<li>查找要异步执行的方法所属的类(targetClass)</li>
+<li>查找最具体的要异步执行的方法（specificMethod，即targetClass实现的方法，而不是targetClass实现的接口上面的方法）</li>
+<li>查找桥接方法，桥接方法是编译器自动添加的，是为了解决类型擦除导致的问题，如果没有找到桥接方法则直接返回原来的方法</li>
+<li>根据<code>@Async</code>注解的值决定使用哪一个<code>Executor</code>，如果没有值则使用默认的<code>Executor</code>，如果没有自己配置任何<code>Executor</code>的情况下，将使用<code>SimpleAsyncTaskExecutor</code></li>
+<li>创建Callable对象，为匿名内部类，里面封装了方法调用的逻辑</li>
+<li>将上面创建的Callable对象传doSumbit方法，该方法会使用第4步获取到的<code>Executor</code>执行任务</li>
+</ol>
+<p>上面的第4步的逻辑在<code>AsyncExecutionInterceptor</code>和其父类<code>AsyncExecutionAspectSupport</code>上，<code>AsyncExecutionInterceptor</code>重写了父类的getDefaultExecutor方法<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> Executor <span class="title">getDefaultExecutor</span><span class="params">(@Nullable BeanFactory beanFactory)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 首先调用父类的getDefaultExecutor方法获取Executor</span></span><br><span class="line">    Executor defaultExecutor = <span class="keyword">super</span>.getDefaultExecutor(beanFactory);</span><br><span class="line">    <span class="comment">// 没有获取到则使用SimpleAsyncTaskExecutor</span></span><br><span class="line">    <span class="keyword">return</span> (defaultExecutor != <span class="keyword">null</span> ? defaultExecutor : <span class="keyword">new</span> SimpleAsyncTaskExecutor());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>AsyncExecutionInterceptor</code>的getDefaultExecutor方法先调用父类的getDefaultExecutor方法获取<code>Executor</code>，父类的getDefaultExecutor方法如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> Executor <span class="title">getDefaultExecutor</span><span class="params">(@Nullable BeanFactory beanFactory)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (beanFactory != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// Search for TaskExecutor bean... not plain Executor since that would</span></span><br><span class="line">            <span class="comment">// match with ScheduledExecutorService as well, which is unusable for</span></span><br><span class="line">            <span class="comment">// our purposes here. TaskExecutor is more clearly designed for it.</span></span><br><span class="line">            <span class="comment">// 从BeanFactory里面查找实现了TaskExecutor的Bean</span></span><br><span class="line">            <span class="keyword">return</span> beanFactory.getBean(TaskExecutor.class);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (NoUniqueBeanDefinitionException ex) &#123;</span><br><span class="line">            <span class="comment">// 找到的Bean不止一个，则查找名称为taskExecutor且实现了Executor接口的Bean</span></span><br><span class="line">            logger.debug(<span class="string">"Could not find unique TaskExecutor bean"</span>, ex);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> beanFactory.getBean(DEFAULT_TASK_EXECUTOR_BEAN_NAME, Executor.class);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">catch</span> (NoSuchBeanDefinitionException ex2) &#123;</span><br><span class="line">                <span class="comment">// ...</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (NoSuchBeanDefinitionException ex) &#123;</span><br><span class="line">            <span class="comment">// 没有找到TaskExecutor类型的Bean，则查找名称为taskExecutor且实现了Executor接口的Bean</span></span><br><span class="line">            logger.debug(<span class="string">"Could not find default TaskExecutor bean"</span>, ex);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> beanFactory.getBean(DEFAULT_TASK_EXECUTOR_BEAN_NAME, Executor.class);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">catch</span> (NoSuchBeanDefinitionException ex2) &#123;</span><br><span class="line">                logger.info(<span class="string">"No task executor bean found for async processing: "</span> +</span><br><span class="line">                        <span class="string">"no bean of type TaskExecutor and no bean named 'taskExecutor' either"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// Giving up -&gt; either using local default executor or none at all...</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 没有找到就返回null，然后子类的getDefaultExecutor方法会返回SimpleAsyncTaskExecutor</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>该方法首先查找类型为<code>TaskExecutor</code>的Bean，没有找到或者找到了不止一个这样的Bean则查找名称为taskExecutor且类型为<code>Executor</code>的Bean，找不到则返回<code>null</code>，如果返回null，<code>AsyncExecutionInterceptor</code>的getDefaultExecutor方法最终会返回<code>SimpleAsyncTaskExecutor</code>。</p>
+<p><code>SimpleAsyncTaskExecutor</code>是一个<code>TaskExecutor</code>，它的策略是每一个任务都开启一个新的线程执行，所以不能够复用线程，而且创建的线程数量没有限制，容易造成资源枯竭，而且会使CPU频繁地切换线程，所以建议自己配置一个可以复用线程的有界的<code>Executor</code></p>
+<p>第7步的逻辑在<code>AsyncExecutionAspectSupport</code>的doSubmit方法上<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> Object <span class="title">doSubmit</span><span class="params">(Callable&lt;Object&gt; task, AsyncTaskExecutor executor, Class&lt;?&gt; returnType)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (CompletableFuture.class.isAssignableFrom(returnType)) &#123;</span><br><span class="line">        <span class="keyword">return</span> CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> task.call();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">catch</span> (Throwable ex) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> CompletionException(ex);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;, executor);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (ListenableFuture.class.isAssignableFrom(returnType)) &#123;</span><br><span class="line">        <span class="keyword">return</span> ((AsyncListenableTaskExecutor) executor).submitListenable(task);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (Future.class.isAssignableFrom(returnType)) &#123;</span><br><span class="line">        <span class="keyword">return</span> executor.submit(task);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        executor.submit(task);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>该方法根据要调用的方法的返回值类型决定怎样执行任务。</p>
+<ul>
+<li>当方法的返回值类型为<code>CompletableFuture</code>，则调用<code>CompletableFuture</code>的supplyAsync方法执行任务，返回值类型为<code>CompletableFuture</code></li>
+<li>当方法的返回值类型为<code>ListenableFuture</code>，则调用<code>AsyncListenableTaskExecutor</code>的submitListenable方法执行任务，返回值类型为<code>ListenableFuture</code></li>
+<li>当方法的返回值类型为<code>Future</code>，则调用<code>AsyncTaskExecutor</code>的submit方法执行任务，返回值类型为<code>Future</code></li>
+<li>当方法没有返回值，调用<code>AsyncTaskExecutor</code>的submit方法执行任务（其它类型的<code>Executor</code>最终也会被封装成<code>AsyncTaskExecutor</code>），返回<code>null</code></li>
+</ul>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/01/04/IDEA查看Java的sun包下的源码/" data-toggle="tooltip" data-placement="top"
+                           title="IDEA查看Java的sun包下的源码">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/12/24/Spring-IoC原理/" data-toggle="tooltip" data-placement="top"
+                           title="Spring IoC原理">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8zODUyNi8xNTA1NA==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用例子"><span class="toc-text">使用例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#异步方法主要原理"><span class="toc-text">异步方法主要原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring线程池"><span class="toc-text">Spring线程池</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EnableAsync注解原理"><span class="toc-text">@EnableAsync注解原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#解析-Import注解"><span class="toc-text">解析@Import注解</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ProxyAsyncConfiguration"><span class="toc-text">ProxyAsyncConfiguration</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AsyncAnnotationBeanPostProcessor"><span class="toc-text">AsyncAnnotationBeanPostProcessor</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#postProcessAfterInitialization方法"><span class="toc-text">postProcessAfterInitialization方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AsyncAnnotationAdvisor"><span class="toc-text">AsyncAnnotationAdvisor</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Pointcut"><span class="toc-text">Pointcut</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Advice"><span class="toc-text">Advice</span></a></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/Tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/Tags/#Spring"
+                           title="Spring">Spring</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a href="https://echi.me">echisan</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/plentymorea">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/plentymore">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; PLTM 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    <br>
+                    Theme by <a href="https://github.com/Haojen/hexo-theme-Anisina">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://plentymore.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-123175280-1';
+    var _gaDomain = 'plentymore.github.io';
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<!-- <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script> -->
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="https://avatars3.githubusercontent.com/u/30522768?s=400&amp;u=a2ce54d7c63789391a0ba32b17792b7a21d64fbb&amp;v=4">
+</body>
+
+</html>

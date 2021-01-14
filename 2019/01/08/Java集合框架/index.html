@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BLOG">
+    <meta name="keyword" content="pltm">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <!-- google-site-verification -->
+    <meta name="google-site-verification" content="fgG59EBWTLiWni3UcgCPhkEPiVDNCnLeaocoTWjctOg" />
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="alternate" type="application/atom+xml" title="PLTM" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Java集合框架｜PTLM blog
+        
+    </title>
+
+    <link rel="canonical" href="https://plentymore.github.io/2019/01/08/Java集合框架/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+    <!-- Google AdSense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+             google_ad_client: "ca-pub-1771277850135880",
+             enable_page_level_ads: true
+          });
+    </script>
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    PLTM
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+                        
+							
+								
+							
+						
+                    
+					
+					
+						<li>
+							<a href="/about">About</a>
+						</li>
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="/images/3.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Java集合框架</h1>
+                    
+                    <span class="meta">
+                         作者 plentymore
+                        <span>
+                          日期 2019-01-08
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/Tags/#JavaBasic"
+                           title="JavaBasic">JavaBasic</a>
+                        
+                        <a class="tag" href="/Tags/#Collection"
+                           title="Collection">Collection</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Java集合框架
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>Java集合框架（Java Collections Framework）是用来操纵和表示集合的统一框架，该框架包含三个要素：接口，实现，算法</p>
+<h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><p><img src="https://docs.oracle.com/javase/tutorial/figures/collections/colls-coreInterfaces.gif" alt="c"></p>
+<p>Java集合框架里面的接口是分级的，具体如上图，<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" target="_blank" rel="noopener">Collection</a>是最顶层的接口，它定义了最基本的集合操作，<code>Collection</code>有4个子接口，分别为<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" target="_blank" rel="noopener">Set</a>，<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" target="_blank" rel="noopener">List</a>，<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Queue.html" target="_blank" rel="noopener">Queue</a>，<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Deque.html" target="_blank" rel="noopener">Deque</a>。<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html" target="_blank" rel="noopener">Map</a>不是真正的<code>Collection</code>，它不是<code>Collection</code>的子接口，但是它是Java集合框架的一部分。</p>
+<h3 id="Collection"><a href="#Collection" class="headerlink" title="Collection"></a>Collection</h3><p><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" target="_blank" rel="noopener">Collection</a>是Java集合框架最顶层的接口，<code>Collection</code>表示由一系列对象组成的一个逻辑单元，这些对象称为元素，所以一个集合由元素组成，这个接口定义了最通用的集合操作。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Collection</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">Iterable</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">// Query Operations（查询操作）</span></span><br><span class="line">    <span class="comment">// 返回集合的元素个数</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">size</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 集合是否为空，即没有元素</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 查看集合是否包含特定的元素</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(Object o)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回集合的迭代器，用于遍历集合元素</span></span><br><span class="line">    <span class="function">Iterator&lt;E&gt; <span class="title">iterator</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 把集合里面的全部元素转换成数组类型返回</span></span><br><span class="line">    Object[] toArray();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 和上面的方法类似，不过这里可以指定元素的类型</span></span><br><span class="line">    &lt;T&gt; T[] toArray(T[] a);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Modification Operations（修改操作）</span></span><br><span class="line">    <span class="comment">// 添加一个元素到集合中</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从集合中移除特定的元素</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">remove</span><span class="params">(Object o)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Bulk Operations（批量操作）</span></span><br><span class="line">    <span class="comment">// 集合是否包含另一个集合的所以元素</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">containsAll</span><span class="params">(Collection&lt;?&gt; c)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 把另一个集合的元素添加到该集合</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">addAll</span><span class="params">(Collection&lt;? extends E&gt; c)</span></span>;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 移除该集合中和另一个集合相同的元素</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">removeAll</span><span class="params">(Collection&lt;?&gt; c)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 只保留该集合中和另一个集合相同的元素</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">retainAll</span><span class="params">(Collection&lt;?&gt; c)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 清空集合中的元素</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Comparison and hashing</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="查询操作"><a href="#查询操作" class="headerlink" title="查询操作"></a>查询操作</h4><ul>
+<li><p>int size()</p>
+</li>
+<li><p>boolean isEmpty()</p>
+</li>
+<li><p>boolean contains(Object o)</p>
+</li>
+</ul>
+<h4 id="批量操作"><a href="#批量操作" class="headerlink" title="批量操作"></a>批量操作</h4><ul>
+<li><p>boolean containsAll(Collection&lt;?&gt; c)</p>
+</li>
+<li><p>boolean addAll(Collection&lt;? extends E&gt; c)</p>
+</li>
+<li><p>boolean removeAll(Collection&lt;?&gt; c)</p>
+</li>
+<li><p>boolean retainAll(Collection&lt;?&gt; c)</p>
+</li>
+<li><p>void clear()</p>
+</li>
+</ul>
+<h4 id="数组操作"><a href="#数组操作" class="headerlink" title="数组操作"></a>数组操作</h4><ul>
+<li><p>Object[] toArray()</p>
+</li>
+<li><p><t> T[] toArray(T[] a)</t></p>
+</li>
+</ul>
+<h4 id="聚合操作"><a href="#聚合操作" class="headerlink" title="聚合操作"></a>聚合操作</h4><p>聚合操作（Aggregate Operations）在JDK1.8以后才支持</p>
+<ul>
+<li><p>default Stream<e> stream()</e></p>
+</li>
+<li><p>default Stream<e> parallelStream() 该方法获取的stream能够充分利用CPU多核心提升性能</e></p>
+</li>
+</ul>
+<h4 id="迭代操作"><a href="#迭代操作" class="headerlink" title="迭代操作"></a>迭代操作</h4><p>有3中方式可以对<code>Collection</code>进行迭代操作（遍历集合里面的元素）</p>
+<ul>
+<li><p>使用聚集操作 （JDK1.8+）</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">al.stream().forEach(e-&gt;System.out.println(e));</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用迭代器</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 迭代器的接口如下</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Iterator</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function">E <span class="title">next</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span></span>; <span class="comment">//optional</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 具体的使用例子如下</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">filter</span><span class="params">(Collection&lt;?&gt; c)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// 调用Collection的iterator方法获取迭代器实例</span></span><br><span class="line">	<span class="comment">// 然后调用迭代器的next方法访问元素</span></span><br><span class="line">    <span class="keyword">for</span> (Iterator&lt;?&gt; it = c.iterator(); it.hasNext(); )</span><br><span class="line">        <span class="keyword">if</span> (!cond(it.next()))</span><br><span class="line">            it.remove();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用for-each循环</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (Object o : collection)</span><br><span class="line">    System.out.println(o);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h3><p><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" target="_blank" rel="noopener">Set</a>拓展了<code>Collection</code>接口，表示不包含重复元素的集合。</p>
+<p>它没有引入更多的方法，不过它从<code>Collection</code>接口继承的某些方法有属于它自身的特定含义，比如add方法，在<code>Set</code>中，add方法也是往集合里面添加元素，不过如果集合里面已经有相同的元素了，则添加失败。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Set</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">Collection</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">// 往集合里面添加一个元素，如果元素已存在，则添加失败，返回false</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>Set</code>的各种操作和<code>Collection</code>的一致</p>
+<h3 id="List"><a href="#List" class="headerlink" title="List"></a>List</h3><p><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" target="_blank" rel="noopener">List</a>拓展了<code>Collection</code>接口，它表示有序的集合，也被称为顺序表，它可以向数组一样使用下标访问集合里面的元素。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">List</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">Collection</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 往集合里面添加一个元素，添加到集合的最后面</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 获取下标为index的元素，List的下标和数组一样，从0开始</span></span><br><span class="line">    <span class="function">E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 替换下标为index的元素为指定的元素</span></span><br><span class="line">    <span class="function">E <span class="title">set</span><span class="params">(<span class="keyword">int</span> index, E element)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 添加一个元素到下标为index的位置，接着原来这个位置及其后面的元素都向后移动</span></span><br><span class="line">    <span class="comment">// 如果index越界了，则插入失败，并抛出异常，所以index不能大于集合的元素个数</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> index, E element)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 移除下标为index的位置的元素，接着把这个位置后面的元素向前移动</span></span><br><span class="line">    <span class="comment">// 如果index越界了，则移除失败，并抛出异常，所以index不能大于或等于集合的元素个数</span></span><br><span class="line">    <span class="function">E <span class="title">remove</span><span class="params">(<span class="keyword">int</span> index)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 查找集合中对应的元素，找到了则返回其下标，找不到返回-1</span></span><br><span class="line">    <span class="comment">// 如果对应元素在集合里面出现了多次，将会返回最早出现（最小下标）的元素的下标</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">indexOf</span><span class="params">(Object o)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 查找集合中对应的元素，找到了则返回其下标，找不到返回-1</span></span><br><span class="line">    <span class="comment">// 如果对应元素在集合里面出现了多次，将返回最后出现（最大下标）的元素的下标</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">lastIndexOf</span><span class="params">(Object o)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回有序的迭代器</span></span><br><span class="line">    <span class="function">ListIterator&lt;E&gt; <span class="title">listIterator</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回从指定下标开始的有序的迭代器</span></span><br><span class="line">    <span class="function">ListIterator&lt;E&gt; <span class="title">listIterator</span><span class="params">(<span class="keyword">int</span> index)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 返回集合的一部分元素，从fromIndex开始（包括fromIndex），到toIndex结束（不包括toIndex）</span></span><br><span class="line">    <span class="function">List&lt;E&gt; <span class="title">subList</span><span class="params">(<span class="keyword">int</span> fromIndex, <span class="keyword">int</span> toIndex)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="位置访问操作"><a href="#位置访问操作" class="headerlink" title="位置访问操作"></a>位置访问操作</h4><p><code>List</code>可以使用下标来访问元素，比如下面的几个方法</p>
+<ul>
+<li><p>E get(int index)</p>
+</li>
+<li><p>E set(int index, E element)</p>
+</li>
+<li><p>void add(int index, E element)</p>
+</li>
+<li><p>E remove(int index)</p>
+</li>
+</ul>
+<h4 id="查找操作"><a href="#查找操作" class="headerlink" title="查找操作"></a>查找操作</h4><ul>
+<li><p>int indexOf(Object o)</p>
+</li>
+<li><p>int lastIndexOf(Object o)</p>
+</li>
+</ul>
+<h4 id="迭代操作-1"><a href="#迭代操作-1" class="headerlink" title="迭代操作"></a>迭代操作</h4><p>除了<code>Iterator</code>之外，<code>List</code>还有自己的<code>ListIterator</code>，<code>ListIterator</code>是有序的迭代器，使用这个迭代器迭代元素的时候不仅可以向后访问元素，还可以向前访问元素</p>
+<ul>
+<li><p>ListIterator<e> listIterator(int index)</e></p>
+</li>
+<li><p>List<e> subList(int fromIndex, int toIndex)</e></p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ListIterator</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">Iterator</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function">E <span class="title">next</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">hasPrevious</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function">E <span class="title">previous</span><span class="params">()</span></span>;  <span class="comment">// 访问前一个元素</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">nextIndex</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">previousIndex</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">set</span><span class="params">(E e)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(E e)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="范围视图操作"><a href="#范围视图操作" class="headerlink" title="范围视图操作"></a>范围视图操作</h4><ul>
+<li>List<e> subList(int fromIndex, int toIndex)<br>使用例子：<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;E&gt; <span class="function">List&lt;E&gt; <span class="title">dealHand</span><span class="params">(List&lt;E&gt; deck, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> deckSize = deck.size();</span><br><span class="line">    List&lt;E&gt; handView = deck.subList(deckSize - n, deckSize);</span><br><span class="line">    List&lt;E&gt; hand = <span class="keyword">new</span> ArrayList&lt;E&gt;(handView);</span><br><span class="line">    handView.clear();</span><br><span class="line">    <span class="keyword">return</span> hand;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</e></li>
+</ul>
+<p><code>List</code>的其它操作也和<code>Collectino</code>一致（因为是从<code>Collection</code>继承的）</p>
+<h3 id="Queue"><a href="#Queue" class="headerlink" title="Queue"></a>Queue</h3><p><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Queue.html" target="_blank" rel="noopener">Queue</a>表示队列，队列是用来保存一系列的元素用于后续处理的（处理完就从队列中移除），在Java集合框架中，队列一般是先进先出（FIFO）的，但是也有不是先进先出的队列，比如优先级队列（<code>PriorityQueue</code>）。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Queue</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">Collection</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">// 添加一个元素到队列，在先进先出队列中，是添加到队列尾部</span></span><br><span class="line">    <span class="comment">// 如果由于容量不足插入失败，则抛出异常，不会返回false</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 和add方法一样，不过不同之处在于，这个方法添加失败一般是返回false，而不是抛出异常</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">offer</span><span class="params">(E e)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 移除队列尾部的元素（最后进来的元素），如果队列为空，则抛出异常，不返回false</span></span><br><span class="line">    <span class="function">E <span class="title">remove</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 和remove方法一样，不过这个方法在队列为空时会返回false，不抛出异常</span></span><br><span class="line">    <span class="function">E <span class="title">poll</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 查看队列头部的元素（最先进来的元素），如果队列为空，则抛出异常，不返回null</span></span><br><span class="line">    <span class="function">E <span class="title">element</span><span class="params">()</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 和element方法一样，不过这个在队列为空时，返回null，不抛出异常</span></span><br><span class="line">    <span class="function">E <span class="title">peek</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到<code>Queue</code>方法一般都提供两种形式，一种是抛出异常的（add，remove，element），一种是不抛出异常的（offer，poll，peek）。队列的主要操作有3种：</p>
+<ul>
+<li><p>插入（Insert）<strong>add</strong>（抛异常），<strong>offer</strong>（返回false）</p>
+</li>
+<li><p>移除（Remove）<strong>remove</strong>（抛异常），<strong>poll</strong>（返回false）</p>
+</li>
+<li><p>检索（Examine/Retrieve）<strong>element</strong>（抛异常），<strong>peek</strong>（返回false）</p>
+</li>
+</ul>
+<h3 id="Deque"><a href="#Deque" class="headerlink" title="Deque"></a>Deque</h3><p><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Deque.html" target="_blank" rel="noopener">Deque</a>表示双向队列，既可以往队首添加元素，也有可以往队尾添加元素的队列。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Deque</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">Queue</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">// 添加元素到队列头部，如果添加失败，则抛出异常</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">addFirst</span><span class="params">(E e)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 添加元素到队尾，如果添加失败，则抛出异常</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">addLast</span><span class="params">(E e)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 和addFirst一样，不同之处是该方法有返回值，由于容量不足添加失败会返回false</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">offerFirst</span><span class="params">(E e)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 和addLast一样，不同之处是该方法有返回值，由于容量不足添加失败会返回false</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">offerLast</span><span class="params">(E e)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 移除并返回队首元素，如果队列为空则抛出异常，不返回null</span></span><br><span class="line">    <span class="function">E <span class="title">removeFirst</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 移除并返回队尾元素，如果队列为空则抛出异常，不返回null</span></span><br><span class="line">    <span class="function">E <span class="title">removeLast</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 和removeFirst方法一样，不过该方法在队列为空的时候返回null，不抛出异常</span></span><br><span class="line">    <span class="function">E <span class="title">pollFirst</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 和removeLast方法一样，不过该方法在队列为空的时候返回null，不抛出异常</span></span><br><span class="line">    <span class="function">E <span class="title">pollLast</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回队首元素，如果队列为空则抛出异常，不返回null</span></span><br><span class="line">    <span class="function">E <span class="title">getFirst</span><span class="params">()</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 返回队尾元素，如果队列为空则抛出异常，不返回null</span></span><br><span class="line">    <span class="function">E <span class="title">getLast</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 和getFirst方法一样，不过该方法在队列为空的时候返回null，不抛出异常</span></span><br><span class="line">    <span class="function">E <span class="title">peekFirst</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 和getLast方法一样，不过该方法在队列为空的时候返回null，不抛出异常</span></span><br><span class="line">    <span class="function">E <span class="title">peekLast</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 移除在队列中首次出现的特定元素（从队头到队尾），如果元素不存在，则返回false</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">removeFirstOccurrence</span><span class="params">(Object o)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 移除在队列中最后出现的特定元素（从队头到队尾），如果元素不存在，则返回false</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">removeLastOccurrence</span><span class="params">(Object o)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// *** Queue methods ***</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 添加元素到队列尾部，如果队列容量不足，则抛出异常，不返回false</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 和add方法一样，不过该方法在队列容量不足的时候返回false，不抛出异常</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">offer</span><span class="params">(E e)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 移除队头元素，这些方法和Queue里面的含义是一样的</span></span><br><span class="line">    <span class="function">E <span class="title">remove</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">E <span class="title">poll</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">E <span class="title">element</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">E <span class="title">peek</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// *** Stack methods ***</span></span><br><span class="line">    <span class="comment">// 双向队列可以当作一个栈来使用</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 把一个元素入栈，实际上就是添加到双向队列的首部</span></span><br><span class="line">    <span class="comment">// 这个方法等同于addFirst</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">push</span><span class="params">(E e)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 弹出栈顶元素，实际上就是双向队列中的队尾元素</span></span><br><span class="line">    <span class="comment">// 该方法等同于removeFirst</span></span><br><span class="line">    <span class="function">E <span class="title">pop</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 这是Collection里面的remove方法，不过在这里该方法有不同的含义</span></span><br><span class="line">    <span class="comment">// 这个方法将移除双向队列中首次出现的元素（从队首到队尾）</span></span><br><span class="line">    <span class="comment">// 等同于removeFirstOccurrence</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">remove</span><span class="params">(Object o)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>双向队列的操作和队列基本上是一致的，只不过双向队列可以从两个方向进行操作，下面的表格总结了操作的方法，并展示了这些方法的不同之处</p>
+<table>
+<thead>
+<tr>
+<th>Type of Operation</th>
+<th>First Element (Beginning of the Deque instance)</th>
+<th>Last Element (End of the Deque instance)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Insert</td>
+<td>addFirst(e)<br>offerFirst(e)</td>
+<td>addLast(e)<br>offerLast(e)</td>
+</tr>
+<tr>
+<td>Remove</td>
+<td>removeFirst()<br>pollFirst()</td>
+<td>removeLast()<br>pollLast()</td>
+</tr>
+<tr>
+<td>Examine</td>
+<td>getFirst()<br>peekFirst()</td>
+<td>getLast()<br>peekLast()</td>
+</tr>
+</tbody>
+</table>
+<p>每个格子都有两个方法，前面方法会抛出异常，后面的方法会返回false</p>
+<h3 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h3><p><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html" target="_blank" rel="noopener">Map</a>用来表示键值对（key-value）映射，每个key对应一个value，<code>Map</code>是这些映射关系的集合，<code>Map</code>包含多个键值对，不过每个键（key）必须是唯一的，不能是相同的。<code>Map</code>不是<code>Collection</code>，但它属于集合框架</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Map</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">// Query Operations</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Map中的键值对数量</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">size</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Map是否为空，即没有键值对</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Map中是否包含特定的键</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">containsKey</span><span class="params">(Object key)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Map中是否包含特定的值</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">containsValue</span><span class="params">(Object value)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 根据key获取对应的value，如果key不存在则返回null</span></span><br><span class="line">    <span class="function">V <span class="title">get</span><span class="params">(Object key)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Modification Operations</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 向Map中放入一个键值对，返回键值对的值</span></span><br><span class="line">    <span class="comment">// 如果键在Map中已存在，则使用给定的值来更新原来的键值对的值，返回原来的旧值</span></span><br><span class="line">    <span class="function">V <span class="title">put</span><span class="params">(K key, V value)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 根据key移除键值对，如果key在Map中不存在，则返回null，否则返回key对应的value</span></span><br><span class="line">    <span class="function">V <span class="title">remove</span><span class="params">(Object key)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Bulk Operations</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 把另一个Map的键值对放入该Map，向当于将另一个Map的键值对调用put方法放到该Map中</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">putAll</span><span class="params">(Map&lt;? extends K, ? extends V&gt; m)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 移除Map中所有的键值对</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Views</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回该Map中所有键的集合，返回类型为Set，因为键都是不相同的</span></span><br><span class="line">    <span class="function">Set&lt;K&gt; <span class="title">keySet</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回该Map中的所有值的集合，返回类型为Colleectino</span></span><br><span class="line">    <span class="function">Collection&lt;V&gt; <span class="title">values</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回该Map中所有键值对的集合，返回类型为Set&lt;Map.Entry&lt;K, V&gt;&gt;</span></span><br><span class="line">    <span class="comment">// Map.Entry表示一个键值对</span></span><br><span class="line">    Set&lt;Map.Entry&lt;K, V&gt;&gt; entrySet();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 表示一个键值对</span></span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">Entry</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">        <span class="comment">// 返回该键值对的key</span></span><br><span class="line">        <span class="function">K <span class="title">getKey</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 返回该键值对的value</span></span><br><span class="line">        <span class="function">V <span class="title">getValue</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 修改该键值对的value</span></span><br><span class="line">        <span class="function">V <span class="title">setValue</span><span class="params">(V value)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 判断该键值对与指定的键值对是否相等</span></span><br><span class="line">        <span class="function"><span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 省略了部分方法</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Comparison and hashing</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h4><ul>
+<li><p>V get(Object key) 获取key对应的value</p>
+</li>
+<li><p>V put(K key, V value) 放入一个key-value（称为Entry）</p>
+</li>
+<li><p>V remove(Object key) 移除一个key-value</p>
+</li>
+<li><p>boolean containsKey(Object key) Map中是否包含特定的key</p>
+</li>
+<li><p>boolean containsValue(Object value) Map中是否包含特定的value</p>
+</li>
+</ul>
+<h4 id="集合视图"><a href="#集合视图" class="headerlink" title="集合视图"></a>集合视图</h4><ul>
+<li><p>Set<k> keySet() 返回Map中的所有key的集合（没有重复元素，所以是Set）</k></p>
+</li>
+<li><p>Collection<v> values() 返回Map的所有value的集合</v></p>
+</li>
+<li><p>Set&lt;Map.Entry&lt;K, V&gt;&gt; entrySet() 返回Map中的所有key-value的集合（Map中每个key-value都是唯一的，所以没有重复元素，因此返回Set）</p>
+</li>
+</ul>
+<h4 id="批量操作-1"><a href="#批量操作-1" class="headerlink" title="批量操作"></a>批量操作</h4><ul>
+<li><p>void putAll(Map&lt;? extends K, ? extends V&gt; m) 如果另一个Map中有和该Map相同的key，则更新该Map中的value</p>
+</li>
+<li><p>void clear()</p>
+</li>
+</ul>
+<h4 id="Multimaps"><a href="#Multimaps" class="headerlink" title="Multimaps"></a>Multimaps</h4><p>Multimaps是一种特殊的<code>Map</code>，它的一个key可以对应一个或者多个value，具体实现起来也不难，直接把<code>List</code>作为value就可以了，比如<code>Map&lt;String, List&lt;String&gt;&gt;</code>，<code>List</code>可以有多个元素，所以相当于一个key对应多个value</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>Java集合框架的实现可以分为6种类型：</p>
+<h3 id="General-purpose-implementations"><a href="#General-purpose-implementations" class="headerlink" title="General-purpose implementations"></a>General-purpose implementations</h3><blockquote>
+<p><strong>General-purpose implementations</strong> are the most commonly used implementations, designed for everyday use. They are summarized in the table titled General-purpose-implementations.</p>
+</blockquote>
+<p>一般用途的实现，比如<code>ArrayList</code>，<code>HashMap</code></p>
+<h3 id="Special-purpose-implementations"><a href="#Special-purpose-implementations" class="headerlink" title="Special-purpose implementations"></a>Special-purpose implementations</h3><blockquote>
+<p><strong>Special-purpose implementations</strong> are designed for use in special situations and display nonstandard performance characteristics, usage restrictions, or behavior.</p>
+</blockquote>
+<p>特殊用途的实现，比如<code>WeakHashMap</code>，<code>JumboEnumSet</code>，<code>EnumSet</code></p>
+<h3 id="Concurrent-implementations"><a href="#Concurrent-implementations" class="headerlink" title="Concurrent implementations"></a>Concurrent implementations</h3><blockquote>
+<p><strong>Concurrent implementations</strong> are designed to support high concurrency, typically at the expense of single-threaded performance. These implementations are part of the java.util.concurrent package.</p>
+</blockquote>
+<p>用于并发场景的实现，比如<code>ConcurrentHashMap</code>，<code>CopyOnWriteArrayList</code>，在java.util.concurrent包下</p>
+<h3 id="Wrapper-implementations"><a href="#Wrapper-implementations" class="headerlink" title="Wrapper implementations"></a>Wrapper implementations</h3><blockquote>
+<p><strong>Wrapper implementations</strong> are used in combination with other types of implementations, often the general-purpose ones, to provide added or restricted functionality.</p>
+</blockquote>
+<p>包装器实现，比如<code>UnmodifiableCollection</code>，<code>UnmodifiableSortedSet</code>，<code>SynchronizedCollection</code>，大部分都是<code>Collections</code>的静态内部类</p>
+<h3 id="Convenience-implementations"><a href="#Convenience-implementations" class="headerlink" title="Convenience implementations"></a>Convenience implementations</h3><blockquote>
+<p><strong>Convenience implementations</strong> are mini-implementations, typically made available via static factory methods, that provide convenient, efficient alternatives to general-purpose implementations for special collections (for example, singleton sets).</p>
+</blockquote>
+<p>便捷实现，比如<code>EmptySet</code>，<code>EmptyList</code>，<code>SingletonSet</code>，大部分是<code>Collections</code>的静态内部类</p>
+<h3 id="Abstract-implementations"><a href="#Abstract-implementations" class="headerlink" title="Abstract implementations"></a>Abstract implementations</h3><blockquote>
+<p><strong>Abstract implementations</strong> are skeletal implementations that facilitate the construction of custom implementations — described later in the Custom Collection Implementations section. An advanced topic, it’s not particularly difficult, but relatively few people will need to do it.</p>
+</blockquote>
+<p>抽象实现，比如<code>AbstractCollection</code>，<code>AbstractList</code>，基于抽象实现类可以快速地实现自己的集合类</p>
+<p>下面的表格给出了集合框架的用作一般用途的实现类<br><strong>General-purpose Implementations</strong></p>
+<table>
+<thead>
+<tr>
+<th>Interfaces</th>
+<th>Hash table Implementations</th>
+<th>Resizable array Implementations</th>
+<th>Tree Implementations</th>
+<th>Linked list Implementations</th>
+<th>Hash table + Linked list Implementations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Set</td>
+<td>HashSet</td>
+<td>&nbsp;</td>
+<td>TreeSet</td>
+<td>&nbsp;</td>
+<td>LinkedHashSet</td>
+</tr>
+<tr>
+<td>List</td>
+<td>&nbsp;</td>
+<td>ArrayList</td>
+<td>&nbsp;</td>
+<td>LinkedList</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>Queue</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>Deque</td>
+<td>&nbsp;</td>
+<td>ArrayDeque</td>
+<td>&nbsp;</td>
+<td>LinkedList</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>Map</td>
+<td>HashMap</td>
+<td>&nbsp;</td>
+<td>TreeMap</td>
+<td>&nbsp;</td>
+<td>LinkedHashMap</td>
+</tr>
+</tbody>
+</table>
+<h2 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h2><p>集合框架实现的算法有：排序（Sorting），洗牌(Shuffling)，常规数据操作(Routine Data Manipulation)，查找(Searching)，组合(Composition)，查找极值（Finding Extreme Values）</p>
+<h3 id="Sorting"><a href="#Sorting" class="headerlink" title="Sorting"></a>Sorting</h3><p>Java集合框架实现的排序算法通常接收一个<code>List</code>作为参数，按照自然顺序进行排序，比如下面的例子<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Sort</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        List&lt;String&gt; list = Arrays.asList(args);</span><br><span class="line">        Collections.sort(list);</span><br><span class="line">        System.out.println(list);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>使用的排序算法为优化的归并排序算法，除了按照自然顺序进行排序之外，也可以使用指定的<code>Comparator</code>进行排序，比如下面的例子：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Make a List of all anagram groups above size threshold.</span></span><br><span class="line">List&lt;List&lt;String&gt;&gt; winners = <span class="keyword">new</span> ArrayList&lt;List&lt;String&gt;&gt;();</span><br><span class="line"><span class="keyword">for</span> (List&lt;String&gt; l : m.values())</span><br><span class="line">    <span class="keyword">if</span> (l.size() &gt;= minGroupSize)</span><br><span class="line">        winners.add(l);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Sort anagram groups according to size</span></span><br><span class="line">Collections.sort(winners, <span class="keyword">new</span> Comparator&lt;List&lt;String&gt;&gt;() &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(List&lt;String&gt; o1, List&lt;String&gt; o2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> o2.size() - o1.size();</span><br><span class="line">    &#125;&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Print anagram groups.</span></span><br><span class="line"><span class="keyword">for</span> (List&lt;String&gt; l : winners)</span><br><span class="line">    System.out.println(l.size() + <span class="string">": "</span> + l);</span><br></pre></td></tr></table></figure></p>
+<h3 id="Shuffling"><a href="#Shuffling" class="headerlink" title="Shuffling"></a>Shuffling</h3><p>洗牌算法和排序算法是对立的，排序算法是使得<code>List</code>里面的元素有序，而洗牌算法是打乱元素的顺序。<br>这种算法在Java集合框架有两种形式，第一种是接收一个<code>List</code>作为参数，然后使用默认的随机算法把元素顺序打乱，比如下面的例子：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Shuffle</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        List&lt;String&gt; list = Arrays.asList(args);</span><br><span class="line">        Collections.shuffle(list);</span><br><span class="line">        System.out.println(list);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>第二种是自己提供一个<code>Random</code>对象，并使用这个对象的随机逻辑来把元素顺序打乱，比如下面的例子：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Shuffle</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">        <span class="keyword">for</span> (String a : args)</span><br><span class="line">            list.add(a);</span><br><span class="line">        Collections.shuffle(list, <span class="keyword">new</span> Random());</span><br><span class="line">        System.out.println(list);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Routine-Data-Manipulation"><a href="#Routine-Data-Manipulation" class="headerlink" title="Routine Data Manipulation"></a>Routine Data Manipulation</h3><p>集合框架提供以下的5个方法来对<code>List</code>对象进行常规的数据操作：</p>
+<ul>
+<li><strong>reverse</strong> — reverses the order of the elements in a List.</li>
+<li><strong>fill</strong> — overwrites every element in a List with the specified value. This operation is useful for reinitializing a List.</li>
+<li><strong>copy</strong> — takes two arguments, a destination List and a source List, and copies the elements of the source into the destination, overwriting its contents. The destination List must be at least as long as the source. If it is longer, the remaining elements in the destination List are unaffected.</li>
+<li><strong>swap</strong> — swaps the elements at the specified positions in a List.</li>
+<li><strong>addAll</strong> — adds all the specified elements to a Collection. The elements to be added may be specified individually or as an array.</li>
+</ul>
+<p>具体实现在<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html" target="_blank" rel="noopener">Collections</a>类</p>
+<h3 id="Searching"><a href="#Searching" class="headerlink" title="Searching"></a>Searching</h3><p>集合框架使用二分查找算法来查找有序的<code>List</code>中特定的元素，这个方法有两张形式，第一种是接收一个<code>List</code>类型的参数和一个key（要查找的元素），这种形式假定<code>List</code>是按照自然顺序升序排序的，然后使用二分查找算法进行查找，例子如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> pos = Collections.binarySearch(list, key);</span><br></pre></td></tr></table></figure></p>
+<p>第二种形式是自己提供一个<code>Comparator</code>，例子如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> pos = Collections.binarySearch(list, key, <span class="keyword">new</span> Comparator()&#123;...&#125;);</span><br></pre></td></tr></table></figure></p>
+<h3 id="Composition"><a href="#Composition" class="headerlink" title="Composition"></a>Composition</h3><ul>
+<li><strong>frequency</strong> — counts the number of times the specified element occurs in the specified collection</li>
+<li><strong>disjoint</strong> — determines whether two Collections are disjoint; that is, whether they contain no elements in common</li>
+</ul>
+<p>在<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html" target="_blank" rel="noopener">Collectins</a>类里面可以看到这两个方法的实现<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Returns the number of elements in the specified collection equal to the specified object.</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span>	<span class="title">frequency</span><span class="params">(Collection&lt;?&gt; c, Object o)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">// Returns true if the two specified collections have no elements in common.</span></span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">boolean</span>	<span class="title">disjoint</span><span class="params">(Collection&lt;?&gt; c1, Collection&lt;?&gt; c2)</span></span></span><br></pre></td></tr></table></figure></p>
+<h3 id="Finding-Extreme-Values"><a href="#Finding-Extreme-Values" class="headerlink" title="Finding Extreme Values"></a>Finding Extreme Values</h3><p>查找集合中的最大或者最小值，同样的，也是提供两种形式，第一种是按照自然顺序，第二种是自己提供<code>Comparator</code>，具体实现也是在<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html#max-java.util.Collection-" target="_blank" rel="noopener">Collectinos</a>类<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Returns the maximum element of the given collection, </span></span><br><span class="line"><span class="comment">// according to the natural ordering of its elements</span></span><br><span class="line"><span class="keyword">static</span> &lt;T extends Object &amp; Comparable&lt;? <span class="keyword">super</span> T&gt;&gt; <span class="function">T <span class="title">max</span><span class="params">(Collection&lt;? extends T&gt; coll)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">// Returns the maximum element of the given collection, </span></span></span><br><span class="line"><span class="function"><span class="comment">// according to the order induced by the specified comparator</span></span></span><br><span class="line"><span class="function"><span class="keyword">static</span> &lt;T&gt; T <span class="title">max</span><span class="params">(Collection&lt;? extends T&gt; coll, Comparator&lt;? <span class="keyword">super</span> T&gt; comp)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">// Returns the minimum element of the given collection, </span></span></span><br><span class="line"><span class="function"><span class="comment">// according to the natural ordering of its elements</span></span></span><br><span class="line"><span class="function"><span class="keyword">static</span> &lt;T extends Object &amp; Comparable&lt;? <span class="keyword">super</span> T&gt;&gt; T <span class="title">min</span><span class="params">(Collection&lt;? extends T&gt; coll)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">// Returns the minimum element of the given collection, </span></span></span><br><span class="line"><span class="function"><span class="comment">// according to the order induced by the specified comparator</span></span></span><br><span class="line"><span class="function"><span class="keyword">static</span> &lt;T&gt; T <span class="title">min</span><span class="params">(Collection&lt;? extends T&gt; coll, Comparator&lt;? <span class="keyword">super</span> T&gt; comp)</span></span></span><br></pre></td></tr></table></figure></p>
+<p>笔记来源： [Collections]（<a href="https://docs.oracle.com/javase/tutorial/collections/index.html" target="_blank" rel="noopener">https://docs.oracle.com/javase/tutorial/collections/index.html</a>)</p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/01/09/Java-List接口常用实现类/" data-toggle="tooltip" data-placement="top"
+                           title="Java List接口常用实现类">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/01/06/Java线程池原理/" data-toggle="tooltip" data-placement="top"
+                           title="Java线程池原理">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8zODUyNi8xNTA1NA==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#接口"><span class="toc-text">接口</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Collection"><span class="toc-text">Collection</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#查询操作"><span class="toc-text">查询操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#批量操作"><span class="toc-text">批量操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数组操作"><span class="toc-text">数组操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#聚合操作"><span class="toc-text">聚合操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#迭代操作"><span class="toc-text">迭代操作</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Set"><span class="toc-text">Set</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#List"><span class="toc-text">List</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#位置访问操作"><span class="toc-text">位置访问操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#查找操作"><span class="toc-text">查找操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#迭代操作-1"><span class="toc-text">迭代操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#范围视图操作"><span class="toc-text">范围视图操作</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Queue"><span class="toc-text">Queue</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deque"><span class="toc-text">Deque</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Map"><span class="toc-text">Map</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#基本操作"><span class="toc-text">基本操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#集合视图"><span class="toc-text">集合视图</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#批量操作-1"><span class="toc-text">批量操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Multimaps"><span class="toc-text">Multimaps</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现"><span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#General-purpose-implementations"><span class="toc-text">General-purpose implementations</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Special-purpose-implementations"><span class="toc-text">Special-purpose implementations</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Concurrent-implementations"><span class="toc-text">Concurrent implementations</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Wrapper-implementations"><span class="toc-text">Wrapper implementations</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Convenience-implementations"><span class="toc-text">Convenience implementations</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Abstract-implementations"><span class="toc-text">Abstract implementations</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#算法"><span class="toc-text">算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Sorting"><span class="toc-text">Sorting</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Shuffling"><span class="toc-text">Shuffling</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Routine-Data-Manipulation"><span class="toc-text">Routine Data Manipulation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Searching"><span class="toc-text">Searching</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Composition"><span class="toc-text">Composition</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Finding-Extreme-Values"><span class="toc-text">Finding Extreme Values</span></a></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/Tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/Tags/#JavaBasic"
+                           title="JavaBasic">JavaBasic</a>
+                        
+                        <a class="tag" href="/Tags/#Collection"
+                           title="Collection">Collection</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a href="https://echi.me">echisan</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/plentymorea">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/plentymore">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; PLTM 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    <br>
+                    Theme by <a href="https://github.com/Haojen/hexo-theme-Anisina">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://plentymore.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-123175280-1';
+    var _gaDomain = 'plentymore.github.io';
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<!-- <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script> -->
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="https://avatars3.githubusercontent.com/u/30522768?s=400&amp;u=a2ce54d7c63789391a0ba32b17792b7a21d64fbb&amp;v=4">
+</body>
+
+</html>

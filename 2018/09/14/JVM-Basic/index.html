@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BLOG">
+    <meta name="keyword" content="pltm">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <!-- google-site-verification -->
+    <meta name="google-site-verification" content="fgG59EBWTLiWni3UcgCPhkEPiVDNCnLeaocoTWjctOg" />
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="alternate" type="application/atom+xml" title="PLTM" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        JVM Basic｜PTLM blog
+        
+    </title>
+
+    <link rel="canonical" href="https://plentymore.github.io/2018/09/14/JVM-Basic/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+    <!-- Google AdSense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+             google_ad_client: "ca-pub-1771277850135880",
+             enable_page_level_ads: true
+          });
+    </script>
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    PLTM
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+                        
+							
+								
+							
+						
+                    
+					
+					
+						<li>
+							<a href="/about">About</a>
+						</li>
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="/images/3.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>JVM Basic</h1>
+                    
+                    <span class="meta">
+                         作者 plentymore
+                        <span>
+                          日期 2018-09-14
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/Tags/#JVM"
+                           title="JVM">JVM</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            JVM Basic
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h1 id="加载-loading"><a href="#加载-loading" class="headerlink" title="加载(loading)"></a>加载(loading)</h1><h2 id="加载的时机"><a href="#加载的时机" class="headerlink" title="加载的时机"></a>加载的时机</h2><p><a href="https://docs.oracle.com/javase/specs/index.html" target="_blank" rel="noopener">The Java Virtual Machine Specification</a>中并没有规定class文件的加载时机，因此实际的加载时机取决于具体的虚拟机实现。</p>
+<h2 id="加载的步骤"><a href="#加载的步骤" class="headerlink" title="加载的步骤"></a>加载的步骤</h2><ol>
+<li>通过类的全限定名获取该类的二进制字节流</li>
+<li>将该类的二进制表示结构转换成在方法区的运行时结构</li>
+<li>在堆中生成一个该类的Class对象，作为上面的方法区运行结构的访问入口</li>
+</ol>
+<p>上面的第一步通过类加载器来完成，可以使用系统的类加载器，也可以使用用户自定义的类加载器</p>
+<h1 id="连接-linking"><a href="#连接-linking" class="headerlink" title="连接(linking)"></a>连接(linking)</h1><p>连接包括验证(Verification)、准备(Preparation)和解析(Resolution)三个步骤</p>
+<h2 id="Verification"><a href="#Verification" class="headerlink" title="Verification"></a>Verification</h2><p>验证保证了类或者接口的二进制流机构是正确的，验证操作可能会导致额外的类的加载，<br>但不会导致额外的类的验证和准备。验证操作是可选的，可以通过<code>-Xverify:none</code>这个JVM参数关闭类验证，关闭类验证可以减少类加载时间，<br>关闭类验证是有风险的，可能会导致JVM加载有害的字节流导致系统崩溃</p>
+<h2 id="Preparation"><a href="#Preparation" class="headerlink" title="Preparation"></a>Preparation</h2><p>准备阶段将会为类或接口的静态域分配内存（在方法区上分配）并设置默认值，这个阶段可以发生和任何时期，但是必须要在初始化（initialization）之前完成。</p>
+<h2 id="Resolution"><a href="#Resolution" class="headerlink" title="Resolution"></a>Resolution</h2><p>解析阶段将会把常量池内的符号引用替换为直接引用</p>
+<h1 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h1><h2 id="初始化的时机"><a href="#初始化的时机" class="headerlink" title="初始化的时机"></a>初始化的时机</h2><p>JVM规范规定，一个类或接口只有在以下几种情况下才可能被初始化：</p>
+<ul>
+<li><p>执行<code>new</code>, <code>getstatic</code>, <code>putstatic</code>, 或者<code>invokestatic</code>这4条JVM指令时：执行<code>new</code>指令（使用new关键字创建对象）的时候，如果对应的类还没有被初始化，则先对它进行初始化。<br>执行<code>getstatic</code>, <code>putstatic</code>, 或者<code>invokestatic</code>指令（读取或设置一个类或接口的静态变量（被final修饰的且已经在编译期把结果放入常量池的静态变量除外），调用一个类的静态方法）的时候，<br>如果对应的类或接口还被初始化，则对它进行初始化</p>
+</li>
+<li><p>The first invocation of a java.lang.invoke.MethodHandle instance which<br>was the result of method handle resolution (§5.4.3.5) for a method handle<br>of kind 2 ( REF_getStatic ), 4 ( REF_putStatic ), 6 ( REF_invokeStatic ), or 8<br>( REF_newInvokeSpecial ).</p>
+</li>
+<li><p>调用java.lang.reflect包里面的方法对类进行反射调用的时候</p>
+</li>
+<li><p>子类初始化的时候，如果父类还没有初始化，则会先触发父类的初始化</p>
+</li>
+<li><p>如果一个接口声明了一个非静态非抽象方法，有类直接或间接地实现了这个接口，那个在这个类初始化的时候会出发这个接口的初始化</p>
+</li>
+<li><p>当一个类被用作JVM的启动类的时候，JVM会先初始化这个类</p>
+</li>
+</ul>
+<blockquote>
+<blockquote>
+<p>Prior to initialization, a class or interface must be linked, that is, verified, prepared,<br>  and optionally resolved.</p>
+</blockquote>
+</blockquote>
+<p>在被初始化之前，一个类或者接口必须已经被连接（已验证，已准备，已解析）</p>
+<h2 id="初始化的步骤"><a href="#初始化的步骤" class="headerlink" title="初始化的步骤"></a>初始化的步骤</h2><p>在初始化阶段，虚拟机才开始执行类或接口的Java代码。初始化阶段做的就是收集类变量的赋值语句和静态代码块，<br>然后组成一个<code>&lt;clint&gt;</code>方法，接着执行这个方法，就完成了初始化过程。该方法是虚拟机创建并执行的，在字节码里面是看不到的。<br>收集代码组成<code>&lt;clint&gt;</code>方法的时候是按照代码顺序由上至下收集的，比如：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line">  <span class="keyword">static</span> &#123;</span><br><span class="line">    System.out.println(a);</span><br><span class="line">    <span class="comment">//System.out.println(b); 这样做的话将产生编译错误，静态代码块只能访问它前面定义的静态变量</span></span><br><span class="line">    <span class="comment">//后面定义的静态变量，只能赋值，不能访问</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面的类将组成一个这样的<code>&lt;clint&gt;</code>方法：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  a = <span class="number">2</span>;</span><br><span class="line">  System.out.println(a);  <span class="comment">//a 被上面的语句赋值为2，因此现在的值为2</span></span><br><span class="line">  b = <span class="number">3</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="运行时数据区-Run-Time-Data-Areas"><a href="#运行时数据区-Run-Time-Data-Areas" class="headerlink" title="运行时数据区(Run-Time Data Areas)"></a>运行时数据区(Run-Time Data Areas)</h1><p>JVM定义了多个运行时数据区，在运行java程序的时候会用到这些数据区。一些数据区在JVM启动的时候创建，并在JVM退出的时候销毁。<br>另一些数据区是是每个线程都拥有的，在线程创建的时候创建，在线程退出的时候销毁。</p>
+<h2 id="程序计数器-The-pc-Register"><a href="#程序计数器-The-pc-Register" class="headerlink" title="程序计数器(The pc Register)"></a>程序计数器(The pc Register)</h2><p>JVM中的每个线程都有自己的程序计数器，因此这块区域是线程<strong>私有</strong>的，不是共享的。如果当前线程执行的方法不是本地方法，则程序计数器的值为当前执行的JVM指令的地址。<br>由于程序计数器存储了当前执行的JVM指令的地址，在切线切换后线程的执行将不会受到影响，能继续从程序计数器保存的地址继续执行指令。</p>
+<h2 id="Java虚拟机栈-Java-Virtual-Machine-Stacks"><a href="#Java虚拟机栈-Java-Virtual-Machine-Stacks" class="headerlink" title="Java虚拟机栈(Java Virtual Machine Stacks)"></a>Java虚拟机栈(Java Virtual Machine Stacks)</h2><p>Java虚拟机栈和程序计数器一样，是线程似有的，生命周期和线程一样，它用来存放Frame，Frame里面存放了局部变量、动态链接、方法返回值等信息。<br>每一个方法从被调用到返回的过程，都和Frame的入栈和出栈相对应。</p>
+<h3 id="栈设置"><a href="#栈设置" class="headerlink" title="栈设置"></a>栈设置</h3><ul>
+<li>-Xss<size>        set java thread stack size</size></li>
+</ul>
+<h3 id="可能抛出的异常"><a href="#可能抛出的异常" class="headerlink" title="可能抛出的异常"></a>可能抛出的异常</h3><ul>
+<li><p>If the computation in a thread requires a larger Java Virtual Machine stack than is permitted, the Java Virtual Machine throws a StackOverflowError.</p>
+</li>
+<li><p>If Java Virtual Machine stacks can be dynamically expanded, and expansion is attempted but insufficient memory can be made available to effect the expansion, or if insufficient memory can be made available to create the initial Java Virtual Machine stack for a new thread, the Java Virtual Machine throws an OutOfMemoryError.</p>
+</li>
+</ul>
+<h2 id="本地方法栈-Native-Method-Stacks"><a href="#本地方法栈-Native-Method-Stacks" class="headerlink" title="本地方法栈(Native Method Stacks)"></a>本地方法栈(Native Method Stacks)</h2><p>本地方法栈和Java虚拟机栈的作用基本相同，区别是本地方法栈是为执行本地方法(native关键字修饰)服务的，而Java虚拟机栈是为执行Java方法服务的。</p>
+<h3 id="可能抛出的异常-1"><a href="#可能抛出的异常-1" class="headerlink" title="可能抛出的异常"></a>可能抛出的异常</h3><ul>
+<li><p>If the computation in a thread requires a larger native method stack than is permitted, the Java Virtual Machine throws a StackOverflowError.</p>
+</li>
+<li><p>If native method stacks can be dynamically expanded and native method stack expansion is attempted but insufficient memory can be made available, or if insufficient memory can be made available to create the initial native method stack for a new thread, the Java Virtual Machine throws an OutOfMemoryError.</p>
+</li>
+</ul>
+<h2 id="堆-Head"><a href="#堆-Head" class="headerlink" title="堆(Head)"></a>堆(Head)</h2><p>Java堆是所有线程共享的内存区域，它是为所有类实例和数组分配内存空间的运行时数据区，在JVM启动的时候创建。堆上为对象分配的存储空间由自动存储管理系统（又被称作垃圾收集器）管理。堆上的对象不会被显式地回收。<br>堆是垃圾收集器管理的主要区域，各种垃圾回收算法还将堆进一步细分成不同的区域，比如分成新生代和老年代。</p>
+<h3 id="堆设置"><a href="#堆设置" class="headerlink" title="堆设置"></a>堆设置</h3><ul>
+<li>-Xms:初始堆大小</li>
+<li>-Xmx:最大堆大小</li>
+<li>-XX:NewSize=n:设置年轻代大小</li>
+<li>-XX:NewRatio=n:设置年轻代和年老代的比值。如:为3，表示年轻代与年老代比值为1：3，年轻代占整个年轻代年老代和的1/4</li>
+<li>-XX:SurvivorRatio=n:年轻代中Eden区与两个Survivor区的比值。注意Survivor区有两个。如：3，表示Eden：Survivor=3：2，一个Survivor区占整个年轻代的1/5</li>
+<li>-XX:MaxPermSize=n:设置持久代大小<h3 id="可能抛出的异常-2"><a href="#可能抛出的异常-2" class="headerlink" title="可能抛出的异常"></a>可能抛出的异常</h3></li>
+<li>If a computation requires more heap than can be made available by the automatic storage management system, the Java Virtual Machine throws an OutOfMemoryError.</li>
+</ul>
+<h2 id="方法区-Method-Area"><a href="#方法区-Method-Area" class="headerlink" title="方法区(Method Area)"></a>方法区(Method Area)</h2><p>方法区和堆一样，也是被所有线程共享的内存区域，方法区的作用和传统语言存储编译后的代码的存储区或者操作系统进程中的’text’段类似，<br>它存储每个类的结构，比如运行时常量池、域和方法等数据，还有方法和构造器里面的代码（包括代码块）。方法区在JVM启动的时候创建，<br>即使方法区逻辑上是堆的一部分，一般的JVM实现通常不会去回收它上面的内存。</p>
+<blockquote>
+<blockquote>
+<p>方法区被很多开发者称作“永久代(Permanent Generation)”，本质上两者并不等价，仅仅是因为HotSpot VM的设计团队把GC分代收集拓展至方法区，或者说使用永久代来实现方法区而已</p>
+</blockquote>
+</blockquote>
+<h3 id="可能抛出的异常-3"><a href="#可能抛出的异常-3" class="headerlink" title="可能抛出的异常"></a>可能抛出的异常</h3><ul>
+<li>If memory in the method area cannot be made available to satisfy an allocation request, the Java Virtual Machine throws an OutOfMemoryError.</li>
+</ul>
+<h2 id="运行时常量池-Run-Time-Constant-Pool"><a href="#运行时常量池-Run-Time-Constant-Pool" class="headerlink" title="运行时常量池(Run-Time Constant Pool)"></a>运行时常量池(Run-Time Constant Pool)</h2><p>运行时常量池是每个类或接口的class文件的constant_pool表的运行时表示。运行时常量池从方法区里面分配空间，因此它是方法区的一部分，<br>它在JVM创建类或者接口的时候创建。</p>
+<h3 id="可能抛出的异常-4"><a href="#可能抛出的异常-4" class="headerlink" title="可能抛出的异常"></a>可能抛出的异常</h3><ul>
+<li>When creating a class or interface, if the construction of the run-time constant pool requires more memory than can be made available in the method area of the Java Virtual Machine, the Java Virtual Machine throws an OutOfMemoryError.</li>
+</ul>
+<h1 id="判断对象是否已经死亡"><a href="#判断对象是否已经死亡" class="headerlink" title="判断对象是否已经死亡"></a>判断对象是否已经死亡</h1><h2 id="引用计数算法"><a href="#引用计数算法" class="headerlink" title="引用计数算法"></a>引用计数算法</h2><p>给对象添加一个引用计数器，当有一个地方引用该对象的时，计数器的值就增加1，当引用失效时，计数器的值就减少1，因此当计数器的值为0的时候，既可以认为对象已经死亡（没有再被引用）。<br>该算法实现简单，判定效率高，但是无法解决循环引用的问题，比如下面的例子：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;</span><br><span class="line">  Ojbect ref;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">      A a = <span class="keyword">new</span> A();</span><br><span class="line">      B b = <span class="keyword">new</span> B();</span><br><span class="line">      a.ref = b;</span><br><span class="line">      b.ref = a;</span><br><span class="line">      a = <span class="keyword">null</span>; <span class="comment">//a.ref还引用着b原来引用的实例</span></span><br><span class="line">      b = <span class="keyword">null</span>; <span class="comment">//b.ref也引用着a原来引用的实例</span></span><br><span class="line">      <span class="comment">// a和b一开始引用的对象将不会被判定为死亡 </span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="根搜索算法"><a href="#根搜索算法" class="headerlink" title="根搜索算法"></a>根搜索算法</h2><p>通过一系列名为”GC Roots”的对象作为起点，从这些起点开始往下搜索，搜索所走过的路径成为引用链。当一个对象到达”GC Roots”没有任何引用链相连，则说明该对象已死亡（不可用），该对象将会判定为可回收的。<br>Java虚拟机将以下对象作为”GC Roots”对象：</p>
+<ul>
+<li>虚拟机栈用引用的对象（局部变量引用的对象），比如<code>method(A a = new A())</code></li>
+<li>方法区中静态属性引用的对象，比如<code>class A{static A a = new A();}</code></li>
+<li>方法区中常量引用的对象，比如<code>class A{final A a = new A();}</code></li>
+<li>本地方法栈中引用的对象</li>
+</ul>
+<h2 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h2><ul>
+<li>强引用（Strong Reference）</li>
+</ul>
+<p><code>Object obj = new Object()</code>这样的就是强引用，只要强引用还存在，垃圾回收器永远不会回收掉被引用的对象。</p>
+<ul>
+<li>软引用（Sofe Reference）</li>
+</ul>
+<p>软引用用来描述一些还有用，但不是必须的对象，在内存溢出之前，虚拟机会尝试对这些对象进行回收。如果回收之后内存还是不够才会出现内存溢出情况。<br>在JDK1.2之后，提供了SofeReference类实现软引用。</p>
+<ul>
+<li>弱引用（Weak Reference）</li>
+</ul>
+<p>和软引用一样，都是用来描述非必须对象的，但它要比软引用更弱一些，被弱引用的对象只能生存到下一次垃圾回收之前，当垃圾收集器开始工作，无论当前内存是否足够，<br>都会回收掉只被软引用关联的对象。在JDK1.2之后，提供了WeakReference类实现弱引用。</p>
+<ul>
+<li>虚引用（Phantom Reference）</li>
+</ul>
+<p>它是最弱的一种引用关系，一个对象是否有虚引用的存在，完全不会对其生存时间造成影响，也无法通过虚引用来取得一个对象实例，为一个对象设置虚引用关联的唯一目的，<br>就是希望在该对象被垃圾收集器回收时收到一个系统通知。在JDK1.2之后，提供了PhantomReference类实现虚引用。</p>
+<h2 id="自我救赎"><a href="#自我救赎" class="headerlink" title="自我救赎"></a>自我救赎</h2><p>在根搜索算法中，当一个对象到达”GC Roots”没有任何引用链相连，会被判定为死亡，但并不是真正的死亡，此时这些对象处于“缓刑”阶段，还有一次机会进行自救。<br>当一个对象到达”GC Roots”没有任何引用链相连，它将会被第一次标记并进行一次筛选，筛选就判断对象是否有必要执行finalize方法，假设该对象没有重写finalize方法，<br>或者它的finalize方法已经执行过一次了，则没有必要执行finalize方法，对象就真正死亡了。否则，该对象将会被放进一个F-Queue队列中，并放在稍后由虚拟机自动创建的低优先级finalize线程中执行。<br>虚拟机会触发这个方法，当不保证等待它执行完成，这样做的原因是避免等待finalize方法执行完成的时间过长使得F-Queue队列的其他对象一直处于等待状态，最终使得垃圾回收系统无法正常运作。<br>稍后垃圾收集器将会对F-Queue中的对象进行第二次标记，如果对象在第二次标记前运行了finalize方法成功拯救了自己（比如，将自己赋值给某个类变量或者对象的成员变量），那么第二次标记的时候它将会被移除出即将被回收的集合，<br>否则，对象将被判定为真正的死亡，然后被回收。例子如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> A SAVE_POINT;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Throwable</span>&#123;</span><br><span class="line">    SAVE_POINT = <span class="keyword">new</span> A();</span><br><span class="line">    SAVE_POINT = <span class="keyword">null</span>; <span class="comment">//对象将被第一次标记</span></span><br><span class="line">    System.gc(); </span><br><span class="line">    Thread.sleep(<span class="number">500</span>);<span class="comment">//等待finalize方法执行</span></span><br><span class="line">    <span class="keyword">if</span>(SAVE_POINT != <span class="keyword">null</span>)&#123;</span><br><span class="line">      <span class="comment">//如果在被第二次标记之前成功执行完了finalize方法，则成功拯救自己</span></span><br><span class="line">      System.out.println(<span class="string">"self save successfully"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      System.out.println(<span class="string">"died."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    SAVE_POINT = <span class="keyword">null</span>;  <span class="comment">//因为上次成功拯救了自己，因此这次也算是第一次标记</span></span><br><span class="line">    System.gc();</span><br><span class="line">    Thread.sleep(<span class="number">500</span>);<span class="comment">//等待finalize方法执行</span></span><br><span class="line">    <span class="comment">//因为对象的finalizer方法已经执行过一次了，所以这次对象必定会判定为真正死亡，然后被回收，自救的机会只有一次</span></span><br><span class="line">    <span class="keyword">if</span>(SAVE_POINT != <span class="keyword">null</span>)&#123;</span><br><span class="line">        System.out.println(<span class="string">"self save successfully"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">//死定了</span></span><br><span class="line">        System.out.println(<span class="string">"died."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">finalize</span><span class="params">()</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">      <span class="keyword">super</span>.finalize();</span><br><span class="line">      A.SAVE_POINT = <span class="keyword">this</span>;</span><br><span class="line">      System.out.println(<span class="string">"save self"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="垃圾收集算法"><a href="#垃圾收集算法" class="headerlink" title="垃圾收集算法"></a>垃圾收集算法</h1><h2 id="标记-清除算法"><a href="#标记-清除算法" class="headerlink" title="标记-清除算法"></a>标记-清除算法</h2><p>该算法分为两个阶段，首先标记出所有需要回收的对象，在标记完成后统一回收所有被标记的对象。<br>该算法的缺点：1.标记和回收效率都不高 2.会产生内存碎片，使得无法给较大的对象分配空间</p>
+<h2 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h2><p>复制算法将内存平均分成两块，每次只使用其中的一块给对象分配空间，当这块空间用完之后，<br>就将这块空间上的存活的对象复制到另一块空间的内存上，然后清楚这块内存的空间，这样就不会产生内存碎片，<br>缺点是每次只能使用一半的空间，浪费严重。</p>
+<blockquote>
+<blockquote>
+<p>现在的商用虚拟机都采用这种算法回收新生代</p>
+</blockquote>
+</blockquote>
+<h2 id="标记-整理算法"><a href="#标记-整理算法" class="headerlink" title="标记-整理算法"></a>标记-整理算法</h2><p>该算法和标记-清除算法基本相同，只不过该算法的后续步骤不是直接对被标记的对象进行清理，<br>而是将未被标记的对象向一端进行移动，然后直接清理掉端边界意外的内存。</p>
+<h2 id="分代收集算法"><a href="#分代收集算法" class="headerlink" title="分代收集算法"></a>分代收集算法</h2><p>该算法根据对象的存活周期不同将内存劃分为几块，一般将Java堆分为新生代和老年代，<br>这样就可以根据各个代不带的特点选择最合适的回收算法，</p>
+<h1 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h1><h2 id="Serial-收集器"><a href="#Serial-收集器" class="headerlink" title="Serial 收集器"></a>Serial 收集器</h2><p>负责新生代的垃圾收集，它是单线程的（只使用一个线程收集），串行的（垃圾收集器与用户程序交替执行），<br>它是Client模式下的默认新生代收集器，其收集几十到一两百兆的新生代停顿时间可以控制在几十到一百多毫秒以内，<br>因为分配给客户端程序的内存一般不会很大，因此在Client模式下的该收集器收集垃圾导致的停顿时间是可以接受的。<br>它的有点是简单高效（和其他垃圾收集器相比），因为它是单线程的，没有线程切换的开销</p>
+<h2 id="ParNew-收集器"><a href="#ParNew-收集器" class="headerlink" title="ParNew 收集器"></a>ParNew 收集器</h2><p>负责新生代的垃圾收集，它是Serial的多线程版本，除了采用多个线程进行垃圾收集意外，其他的和Serival收集器基本相同。<br>默认开启的线程数量与 CPU 数量相同，可以使用<code>-XX:ParallelGCThreads</code>来设置线程数。它是Server模式下的首选的新生代垃圾收集器，<br>其中一个重要的非性能原因是，除了Serial以外，只有该收集器能和CMS收集器配合工作。</p>
+<h2 id="Parallel-Scavenge-收集器"><a href="#Parallel-Scavenge-收集器" class="headerlink" title="Parallel Scavenge 收集器"></a>Parallel Scavenge 收集器</h2><p>负责新生代的垃圾收集，它是多线程的，并行的。该收集器关注的重点和其他收集器不同，比如CMS收集器关注的是缩短垃圾回收时用户线程停顿的时间，<br>而Parallel Scavenge收集器关注的是达到一个可控制的吞吐量。这里的吞吐量指的是运行用户代码的时间与CPU总运行时间的比值，<br>即吞吐量=运行用户代码时间/（运行用户代码时间+垃圾收集时间），比如运行了用户代码9分钟，垃圾收集用了1分钟，则吞吐量为90%。<br>停顿时间越短就越适合需要与用户交互的程序，良好的响应速度能提升用户体验。而高吞吐量则可以高效率地利用 CPU 时间，尽快完成程序的运算任务，适合在后台运算而不需要太多交互的任务。</p>
+<p>缩短停顿时间是以牺牲吞吐量和新生代空间来换取的：新生代空间变小，垃圾回收变得频繁，导致吞吐量下降。</p>
+<p>可以通过开关参数<code>--XX:+UseAdaptiveSizePolicy</code>打开 GC 自适应的调节策略（GC Ergonomics），就不需要手工指定新生代的大小（-Xmn）、Eden 和 Survivor 区的比例、晋升老年代对象年龄等细节参数了。<br>虚拟机会根据当前系统的运行情况收集性能监控信息，动态调整这些参数以提供最合适的停顿时间或者最大的吞吐量。</p>
+<h2 id="Serial-Old-收集器"><a href="#Serial-Old-收集器" class="headerlink" title="Serial Old 收集器"></a>Serial Old 收集器</h2><p>Serial收集器的老年代版本，使用标记-整理算法，一般在Client模式下使用</p>
+<h2 id="Parallel-Old收集器"><a href="#Parallel-Old收集器" class="headerlink" title="Parallel Old收集器"></a>Parallel Old收集器</h2><p>Parallel Scavenge的老年代版本，多线程，使用标记-整理算法，在注重吞吐量以及CPU资源敏感的场合使用。</p>
+<h2 id="CMS-收集器"><a href="#CMS-收集器" class="headerlink" title="CMS 收集器"></a>CMS 收集器</h2><p>以获得最短回收时间为目标的收集器，它基于标记-清除算法，一般用于注重系统响应速度的场合。它分为4个步骤：</p>
+<ul>
+<li>初始标记(CMS initial mark)</li>
+<li>并发标记(CMS concurrent mark)</li>
+<li>重新标记(CMS remark)</li>
+<li>并发清除(CMS concurrent sweep)</li>
+</ul>
+<p>其中初始标记和重新标记需要使用户线程停顿，初始标记仅仅标记一下GC Roots能直接关联到的对象，速度很快，<br>并发标记是进行GC Roots Tracing的过程，而重新标记则是为了修正并发标记期间由于用户线程继续运作而导致标记产生变动的那一部分对象的标记记录，<br>这个阶段的停顿时间一般会比初始标记阶段稍长一些，但远比并发标记的时间短。</p>
+<p>缺点：</p>
+<ul>
+<li>读CPU资源敏感</li>
+<li>无法处理浮动垃圾，可能出现<code>Concurrent Mode Failure</code>失败而导致另一次Full GC的产生。</li>
+<li>会产生空间碎片</li>
+</ul>
+<h2 id="G1-收集器"><a href="#G1-收集器" class="headerlink" title="G1 收集器"></a>G1 收集器</h2><p>面向服务端应用的收集器，计划在未来用该收集器取代CMS收集器。该收集器有以下特点：</p>
+<ul>
+<li>并发与并行：能充分利用多CPU的硬件优势，使用多个CPU减少用户线程停顿时间</li>
+<li>分代收集：分代的概念依旧存在，但是它不需要于其他收集器配合就能回收掉整个堆的垃圾</li>
+<li>空间整合：和CMS的标记-清除算法不同，G1从整体来看是给予标记-整理算法的，从局部来看是给予复制算法的，<br>两种算法都以为着G1回收垃圾后不会产生内存碎片</li>
+<li>可预测的停顿：这是G1和CMS相比的一大优势，两者的目标都是减少用户线程停顿时间，但G1除了降低停顿时间以外，还建立了可预测的停顿时间模型，<br>能让使用者明确指定在一个长度为M毫秒的时间片内，垃圾收集消耗的时间不得超过N毫秒。</li>
+</ul>
+<p>G1 把堆划分成多个大小相等的独立区域（Region），新生代和老年代不再物理隔离，基本步骤如下：</p>
+<ul>
+<li>初始标记</li>
+<li>并发标记</li>
+<li>最终标记：为了修正在并发标记期间因用户程序继续运作而导致标记产生变动的那一部分标记记录，虚拟机将这段时间对象变化记录在线程的 Remembered Set Logs 里面，最终标记阶段需要把 Remembered Set Logs 的数据合并到 Remembered Set 中。这阶段需要停顿线程，但是可并行执行。</li>
+<li>筛选回收：首先对各个 Region 中的回收价值和成本进行排序，根据用户所期望的 GC 停顿时间来制定回收计划。此阶段其实也可以做到与用户程序一起并发执行，但是因为只回收一部分 Region，时间是用户可控制的，而且停顿用户线程将大幅度提高收集效率。</li>
+</ul>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/12/11/Spring-Configurable基本用法/" data-toggle="tooltip" data-placement="top"
+                           title="Spring @Configurable基本用法">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/09/12/Collection-Framework-2/" data-toggle="tooltip" data-placement="top"
+                           title="Collection-Framework(2)">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8zODUyNi8xNTA1NA==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#加载-loading"><span class="toc-text">加载(loading)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#加载的时机"><span class="toc-text">加载的时机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#加载的步骤"><span class="toc-text">加载的步骤</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#连接-linking"><span class="toc-text">连接(linking)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Verification"><span class="toc-text">Verification</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Preparation"><span class="toc-text">Preparation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Resolution"><span class="toc-text">Resolution</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#初始化"><span class="toc-text">初始化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#初始化的时机"><span class="toc-text">初始化的时机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#初始化的步骤"><span class="toc-text">初始化的步骤</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#运行时数据区-Run-Time-Data-Areas"><span class="toc-text">运行时数据区(Run-Time Data Areas)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#程序计数器-The-pc-Register"><span class="toc-text">程序计数器(The pc Register)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java虚拟机栈-Java-Virtual-Machine-Stacks"><span class="toc-text">Java虚拟机栈(Java Virtual Machine Stacks)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#栈设置"><span class="toc-text">栈设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#可能抛出的异常"><span class="toc-text">可能抛出的异常</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#本地方法栈-Native-Method-Stacks"><span class="toc-text">本地方法栈(Native Method Stacks)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#可能抛出的异常-1"><span class="toc-text">可能抛出的异常</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#堆-Head"><span class="toc-text">堆(Head)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#堆设置"><span class="toc-text">堆设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#可能抛出的异常-2"><span class="toc-text">可能抛出的异常</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#方法区-Method-Area"><span class="toc-text">方法区(Method Area)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#可能抛出的异常-3"><span class="toc-text">可能抛出的异常</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运行时常量池-Run-Time-Constant-Pool"><span class="toc-text">运行时常量池(Run-Time Constant Pool)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#可能抛出的异常-4"><span class="toc-text">可能抛出的异常</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#判断对象是否已经死亡"><span class="toc-text">判断对象是否已经死亡</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#引用计数算法"><span class="toc-text">引用计数算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#根搜索算法"><span class="toc-text">根搜索算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#引用类型"><span class="toc-text">引用类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自我救赎"><span class="toc-text">自我救赎</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#垃圾收集算法"><span class="toc-text">垃圾收集算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#标记-清除算法"><span class="toc-text">标记-清除算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#复制算法"><span class="toc-text">复制算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#标记-整理算法"><span class="toc-text">标记-整理算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分代收集算法"><span class="toc-text">分代收集算法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#垃圾收集器"><span class="toc-text">垃圾收集器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Serial-收集器"><span class="toc-text">Serial 收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ParNew-收集器"><span class="toc-text">ParNew 收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Parallel-Scavenge-收集器"><span class="toc-text">Parallel Scavenge 收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Serial-Old-收集器"><span class="toc-text">Serial Old 收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Parallel-Old收集器"><span class="toc-text">Parallel Old收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CMS-收集器"><span class="toc-text">CMS 收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#G1-收集器"><span class="toc-text">G1 收集器</span></a></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/Tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/Tags/#JVM"
+                           title="JVM">JVM</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a href="https://echi.me">echisan</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/plentymorea">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/plentymore">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; PLTM 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    <br>
+                    Theme by <a href="https://github.com/Haojen/hexo-theme-Anisina">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://plentymore.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-123175280-1';
+    var _gaDomain = 'plentymore.github.io';
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<!-- <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script> -->
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="https://avatars3.githubusercontent.com/u/30522768?s=400&amp;u=a2ce54d7c63789391a0ba32b17792b7a21d64fbb&amp;v=4">
+</body>
+
+</html>

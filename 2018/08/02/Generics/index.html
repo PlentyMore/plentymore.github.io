@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BLOG">
+    <meta name="keyword" content="pltm">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <!-- google-site-verification -->
+    <meta name="google-site-verification" content="fgG59EBWTLiWni3UcgCPhkEPiVDNCnLeaocoTWjctOg" />
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="alternate" type="application/atom+xml" title="PLTM" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Generics｜PTLM blog
+        
+    </title>
+
+    <link rel="canonical" href="https://plentymore.github.io/2018/08/02/Generics/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+    <!-- Google AdSense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+             google_ad_client: "ca-pub-1771277850135880",
+             enable_page_level_ads: true
+          });
+    </script>
+<link rel="stylesheet" href="\assets\css\APlayer.min.css" class="aplayer-style-marker">
+<script src="\assets\js\APlayer.min.js" class="aplayer-script-marker"></script>
+<script src="\assets\js\Meting.min.js" class="meting-script-marker"></script>
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    PLTM
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+                        
+							
+								
+							
+						
+                    
+					
+					
+						<li>
+							<a href="/about">About</a>
+						</li>
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="/images/3.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Generics</h1>
+                    
+                    <span class="meta">
+                         作者 plentymore
+                        <span>
+                          日期 2018-08-02
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/Tags/#JavaBasic"
+                           title="JavaBasic">JavaBasic</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Generics
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                
+    <div id="aplayer-fYNpQmFY" class="aplayer aplayer-tag-marker meting-tag-marker" data-id="419596411" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#ad7a86"></div>
+<h2 id="使用泛型的好处"><a href="#使用泛型的好处" class="headerlink" title="使用泛型的好处"></a>使用泛型的好处</h2><ul>
+<li>能在编译时进行强类型检查<br>如果代码类型安全检查不通过，编译器将抛出编译错误警告，一般来说，修复在编译期发现的错误比在修复在运行时抛出的错误更简单、</li>
+<li>消除手动的类型转换<br>不使用泛型的代码要手动进行类型转换，容易出错，而使用泛型的代码，编译器将自动进行类型转换</li>
+<li>使开发者能够实现通用的算法<br>比如Arrays的sort方法</li>
+</ul>
+<h2 id="Terminology"><a href="#Terminology" class="headerlink" title="Terminology"></a>Terminology</h2><ul>
+<li><strong>Type Parameter and Type Argument</strong> <blockquote>
+<p>Many developers use the terms “type parameter” and “type argument” interchangeably, but these terms are not the same. When coding, one provides type arguments in order to create a parameterized type. Therefore, the T in Foo<t> is a type parameter and the String in Foo<string> f is a type argument.</string></t></p>
+</blockquote>
+</li>
+</ul>
+<h2 id="泛型的格式"><a href="#泛型的格式" class="headerlink" title="泛型的格式"></a>泛型的格式</h2><blockquote>
+<p>A generic class is defined with the following format:</p>
+</blockquote>
+<p><code>class name&lt;T1, T2, ..., Tn&gt; { /* ... */ }</code></p>
+<blockquote>
+<p>The type parameter section, delimited by angle brackets (&lt;&gt;), follows the class name. It specifies the type parameters (also called type variables) T1, T2, …, and Tn.</p>
+</blockquote>
+<p>例子：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GenClass</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">    T data;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setData</span><span class="params">(T data)</span></span>;</span><br><span class="line">    <span class="keyword">public</span> T getData&#123;(<span class="keyword">return</span> <span class="keyword">this</span>.data)&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Type-Parameter-Naming-Conventions"><a href="#Type-Parameter-Naming-Conventions" class="headerlink" title="Type Parameter Naming Conventions"></a>Type Parameter Naming Conventions</h2><p>类型参数传统命名规则：</p>
+<ul>
+<li>E - Element (used extensively by the Java Collections Framework)</li>
+<li>K - Key</li>
+<li>N - Number</li>
+<li>T - Type</li>
+<li>V - Value</li>
+<li>S,U,V etc. - 2nd, 3rd, 4th types</li>
+</ul>
+<h2 id="实例化泛型类"><a href="#实例化泛型类" class="headerlink" title="实例化泛型类"></a>实例化泛型类</h2><p><code>GenClass&lt;String&gt; genClass;</code><br>使用具体的类型，比如String,Integer替换掉T，就得到了泛型类GenClass的引用。</p>
+<p><code>GenClass&lt;String&gt; genClass = new GenClass&lt;String&gt;()</code><br>这样就实例化了泛型类GenClass，语法和普通类没有多大差别，只是多了&lt;&gt;。</p>
+<p>在JDK1.7以及之后的版本，只需要<code>new GenClass&lt;&gt;()</code>就可以实例化泛型类GenClass。</p>
+<p>如果省略&lt;&gt;，实例化的是GenClass的原生态类型，不是泛型类型，<br>这使得genClass的引用是泛型，但却指向了原生态类型的对象，这是不安全的，编译器会发出警告。<br>如果一个类不是泛型类，比如<code>class A{}</code>，它是不存在原生态类型这个概念的</p>
+<h2 id="原生态类型"><a href="#原生态类型" class="headerlink" title="原生态类型"></a>原生态类型</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span>&lt;<span class="title">T</span>&gt;</span>&#123;<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span><span class="params">(T t)</span></span>&#123;<span class="comment">/**/&#125;&#125;</span></span><br><span class="line"><span class="comment">A a = new A();//没有&lt;&gt;，这样就是原生态类型</span></span><br><span class="line"><span class="comment">A&lt;Integer&gt; a1 = new A&lt;Integer&gt;();//有&lt;&gt;,这样就是泛型类型</span></span><br><span class="line"><span class="comment">A&lt;Integer&gt; a2 = new A();// 合法，为了向后兼容，泛型类型的引用可以指向原生态类型，但编译器会发出警告</span></span><br><span class="line"><span class="comment">A a3 = a1;</span></span><br><span class="line"><span class="comment">a3.set(1);//合法，但编译器会发出警告。</span></span><br><span class="line"><span class="comment">//当你使用原生态类型的引用去调用它对应的泛型类的方法的时候，编译器就会发出警告</span></span><br><span class="line"><span class="comment">//使用原生态类型会跳过编译器的安全检查，这是不安全的，因此应该避免使用原生态类型</span></span><br><span class="line"><span class="comment">//使用原生态类型会失去泛型的优势</span></span><br></pre></td></tr></table></figure>
+<h2 id="Unchecked-Error-Messages"><a href="#Unchecked-Error-Messages" class="headerlink" title="Unchecked Error Messages"></a>Unchecked Error Messages</h2><p>当你在代码中混合使用原生态类型和泛型时，<br>比如这样子：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WarningDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        Box&lt;Integer&gt; bi;</span><br><span class="line">        bi = createBox();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> Box <span class="title">createBox</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Box();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>编译器就会发出这样的警告信息：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Note: Example.java uses unchecked or unsafe operations.</span><br><span class="line">Note: Recompile with -Xlint:unchecked <span class="keyword">for</span> details.</span><br></pre></td></tr></table></figure></p>
+<p>可以使用@SuppressWarnings注解去掉警告信息，当你必须确保你的代码是安全的</p>
+<h2 id="范型的限制"><a href="#范型的限制" class="headerlink" title="范型的限制"></a>范型的限制</h2><ul>
+<li>不能使用原始类型实例化泛型类<br><code>new ArrayList&lt;int&gt;//错误</code></li>
+<li>不能实例化类型参数<br><code>void &lt;T&gt; fun(T t){new T()//错误}</code></li>
+<li>静态域不能声明为参数化类型<br><code>class A&lt;T&gt;{static T t;//错误}</code></li>
+<li><p>不能对参数化类型使用instanceof操作符或对没有使用通配符的类型参数进行类型转换<br></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">func(List&lt;E&gt; lists)&#123;</span><br><span class="line">  <span class="keyword">for</span>(E l:lists)&#123;</span><br><span class="line">    <span class="keyword">if</span>(l <span class="keyword">instanceof</span> List&lt;String&gt;<span class="comment">//错误)</span></span><br><span class="line">    <span class="keyword">if</span>(l <span class="keyword">instanceof</span> List&lt;?&gt;<span class="comment">//OK)</span></span><br><span class="line">    <span class="keyword">if</span>(l <span class="keyword">instanceof</span> List<span class="comment">//OK)</span></span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">&#125;</span><br><span class="line">func1()&#123;</span><br><span class="line">  List&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">  List&lt;Number&gt; numbers = (List&lt;Number&gt;) list;  <span class="comment">//错误,List&lt;Integer&gt;和List&lt;Numbe&gt;不是同一个类型</span></span><br><span class="line">  List&lt;?&gt; list1 = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">  List&lt;Number&gt; num = (List&lt;Number&gt;) list1  <span class="comment">//OK,使用了通配符</span></span><br><span class="line">  List&lt;String&gt; l1 = ...;</span><br><span class="line">  ArrayList&lt;String&gt; l2 = (ArrayList&lt;String&gt;)l1;  <span class="comment">// OK</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>不能实例化参数化类型的数组<br><code>new ArrayList&lt;String&gt;[2] //错误</code></p>
+</li>
+<li><p>不能创建、捕捉、抛出参数化类型的异常</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Extends Throwable indirectly</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MathException</span>&lt;<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">Exception</span> </span>&#123; <span class="comment">/* ... */</span> &#125;    <span class="comment">// compile-time error</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Extends Throwable directly</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">QueueFullException</span>&lt;<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">Throwable</span> </span>&#123; <span class="comment">/* ... */</span> <span class="comment">// compile-time error</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T extends Exception, J&gt; <span class="function"><span class="keyword">void</span> <span class="title">execute</span><span class="params">(List&lt;J&gt; jobs)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (J job : jobs)</span><br><span class="line">            <span class="comment">// ...</span></span><br><span class="line">    &#125; <span class="keyword">catch</span> (T e) &#123;   <span class="comment">// compile-time error</span></span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">You can, however, use a type parameter in a <span class="keyword">throws</span> clause:</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Parser</span>&lt;<span class="title">T</span> <span class="keyword">extends</span> <span class="title">Exception</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">parse</span><span class="params">(File file)</span> <span class="keyword">throws</span> T </span>&#123;     <span class="comment">// OK</span></span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>同一个类中不能有两个类型擦除后方法签名相同的方法<br></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">func</span><span class="params">(List&lt;String&gt; l)</span></span>&#123;&#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">func</span><span class="params">(List&lt;Integer&gt; l)</span></span>&#123;&#125;</span><br><span class="line">  <span class="comment">//类型擦除后方法签名相同，编译错误</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>泛型的内容有点多，google翻了一下找到了一篇总结得比较简洁的博客，这博客我先<a href="https://my.oschina.net/polly/blog/877647" target="_blank" rel="noopener">记下了</a></p>
+<p>笔记来源： <a href="https://docs.oracle.com/javase/tutorial/java/generics/why.html" target="_blank" rel="noopener">Generics</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/08/04/Threads/" data-toggle="tooltip" data-placement="top"
+                           title="Threads">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/08/02/Type-Erasure/" data-toggle="tooltip" data-placement="top"
+                           title="Type Erasure">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8zODUyNi8xNTA1NA==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用泛型的好处"><span class="toc-text">使用泛型的好处</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Terminology"><span class="toc-text">Terminology</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#泛型的格式"><span class="toc-text">泛型的格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Type-Parameter-Naming-Conventions"><span class="toc-text">Type Parameter Naming Conventions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实例化泛型类"><span class="toc-text">实例化泛型类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原生态类型"><span class="toc-text">原生态类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Unchecked-Error-Messages"><span class="toc-text">Unchecked Error Messages</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#范型的限制"><span class="toc-text">范型的限制</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/Tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/Tags/#JavaBasic"
+                           title="JavaBasic">JavaBasic</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a href="https://echi.me">echisan</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/plentymorea">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/plentymore">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; PLTM 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    <br>
+                    Theme by <a href="https://github.com/Haojen/hexo-theme-Anisina">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://plentymore.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-123175280-1';
+    var _gaDomain = 'plentymore.github.io';
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<!-- <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script> -->
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="https://avatars3.githubusercontent.com/u/30522768?s=400&amp;u=a2ce54d7c63789391a0ba32b17792b7a21d64fbb&amp;v=4">
+</body>
+
+</html>

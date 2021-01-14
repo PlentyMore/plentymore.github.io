@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BLOG">
+    <meta name="keyword" content="pltm">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <!-- google-site-verification -->
+    <meta name="google-site-verification" content="fgG59EBWTLiWni3UcgCPhkEPiVDNCnLeaocoTWjctOg" />
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="alternate" type="application/atom+xml" title="PLTM" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Regex｜PTLM blog
+        
+    </title>
+
+    <link rel="canonical" href="https://plentymore.github.io/2018/08/01/Regex/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+    <!-- Google AdSense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+             google_ad_client: "ca-pub-1771277850135880",
+             enable_page_level_ads: true
+          });
+    </script>
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    PLTM
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+                        
+							
+								
+							
+						
+                    
+					
+					
+						<li>
+							<a href="/about">About</a>
+						</li>
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="/images/3.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Regex</h1>
+                    
+                    <span class="meta">
+                         作者 plentymore
+                        <span>
+                          日期 2018-08-01
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/Tags/#JavaBasic"
+                           title="JavaBasic">JavaBasic</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Regex
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h2 id="Character-Classes"><a href="#Character-Classes" class="headerlink" title="Character Classes"></a>Character Classes</h2><table>
+<thead>
+<tr>
+<th>Construct</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[abc]</td>
+<td>a, b, or c (simple class)（a,b或c</td>
+</tr>
+<tr>
+<td>[^abc]</td>
+<td>Any character except a, b, or c (negation)（除a,b或c以外的任意字符</td>
+</tr>
+<tr>
+<td>[a-zA-Z]</td>
+<td>a through z, or A through Z, inclusive (range)（a-z或A-Z，包括a,z,A,Z</td>
+</tr>
+<tr>
+<td>[a-d[m-p]]</td>
+<td>a through d, or m through p: [a-dm-p] (union)（并集，a-d或者e-f之间的所有字符</td>
+</tr>
+<tr>
+<td>[a-z&amp;&amp;[def]]</td>
+<td>d, e, or f (intersection)（交集，a-z中与d,e或f相同的字符</td>
+</tr>
+<tr>
+<td>[a-z&amp;&amp;[^bc]]</td>
+<td>a through z, except for b and c: [ad-z] (subtraction)（a-z中除b和c以外的字符</td>
+</tr>
+<tr>
+<td>[a-z&amp;&amp;[^m-p]]</td>
+<td>a through z, and not m through p: [a-lq-z] (subtraction)（a-z中除m-p以外的字符</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Predefined-Character-Classes"><a href="#Predefined-Character-Classes" class="headerlink" title="Predefined Character Classes"></a>Predefined Character Classes</h2><table>
+<thead>
+<tr>
+<th>Construct</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>.</td>
+<td>Any character (may or may not match line terminators)（任意字符，可能匹配也可能不匹配行结束符</td>
+</tr>
+<tr>
+<td>\d</td>
+<td>A digit: [0-9]（数字</td>
+</tr>
+<tr>
+<td>\D</td>
+<td>A non-digit: [^0-9]（非数字</td>
+</tr>
+<tr>
+<td>\s</td>
+<td>A whitespace character: [ \t\n\x0B\f\r]（空白符</td>
+</tr>
+<tr>
+<td>\S</td>
+<td>A non-whitespace character: [^\s]（非空白符</td>
+</tr>
+<tr>
+<td>\w</td>
+<td>A word character: [a-zA-Z_0-9]（数字，字母和下划线</td>
+</tr>
+<tr>
+<td>\W</td>
+<td>A non-word character: [^\w]（非数字，非字母和非下划线的字符</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>In the table above, each construct in the left-hand column is shorthand for the character class in the right-hand column. For example, \d means a range of digits (0-9), and \w means a word character (any lowercase letter, any uppercase letter, the underscore character, or any digit). Use the predefined classes whenever possible. They make your code easier to read and eliminate errors introduced by malformed character classes.</p>
+</blockquote>
+<blockquote>
+<p>Constructs beginning with a backslash are called escaped constructs. We previewed escaped constructs in the String Literals section where we mentioned the use of backslash and \Q and \E for quotation. If you are using an escaped construct within a string literal, you must precede the backslash with another backslash for the string to compile. For example:（以反斜杆’\‘开头的为转义字符<br><code>private final String REGEX = &quot;\\d&quot;; // a single digit</code></p>
+</blockquote>
+<blockquote>
+<p>In this example \d is the regular expression; the extra backslash is required for the code to compile. The test harness reads the expressions directly from the Console, however, so the extra backslash is unnecessary.</p>
+</blockquote>
+<h2 id="Quantifiers"><a href="#Quantifiers" class="headerlink" title="Quantifiers"></a>Quantifiers</h2><table>
+<thead>
+<tr>
+<th>Greedy</th>
+<th>Reluctant</th>
+<th>Possessive</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>X?</td>
+<td>X??</td>
+<td>X?+</td>
+<td>X, once or not at all（匹配0或1次</td>
+</tr>
+<tr>
+<td>X*</td>
+<td>X*?</td>
+<td>X*+</td>
+<td>X, zero or more times（匹配0次以上</td>
+</tr>
+<tr>
+<td>X+</td>
+<td>X+?</td>
+<td>X++</td>
+<td>X, one or more times（匹配1此以上</td>
+</tr>
+<tr>
+<td>X{n}</td>
+<td>X{n}?</td>
+<td>X{n}+</td>
+<td>X, exactly n times（匹配n次，n为具体数字</td>
+</tr>
+<tr>
+<td>X{n,}</td>
+<td>X{n,}?</td>
+<td>X{n,}+</td>
+<td>X, at least n times（匹配至少n次</td>
+</tr>
+<tr>
+<td>X{n,m}</td>
+<td>X{n,m}?</td>
+<td>X{n,m}+</td>
+<td>X, at least n but not more than m times（n-m次</td>
+</tr>
+</tbody>
+</table>
+<h3 id="Differences-Among-Greedy-Reluctant-and-Possessive-Quantifiers"><a href="#Differences-Among-Greedy-Reluctant-and-Possessive-Quantifiers" class="headerlink" title="Differences Among Greedy, Reluctant, and Possessive Quantifiers"></a>Differences Among Greedy, Reluctant, and Possessive Quantifiers</h3><blockquote>
+<p>There are subtle differences among greedy, reluctant, and possessive quantifiers.</p>
+</blockquote>
+<blockquote>
+<p>Greedy quantifiers are considered “greedy” because they force the matcher to read in, or eat, the entire input string prior to attempting the first match. If the first match attempt (the entire input string) fails, the matcher backs off the input string by one character and tries again, repeating the process until a match is found or there are no more characters left to back off from. Depending on the quantifier used in the expression, the last thing it will try matching against is 1 or 0 characters.</p>
+</blockquote>
+<blockquote>
+<p>The reluctant quantifiers, however, take the opposite approach: They start at the beginning of the input string, then reluctantly eat one character at a time looking for a match. The last thing they try is the entire input string.</p>
+</blockquote>
+<blockquote>
+<p>Finally, the possessive quantifiers always eat the entire input string, trying once (and only once) for a match. Unlike the greedy quantifiers, possessive quantifiers never back off, even if doing so would allow the overall match to succeed.</p>
+</blockquote>
+<blockquote>
+<p>To illustrate, consider the input string xfooxxxxxxfoo.</p>
+</blockquote>
+ <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Enter your regex: .*foo  // greedy quantifier</span><br><span class="line">Enter input string to search: xfooxxxxxxfoo</span><br><span class="line">I found the text &quot;xfooxxxxxxfoo&quot; starting at index 0 and ending at index 13.</span><br><span class="line"></span><br><span class="line">Enter your regex: .*?foo  // reluctant quantifier</span><br><span class="line">Enter input string to search: xfooxxxxxxfoo</span><br><span class="line">I found the text &quot;xfoo&quot; starting at index 0 and ending at index 4.</span><br><span class="line">I found the text &quot;xxxxxxfoo&quot; starting at index 4 and ending at index 13.</span><br><span class="line"></span><br><span class="line">Enter your regex: .*+foo // possessive quantifier</span><br><span class="line">Enter input string to search: xfooxxxxxxfoo</span><br><span class="line">No match found.</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>The first example uses the greedy quantifier .<em> to find “anything”, zero or more times, followed by the letters “f” “o” “o”. Because the quantifier is greedy, the .</em> portion of the expression first eats the entire input string. At this point, the overall expression cannot succeed, because the last three letters (“f” “o” “o”) have already been consumed. So the matcher slowly backs off one letter at a time until the rightmost occurrence of “foo” has been regurgitated, at which point the match succeeds and the search ends.</p>
+</blockquote>
+<blockquote>
+<p>The second example, however, is reluctant, so it starts by first consuming “nothing”. Because “foo” doesn’t appear at the beginning of the string, it’s forced to swallow the first letter (an “x”), which triggers the first match at 0 and 4. Our test harness continues the process until the input string is exhausted. It finds another match at 4 and 13.</p>
+</blockquote>
+<blockquote>
+<p>The third example fails to find a match because the quantifier is possessive. In this case, the entire input string is consumed by .*+, leaving nothing left over to satisfy the “foo” at the end of the expression. Use a possessive quantifier for situations where you want to seize all of something without ever backing off; it will outperform the equivalent greedy quantifier in cases where the match is not immediately found.</p>
+</blockquote>
+<h2 id="Boundary-Matchers"><a href="#Boundary-Matchers" class="headerlink" title="Boundary Matchers"></a>Boundary Matchers</h2><table>
+<thead>
+<tr>
+<th>Boundary Construct</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>^</td>
+<td>The beginning of a line（行开头</td>
+</tr>
+<tr>
+<td>$</td>
+<td>The end of a line（行结尾</td>
+</tr>
+<tr>
+<td>\b</td>
+<td>A word boundary（单词边界</td>
+</tr>
+<tr>
+<td>\B</td>
+<td>A non-word boundary（非单词边界</td>
+</tr>
+<tr>
+<td>\A</td>
+<td>The beginning of the input（输入的起始位置</td>
+</tr>
+<tr>
+<td>\G</td>
+<td>The end of the previous match（上次匹配的结尾处</td>
+</tr>
+<tr>
+<td>\Z</td>
+<td>The end of the input but for the final terminator, if any</td>
+</tr>
+<tr>
+<td>\z</td>
+<td>The end of the input（输入的结束位置</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Embedded-Flag-Expressions"><a href="#Embedded-Flag-Expressions" class="headerlink" title="Embedded Flag Expressions"></a>Embedded Flag Expressions</h2><table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Equivalent Embedded Flag Expression</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pattern.CANON_EQ</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Pattern.CASE_INSENSITIVE</td>
+<td>(?i)</td>
+</tr>
+<tr>
+<td>Pattern.COMMENTS</td>
+<td>(?x)</td>
+</tr>
+<tr>
+<td>Pattern.MULTILINE</td>
+<td>(?m)</td>
+</tr>
+<tr>
+<td>Pattern.DOTALL</td>
+<td>(?s)</td>
+</tr>
+<tr>
+<td>Pattern.LITERAL</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Pattern.UNICODE_CASE</td>
+<td>(?u)</td>
+</tr>
+<tr>
+<td>Pattern.UNIX_LINES</td>
+<td>(?d)</td>
+</tr>
+</tbody>
+</table>
+<p>笔记来源： <a href="https://docs.oracle.com/javase/tutorial/essential/regex/index.html" target="_blank" rel="noopener">Regular Expressions</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/08/01/Interfaces-and-Inheritance/" data-toggle="tooltip" data-placement="top"
+                           title="Interfaces and Inheritance">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/08/01/Java-meta-annotations/" data-toggle="tooltip" data-placement="top"
+                           title="Java meta-annotations">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8zODUyNi8xNTA1NA==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Character-Classes"><span class="toc-text">Character Classes</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Predefined-Character-Classes"><span class="toc-text">Predefined Character Classes</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Quantifiers"><span class="toc-text">Quantifiers</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Differences-Among-Greedy-Reluctant-and-Possessive-Quantifiers"><span class="toc-text">Differences Among Greedy, Reluctant, and Possessive Quantifiers</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Boundary-Matchers"><span class="toc-text">Boundary Matchers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Embedded-Flag-Expressions"><span class="toc-text">Embedded Flag Expressions</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/Tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/Tags/#JavaBasic"
+                           title="JavaBasic">JavaBasic</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a href="https://echi.me">echisan</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/plentymorea">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/plentymore">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; PLTM 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    <br>
+                    Theme by <a href="https://github.com/Haojen/hexo-theme-Anisina">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://plentymore.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-123175280-1';
+    var _gaDomain = 'plentymore.github.io';
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<!-- <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script> -->
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="https://avatars3.githubusercontent.com/u/30522768?s=400&amp;u=a2ce54d7c63789391a0ba32b17792b7a21d64fbb&amp;v=4">
+</body>
+
+</html>

@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BLOG">
+    <meta name="keyword" content="pltm">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <!-- google-site-verification -->
+    <meta name="google-site-verification" content="fgG59EBWTLiWni3UcgCPhkEPiVDNCnLeaocoTWjctOg" />
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="alternate" type="application/atom+xml" title="PLTM" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        spring-boot自动配置原理｜PTLM blog
+        
+    </title>
+
+    <link rel="canonical" href="https://plentymore.github.io/2018/12/23/spring-boot自动配置原理/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+    <!-- Google AdSense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+             google_ad_client: "ca-pub-1771277850135880",
+             enable_page_level_ads: true
+          });
+    </script>
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    PLTM
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+                        
+							
+								
+							
+						
+                    
+					
+					
+						<li>
+							<a href="/about">About</a>
+						</li>
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="/images/3.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>spring-boot自动配置原理</h1>
+                    
+                    <span class="meta">
+                         作者 plentymore
+                        <span>
+                          日期 2018-12-23
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/Tags/#Spring Boot"
+                           title="Spring Boot">Spring Boot</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            spring-boot自动配置原理
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h2 id="效率对比"><a href="#效率对比" class="headerlink" title="效率对比"></a>效率对比</h2><p>Spring Boot的出现是为了简化Spring集成的项目(还有一些常用的第三方类库)的配置，在原本的Spring集成的项目中（比如spring-web，spring-data-jdbc等），无论是基于注解的配置还是基于xml的配置，你都需要进行很多的配置才能正常使用。比如spring-web，如果不使用Spring Boot，你需要：<br>① 添加所需要的依赖，spring-webmvc和javax.servlet-api共两个<br>② 继承<code>AbstractAnnotationConfigDispatcherServletInitializer</code>类，重写它的getRootConfigClasses，getServletConfigClasses和getServletMappings方法；<br>③ 创建一个WebConfig类配置你需要的Bean，并在上面加上<code>@Configuration</code>, <code>@EnableWebMvc</code>,<br>还有<code>@ComponentScan</code>注解<br>④ 写Controller类，上面加上<code>@Controller</code>和<code>@RequestMapping</code>注解<br>⑤ 把你的项目打包成war（记得把依赖也打包到lib目录），配置Servlet容器，启动Servlet容器，部署war到Servlet容器</p>
+<p>如果你需要配置一些SpringMVC的东西，比如视图解析器，消息转换器等，你需要新建一个类实现<code>WebMvcConfigurer</code>接口，然后根据重写接口里面的方法，然后在类上面加上<code>@Configuration</code>和<code>@EnableWebMvc</code>注解<br>如果你需要改变Servlet容器的服务端口，只能去改变外部的Servlet容器的配置，无法在项目的代码或者配置文件里面实现</p>
+<p>而用Spring Boot，你只需要<br>① 添加所需要的依赖，spring-boot-starter-web，就这一个就行<br>② 写Controller类，在上面加上<code>Controller</code>和<code>@RequestMapping</code>注解<br>③ 创建一个类（或者直接在Controller类上面）写一个启动（main）方法，比如<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(App.class);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在类上面加上<code>@SpringBootApplication</code>注解，然后运行这个main方法就可以了。<br>如果你需要配置SpringMVC，你只需要新建一个applicatinon.properties文件，然后输入<code>spring.mvc.</code>，在IDE里面会有提示有哪些属性可以配置，比如<code>spring.mvc.view.prefix=/WEB-INF/views/</code><br>如果你需要改变Servlet容器的服务端口，比如Tomcat，只需要在配置文件（applicatinon.properties）上设置一下，比如<code>server.port=8888</code>这样子就行了</p>
+<p>所以，Spring Boot的出现真的是一个非常巨大的进步，它使得我们原本要进行大量配置才能运行的项目变得只需要很少量的配置（甚至不需用任何配置）就可以运行。</p>
+<h2 id="原理揭秘"><a href="#原理揭秘" class="headerlink" title="原理揭秘"></a>原理揭秘</h2><p>那么这么牛逼的功能是怎样实现的呢？简单来说，其实是它帮你把原来需要你进行配置的属性都配置好了，然后你就不用配置了。<br>在Spring Boot项目的介绍里面，是这么说的：</p>
+<blockquote>
+<p>We take an opinionated view of the Spring platform and third-party libraries so you can get started with minimum fuss</p>
+</blockquote>
+<p>我个人认为意思大概就是，用他们认为的最合适的配置（一般是最通用的配置，大家都一般这样配置之类的）帮你配置好，然后你就可以不用配置很多东西快速上手了。</p>
+<h3 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h3><p>要启动一个Springboot应用，非常地简单<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(App.class);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在类上面加上<code>@SpringBootApplication</code>注解，然后在main方法里面调用<code>SpringApplication</code>的静态run方法就可以了。这个例子只需要一个依赖：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1.1.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="启动过程"><a href="#启动过程" class="headerlink" title="启动过程"></a>启动过程</h3><p>Springboot应用一般都通过上述的静态run方法启动，所以首先来看看这个方法做了什么，该方法在<code>SpringApplication</code>类里面（这个类在spring-boot模块下）<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ConfigurableApplicationContext <span class="title">run</span><span class="params">(Class&lt;?&gt; primarySource,</span></span></span><br><span class="line"><span class="function"><span class="params">		String... args)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> run(<span class="keyword">new</span> Class&lt;?&gt;[] &#123; primarySource &#125;, args);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ConfigurableApplicationContext <span class="title">run</span><span class="params">(Class&lt;?&gt;[] primarySources,</span></span></span><br><span class="line"><span class="function"><span class="params">		String[] args)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> SpringApplication(primarySources).run(args);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>该方法最终创建了一个SpringApplication实例，然后调用实例的run方法（非静态的），所以首先来看SpringApplicatino的创建过程，然后再看非静态run方法</p>
+<h4 id="SpringApplication"><a href="#SpringApplication" class="headerlink" title="SpringApplication"></a>SpringApplication</h4><p><a href="https://docs.spring.io/spring-boot/docs/2.1.1.RELEASE/api/org/springframework/boot/SpringApplication.html" target="_blank" rel="noopener">SpringApplication</a>可以用来启动Springboot应用，具体的启动过程(调用其非静态run方法)如下：</p>
+<ol>
+<li>创建一个<code>ApplicationContext</code>实例<br>具体的<code>ApplicationContext</code>实例的类型可能为三种类型，<code>AnnotationConfigServletWebServerApplicationContext</code>或者<code>AnnotationConfigReactiveWebServerApplicationContext</code>或者<code>AnnotationConfigApplicationContext</code>。要创建哪种类型的<code>ApplicationContext</code>，是根据classpath有哪些类文件判断的，判断逻辑在<code>WebApplicationType</code>的deduceFromClasspath方法里面<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> WebApplicationType <span class="title">deduceFromClasspath</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (ClassUtils.isPresent(WEBFLUX_INDICATOR_CLASS, <span class="keyword">null</span>)</span><br><span class="line">			&amp;&amp; !ClassUtils.isPresent(WEBMVC_INDICATOR_CLASS, <span class="keyword">null</span>)</span><br><span class="line">			&amp;&amp; !ClassUtils.isPresent(JERSEY_INDICATOR_CLASS, <span class="keyword">null</span>)) &#123;</span><br><span class="line">		<span class="keyword">return</span> WebApplicationType.REACTIVE;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> (String className : SERVLET_INDICATOR_CLASSES) &#123;</span><br><span class="line">		<span class="keyword">if</span> (!ClassUtils.isPresent(className, <span class="keyword">null</span>)) &#123;</span><br><span class="line">			<span class="keyword">return</span> WebApplicationType.NONE;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> WebApplicationType.SERVLET;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>如果classpath包含<code>org.springframework.web.reactive.DispatcherHandler</code>而不包含<code>org.springframework.web.servlet.DispatcherServlet</code>和<code>org.glassfish.jersey.servlet.ServletContainer</code>的时候，将创建<code>AnnotationConfigReactiveWebServerApplicationContext</code></p>
+<p>如果上面的条件不满足，则继续检测classpath是否包含<code>javax.servlet.Servlet</code>或者<code>org.springframework.web.context.ConfigurableWebApplicationContext</code>，如果是，将创建<code>AnnotationConfigServletWebServerApplicationContext</code>，如果不是，将创建<code>AnnotationConfigApplicationContext</code></p>
+<hr>
+<ol start="2">
+<li>注册<code>CommandLinePropertySource</code>来暴露命令行参数，使得这些参数成为Spring配置属性的一部分</li>
+</ol>
+<hr>
+<ol start="3">
+<li>刷新<code>ApplicationContext</code>，即调用它的refresh方法，这将会创建所有非延迟加载的单例Bean的实例<br>最终调用的方法为<code>AbstractApplicationContext</code>的refresh方法，具体的步骤在另一篇讲解Spring IoC原理的博客已经介绍过了</li>
+</ol>
+<hr>
+<ol start="4">
+<li>调用<code>CommandLineRunner</code>类型的Bean实例的run方法<br>所以让自己的启动类或者任意Bean实现<code>CommandLineRunner</code>接口，就可以在Springboot应用启动后执行自己想要添加的其他逻辑</li>
+</ol>
+<p>非静态run方法的代码如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ConfigurableApplicationContext <span class="title">run</span><span class="params">(String... args)</span> </span>&#123;</span><br><span class="line">	StopWatch stopWatch = <span class="keyword">new</span> StopWatch();</span><br><span class="line">	stopWatch.start();</span><br><span class="line">	ConfigurableApplicationContext context = <span class="keyword">null</span>;</span><br><span class="line">	Collection&lt;SpringBootExceptionReporter&gt; exceptionReporters = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">	configureHeadlessProperty();</span><br><span class="line">	SpringApplicationRunListeners listeners = getRunListeners(args);</span><br><span class="line">	listeners.starting();</span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		<span class="comment">// 这里创建了一个CommandLinePropertySource实例</span></span><br><span class="line">		ApplicationArguments applicationArguments = <span class="keyword">new</span> DefaultApplicationArguments(</span><br><span class="line">				args);</span><br><span class="line">		ConfigurableEnvironment environment = prepareEnvironment(listeners,</span><br><span class="line">				applicationArguments);</span><br><span class="line">		configureIgnoreBeanInfo(environment);</span><br><span class="line">		Banner printedBanner = printBanner(environment);</span><br><span class="line">		<span class="comment">// 对应步骤1</span></span><br><span class="line">		context = createApplicationContext();</span><br><span class="line">		exceptionReporters = getSpringFactoriesInstances(</span><br><span class="line">				SpringBootExceptionReporter.class,</span><br><span class="line">				<span class="keyword">new</span> Class[] &#123; ConfigurableApplicationContext.class &#125;, context);</span><br><span class="line">		<span class="comment">// 对应步骤2，会把上面创建的CommandLinePropertySource实例注册到beanFactory</span></span><br><span class="line">		prepareContext(context, environment, listeners, applicationArguments,</span><br><span class="line">				printedBanner);</span><br><span class="line">		<span class="comment">// 对应步骤3</span></span><br><span class="line">		refreshContext(context);</span><br><span class="line">		afterRefresh(context, applicationArguments);</span><br><span class="line">		stopWatch.stop();</span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>.logStartupInfo) &#123;</span><br><span class="line">			<span class="keyword">new</span> StartupInfoLogger(<span class="keyword">this</span>.mainApplicationClass)</span><br><span class="line">					.logStarted(getApplicationLog(), stopWatch);</span><br><span class="line">		&#125;</span><br><span class="line">		listeners.started(context);</span><br><span class="line">		<span class="comment">// 对应步骤4</span></span><br><span class="line">		callRunners(context, applicationArguments);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">catch</span> (Throwable ex) &#123;</span><br><span class="line">		handleRunFailure(context, ex, exceptionReporters, listeners);</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(ex);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		listeners.running(context);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">catch</span> (Throwable ex) &#123;</span><br><span class="line">		handleRunFailure(context, ex, exceptionReporters, <span class="keyword">null</span>);</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(ex);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> context;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="SpringBootApplication"><a href="#SpringBootApplication" class="headerlink" title="@SpringBootApplication"></a>@SpringBootApplication</h3><p>在启动类中，需要加上<code>@SpringBootApplication</code>注解，这个注解的作用就是添加一些Bean来实现自动配置的功能，这个注解可以说是Springboot自动配置的核心。</p>
+<p>查看该注解的源码，可以发现，它里面包含了其它的几个注解<code>@SpringBootConfiguration</code>，<code>@EnableAutoConfiguration</code>和<code>@ComponentScan</code>。</p>
+<h4 id="SpringBootConfiguration"><a href="#SpringBootConfiguration" class="headerlink" title="@SpringBootConfiguration"></a>@SpringBootConfiguration</h4><p><code>@SpringBootConfiguration</code>注解其实就是<code>@Configuration</code>注解<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Target(ElementType.TYPE)</span><br><span class="line">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="line">@Documented</span><br><span class="line">@Configuration</span><br><span class="line">public @interface SpringBootConfiguration &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>文档上说它可以用来代替<code>@Configuration</code>注解，这样一来被它标注的配置类可以被自动发现（比如在测试中）。每个Springboot应用都应该只包含一个<code>@SpringBootConfiguration</code>注解，一般情况下我们不应该直接使用这个注解，而是通过<code>@SpringBootApplication</code>注解来间接地使用</p>
+<h4 id="ComponentScan"><a href="#ComponentScan" class="headerlink" title="@ComponentScan"></a>@ComponentScan</h4><p>这个就是Spring Framework里面的<code>@ComponentScan</code>注解，作用是开启扫描<code>@Configuration</code>类配置的功能，并指定扫描路径等，详情可以看<a href="https://docs.spring.io/spring/docs/5.1.3.RELEASE/javadoc-api/org/springframework/context/annotation/ComponentScan.html" target="_blank" rel="noopener">文档</a></p>
+<h4 id="EnableAutoConfiguration"><a href="#EnableAutoConfiguration" class="headerlink" title="@EnableAutoConfiguration"></a>@EnableAutoConfiguration</h4><p><a href="https://docs.spring.io/spring-boot/docs/2.1.1.RELEASE/api/org/springframework/boot/autoconfigure/EnableAutoConfiguration.html" target="_blank" rel="noopener">@EnableAutoConfiguration</a>在spring-boot-autoconfiguration模块下，它的作用其实就是开启自动配置功能。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Target</span>(ElementType.TYPE)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Inherited</span></span><br><span class="line"><span class="meta">@AutoConfigurationPackage</span></span><br><span class="line"><span class="meta">@Import</span>(AutoConfigurationImportSelector.class)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> EnableAutoConfiguration &#123;</span><br><span class="line"></span><br><span class="line">	String ENABLED_OVERRIDE_PROPERTY = <span class="string">"spring.boot.enableautoconfiguration"</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Exclude specific auto-configuration classes such that they will never be applied.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the classes to exclude</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	Class&lt;?&gt;[] exclude() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Exclude specific auto-configuration class names such that they will never be</span></span><br><span class="line"><span class="comment">	 * applied.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the class names to exclude</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@since</span> 1.3.0</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	String[] excludeName() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>@EnableAutoConfiguration</code>里面包含了<code>@AutoConfigurationPackage</code>和<code>@Import</code>注解</p>
+<p><code>@AutoConfigurationPackage</code>注解会把被它注解的类的包名设置为自动配置包名（把包名注册到AutoConfigurationPackages）</p>
+<p><code>@Import</code>注解会导入一个<code>ImportSelector</code>，然后<code>ImportSelector</code>会调用其selectImports方法返回配置类的名称，在这里，<code>@Import</code>导入了<code>AutoConfigurationImportSelector</code>，它的selectImports方法如下<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> String[] selectImports(AnnotationMetadata annotationMetadata) &#123;</span><br><span class="line">	<span class="keyword">if</span> (!isEnabled(annotationMetadata)) &#123;</span><br><span class="line">		<span class="keyword">return</span> NO_IMPORTS;</span><br><span class="line">	&#125;</span><br><span class="line">	AutoConfigurationMetadata autoConfigurationMetadata = AutoConfigurationMetadataLoader</span><br><span class="line">			.loadMetadata(<span class="keyword">this</span>.beanClassLoader);</span><br><span class="line">	AutoConfigurationEntry autoConfigurationEntry = getAutoConfigurationEntry(</span><br><span class="line">			autoConfigurationMetadata, annotationMetadata);</span><br><span class="line">	<span class="keyword">return</span> StringUtils.toStringArray(autoConfigurationEntry.getConfigurations());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>重点看它里面调用的getAutoConfigurationEntry方法，这个方法会获取所有的自动配置类</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> AutoConfigurationEntry <span class="title">getAutoConfigurationEntry</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">		AutoConfigurationMetadata autoConfigurationMetadata,</span></span></span><br><span class="line"><span class="function"><span class="params">		AnnotationMetadata annotationMetadata)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (!isEnabled(annotationMetadata)) &#123;</span><br><span class="line">		<span class="keyword">return</span> EMPTY_ENTRY;</span><br><span class="line">	&#125;</span><br><span class="line">	AnnotationAttributes attributes = getAttributes(annotationMetadata);</span><br><span class="line">    <span class="comment">// 继续查看getCandidateConfigurations方法</span></span><br><span class="line">	List&lt;String&gt; configurations = getCandidateConfigurations(annotationMetadata,</span><br><span class="line">			attributes);</span><br><span class="line">	configurations = removeDuplicates(configurations);</span><br><span class="line">	Set&lt;String&gt; exclusions = getExclusions(annotationMetadata, attributes);</span><br><span class="line">	checkExcludedClasses(configurations, exclusions);</span><br><span class="line">	configurations.removeAll(exclusions);</span><br><span class="line">	configurations = filter(configurations, autoConfigurationMetadata);</span><br><span class="line">	fireAutoConfigurationImportEvents(configurations, exclusions);</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> AutoConfigurationEntry(configurations, exclusions);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>getAutoConfigurationEntry方法将调用getCandidateConfigurations方法来获取所有的配置类并转换成字符串</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> List&lt;String&gt; <span class="title">getCandidateConfigurations</span><span class="params">(AnnotationMetadata metadata,</span></span></span><br><span class="line"><span class="function"><span class="params">		AnnotationAttributes attributes)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// 查看这个</span></span><br><span class="line">	List&lt;String&gt; configurations = SpringFactoriesLoader.loadFactoryNames(</span><br><span class="line">			getSpringFactoriesLoaderFactoryClass(), getBeanClassLoader());</span><br><span class="line">	Assert.notEmpty(configurations,</span><br><span class="line">			<span class="string">"No auto configuration classes found in META-INF/spring.factories. If you "</span></span><br><span class="line">					+ <span class="string">"are using a custom packaging, make sure that file is correct."</span>);</span><br><span class="line">	<span class="keyword">return</span> configurations;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到最终将调用<code>SpringFactoriesLoader</code>的loadFactoryNames方法，该方法是用来从<code>META-INF/spring.factories</code>文件里面获取某个factory的具体实现类的全限定名的（可能有多个），Springboot利用这个方法扫描自动配置类，Springboot的自动配置类不止一个，同时Springboot把这些自动配置类的全限定名也放在这个文件下（<code>META-INF/spring.factories</code>），这些自动给配置类等的key为<code>org.springframework.boot.autoconfigure.EnableAutoConfiguration</code>，如下图：</p>
+<p><img src="https://i.imgur.com/FgAzTcG.png" alt="Imgur"></p>
+<p>所以，将从这个文件里面读取<code>org.springframework.boot.autoconfigure.EnableAutoConfiguration</code>的所有值（使用<code>MultiValueMap</code>存放），这些值就是自动配置类（类上面都有<code>@Configuratino</code>注解）的全限定名。</p>
+<p><code>SpringFactoriesLoader</code>的loadFactoryNames方法本来是用来在<code>META-INF/spring.factories</code>文件查找某个factory接口或者抽象类的实现类的，一般会把factory接口或者抽象类作为key，实现类作为value存放到<code>META-INF/spring.factories</code>。Springboot利用了这个机制来查找自动配置类，所以Springboot在<code>META-INF/spring.factories</code>文件中存放了以<code>EnableAutoConfiguration</code>的全限定名作为key，以自动配置类的全限定名作为value的多值Map</p>
+<p><code>SpringFactoriesLoader</code>的loadFactoryNames方法有两个参数，第一个参数为<code>Class</code>类型，具体应为factory接口或者抽象类，可以看到在getCandidateConfigurations方法中调用了getSpringFactoriesLoaderFactoryClass方法来获取factory接口或抽象类，该方法直接返回了EnableAutoConfiguration.class，所以将使用<code>EnableAutoConfiguration</code>类的全限名称作为key筛选出所有的自动配置类</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">protected</span> Class&lt;?&gt; getSpringFactoriesLoaderFactoryClass() &#123;</span><br><span class="line">	<span class="keyword">return</span> EnableAutoConfiguration.class;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第二个参数为<code>ClassLoader</code>类型，如果为空则使用默认的<code>Classloader</code></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;String&gt; <span class="title">loadFactoryNames</span><span class="params">(Class&lt;?&gt; factoryClass, @Nullable ClassLoader classLoader)</span> </span>&#123;</span><br><span class="line">	String factoryClassName = factoryClass.getName();</span><br><span class="line">	<span class="comment">// 首先调用loadSpringFactories方法，这或加载META-INF/spring.factories文件下的所有键值对</span></span><br><span class="line">	<span class="comment">// 接着以factoryClassName为key，选出所有的自动配置类</span></span><br><span class="line">	<span class="comment">// 在这里key就是EnableAutoConfiguration类的全限定名</span></span><br><span class="line">	<span class="keyword">return</span> loadSpringFactories(classLoader).getOrDefault(factoryClassName, Collections.emptyList());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> Map&lt;String, List&lt;String&gt;&gt; loadSpringFactories(<span class="meta">@Nullable</span> ClassLoader classLoader) &#123;</span><br><span class="line">	MultiValueMap&lt;String, String&gt; result = cache.get(classLoader);</span><br><span class="line">	<span class="keyword">if</span> (result != <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> result;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		<span class="comment">// FACTORIES_RESOURCE_LOCATION的值为META-INF/spring.factories</span></span><br><span class="line">		<span class="comment">// 所以将从META-INF/spring.factories文件加载所有的键值对</span></span><br><span class="line">		Enumeration&lt;URL&gt; urls = (classLoader != <span class="keyword">null</span> ?</span><br><span class="line">				classLoader.getResources(FACTORIES_RESOURCE_LOCATION) :</span><br><span class="line">				ClassLoader.getSystemResources(FACTORIES_RESOURCE_LOCATION));</span><br><span class="line">		result = <span class="keyword">new</span> LinkedMultiValueMap&lt;&gt;();</span><br><span class="line">		<span class="keyword">while</span> (urls.hasMoreElements()) &#123;</span><br><span class="line">			URL url = urls.nextElement();</span><br><span class="line">			UrlResource resource = <span class="keyword">new</span> UrlResource(url);</span><br><span class="line">			Properties properties = PropertiesLoaderUtils.loadProperties(resource);</span><br><span class="line">			<span class="keyword">for</span> (Map.Entry&lt;?, ?&gt; entry : properties.entrySet()) &#123;</span><br><span class="line">				String factoryClassName = ((String) entry.getKey()).trim();</span><br><span class="line">				<span class="keyword">for</span> (String factoryName : StringUtils.commaDelimitedListToStringArray((String) entry.getValue())) &#123;</span><br><span class="line">					result.add(factoryClassName, factoryName.trim());</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		cache.put(classLoader, result);</span><br><span class="line">		<span class="keyword">return</span> result;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">catch</span> (IOException ex) &#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Unable to load factories from location ["</span> +</span><br><span class="line">				FACTORIES_RESOURCE_LOCATION + <span class="string">"]"</span>, ex);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以Springboot是从<code>META-INF/spring.factories</code>文件里面加载自动配置类的，获取到这些自动配置类的全限定名之后，这些配置类<code>ApplicationContext</code>的refresh方法的时候，被<code>ConfigurationClassPostProcessor</code>这个<code>BeanDefinitionRegistryPostProcessor</code>所处理（即解析配置类里面配置的Bean，然后将<code>BeanDefintion</code>注册到<code>BeanFactory</code>），然后这些自动配置类配置的Bean会交由Spring IoC容器管理。</p>
+<p>需要注意的是，Springboot会加载所有jar包里面的<code>META-INF/spring.factories</code>文件，而不仅仅是spring-boot-autoconfiguration模型下的<code>META-INF/spring.factories</code>文件，所以，如果要自己写一个Springboot自动配置模块，可以自己创建一个<code>META-INF/spring.factories</code>文件，然后以<code>EnableAutoConfiguration</code>类的全限定名为key，自动配置类的全限定名为value，写到文件里面，如下图所示</p>
+<p><img src="https://i.imgur.com/oHDP1rP.png" alt="Imgur"></p>
+<h3 id="自动配置例子"><a href="#自动配置例子" class="headerlink" title="自动配置例子"></a>自动配置例子</h3><p>以Spring异步功能的自动配置为例，在spring-boot-auto-configuration模块下，有一个<code>TaskExecutionAutoConfiguration</code><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@ConditionalOnClass</span>(ThreadPoolTaskExecutor.class)</span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableConfigurationProperties</span>(TaskExecutionProperties.class)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TaskExecutionAutoConfiguration</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Bean name of the application &#123;<span class="doctag">@link</span> TaskExecutor&#125;.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String APPLICATION_TASK_EXECUTOR_BEAN_NAME = <span class="string">"applicationTaskExecutor"</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> TaskExecutionProperties properties;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> ObjectProvider&lt;TaskExecutorCustomizer&gt; taskExecutorCustomizers;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> ObjectProvider&lt;TaskDecorator&gt; taskDecorator;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">TaskExecutionAutoConfiguration</span><span class="params">(TaskExecutionProperties properties,</span></span></span><br><span class="line"><span class="function"><span class="params">			ObjectProvider&lt;TaskExecutorCustomizer&gt; taskExecutorCustomizers,</span></span></span><br><span class="line"><span class="function"><span class="params">			ObjectProvider&lt;TaskDecorator&gt; taskDecorator)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.properties = properties;</span><br><span class="line">		<span class="keyword">this</span>.taskExecutorCustomizers = taskExecutorCustomizers;</span><br><span class="line">		<span class="keyword">this</span>.taskDecorator = taskDecorator;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 这个Bean是用来创建TaskExecutor的</span></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="meta">@ConditionalOnMissingBean</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> TaskExecutorBuilder <span class="title">taskExecutorBuilder</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		TaskExecutionProperties.Pool pool = <span class="keyword">this</span>.properties.getPool();</span><br><span class="line">		TaskExecutorBuilder builder = <span class="keyword">new</span> TaskExecutorBuilder();</span><br><span class="line">		builder = builder.queueCapacity(pool.getQueueCapacity());</span><br><span class="line">		builder = builder.corePoolSize(pool.getCoreSize());</span><br><span class="line">		builder = builder.maxPoolSize(pool.getMaxSize());</span><br><span class="line">		builder = builder.allowCoreThreadTimeOut(pool.isAllowCoreThreadTimeout());</span><br><span class="line">		builder = builder.keepAlive(pool.getKeepAlive());</span><br><span class="line">		builder = builder.threadNamePrefix(<span class="keyword">this</span>.properties.getThreadNamePrefix());</span><br><span class="line">		builder = builder.customizers(<span class="keyword">this</span>.taskExecutorCustomizers);</span><br><span class="line">		builder = builder.taskDecorator(<span class="keyword">this</span>.taskDecorator.getIfUnique());</span><br><span class="line">		<span class="keyword">return</span> builder;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 这个Bean是一个TaskExecutor</span></span><br><span class="line">    <span class="comment">// 如果没有手动配置其Executor，异步方法执行的时候将会使用它来执行</span></span><br><span class="line">    <span class="comment">// Bean名称为applicationTaskExecutor</span></span><br><span class="line">	<span class="meta">@Lazy</span></span><br><span class="line">	<span class="meta">@Bean</span>(name = APPLICATION_TASK_EXECUTOR_BEAN_NAME)</span><br><span class="line">	<span class="meta">@ConditionalOnMissingBean</span>(Executor.class)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> ThreadPoolTaskExecutor <span class="title">applicationTaskExecutor</span><span class="params">(TaskExecutorBuilder builder)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> builder.build();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>该配置类配置了两个Bean，一个是<code>TaskExecutorBuilder</code>类型的，一个是<code>ThreadPoolTaskExecutor</code>类型的</p>
+<p><code>TaskExecutorBuilder</code>用来构建<code>ThreadPoolTaskExecutor</code>，可以通过设置<code>TaskExecutionProperties</code>的属性来改变<code>ThreadPoolTaskExecutor</code>里面的参数，比如核心线程数，最大线程数等，具体可以在<code>application.properties</code>文件里面使用相关的参数进行设置（前缀为<code>spring.task.execution</code>），如下图：</p>
+<p><img src="https://i.imgur.com/mbmphCa.png" alt="Imgur"></p>
+<p>要知道具体有哪些参数可以设置，除了在<code>application.properties</code>使用IDE的自动提示功能之外，还可以直接查看相应的配置参数类的属性，在这个例子，配置参数类为<code>TaskExecutionProperties</code>，为什么是这个？因为在<code>TaskExecutionAutoConfiguration</code>类里面这样一个注解：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@EnableConfigurationProperties</span>(TaskExecutionProperties.class)</span><br></pre></td></tr></table></figure></p>
+<p>它表示使用<code>TaskExecutionProperties</code>作为配置参数类，这个类里面的所有成员变量都可以作为配置参数<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@ConfigurationProperties</span>(<span class="string">"spring.task.execution"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TaskExecutionProperties</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 这个是线程池的核心参数</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> Pool pool = <span class="keyword">new</span> Pool();</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Prefix to use for the names of newly created threads.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="comment">// 这个是线程池的线程的前缀</span></span><br><span class="line">	<span class="keyword">private</span> String threadNamePrefix = <span class="string">"task-"</span>;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> Pool <span class="title">getPool</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.pool;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getThreadNamePrefix</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.threadNamePrefix;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setThreadNamePrefix</span><span class="params">(String threadNamePrefix)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.threadNamePrefix = threadNamePrefix;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Pool</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="comment">/**</span></span><br><span class="line"><span class="comment">		 * Queue capacity. An unbounded capacity does not increase the pool and therefore</span></span><br><span class="line"><span class="comment">		 * ignores the "max-size" property.</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		<span class="comment">// 任务队列的容量</span></span><br><span class="line">		<span class="keyword">private</span> <span class="keyword">int</span> queueCapacity = Integer.MAX_VALUE;</span><br><span class="line"></span><br><span class="line">		<span class="comment">/**</span></span><br><span class="line"><span class="comment">		 * Core number of threads.</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		<span class="comment">// 核心线程数</span></span><br><span class="line">		<span class="keyword">private</span> <span class="keyword">int</span> coreSize = <span class="number">8</span>;</span><br><span class="line"></span><br><span class="line">		<span class="comment">/**</span></span><br><span class="line"><span class="comment">		 * Maximum allowed number of threads. If tasks are filling up the queue, the pool</span></span><br><span class="line"><span class="comment">		 * can expand up to that size to accommodate the load. Ignored if the queue is</span></span><br><span class="line"><span class="comment">		 * unbounded.</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		<span class="comment">// 最大线程数</span></span><br><span class="line">		<span class="keyword">private</span> <span class="keyword">int</span> maxSize = Integer.MAX_VALUE;</span><br><span class="line"></span><br><span class="line">		<span class="comment">/**</span></span><br><span class="line"><span class="comment">		 * Whether core threads are allowed to time out. This enables dynamic growing and</span></span><br><span class="line"><span class="comment">		 * shrinking of the pool.</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		<span class="comment">// 是否允许核心线程在空闲时间到达某个阈值后被销毁</span></span><br><span class="line">		<span class="keyword">private</span> <span class="keyword">boolean</span> allowCoreThreadTimeout = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">		<span class="comment">/**</span></span><br><span class="line"><span class="comment">		 * Time limit for which threads may remain idle before being terminated.</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		<span class="comment">// 表示线程最大空闲时间，超过这个值后线程将会被终止</span></span><br><span class="line">		<span class="keyword">private</span> Duration keepAlive = Duration.ofSeconds(<span class="number">60</span>);</span><br><span class="line">		<span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>接下来看看<code>TaskExecutorBuilder</code>构建的taskExecotur是怎样的（是什么类型，核心线程数多少，任务队列是怎样的等等）</p>
+<p>在<code>TaskExecutorBuilder</code>的build方法里面看到它构建的<code>taskExecotur</code>具体类型为<code>ThreadPoolTaskExecutor</code>，首先会使用配置文件的配置参数来设置<code>ThreadPoolTaskExecutor</code>的各种参数的值，加上我们没有配置任何的参数，则会使用<code>ThreadPoolTaskExecutor</code>的默认值。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadPoolTaskExecutor</span> <span class="keyword">extends</span> <span class="title">ExecutorConfigurationSupport</span></span></span><br><span class="line"><span class="class">		<span class="keyword">implements</span> <span class="title">AsyncListenableTaskExecutor</span>, <span class="title">SchedulingTaskExecutor</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> Object poolSizeMonitor = <span class="keyword">new</span> Object();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 核心线程数为1</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> corePoolSize = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 最大线程数不作限制</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> maxPoolSize = Integer.MAX_VALUE;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 线程最大空闲时间为60秒</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> keepAliveSeconds = <span class="number">60</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 队列容量不作限制（无界队列）</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> queueCapacity = Integer.MAX_VALUE;</span><br><span class="line">   </span><br><span class="line">    <span class="comment">// 核心线程不超时</span></span><br><span class="line">    <span class="comment">// 即核心线程空闲时间超过keepAliveSeconds也不会被终止</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">boolean</span> allowCoreThreadTimeOut = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 任务装饰器，可以做很多事情</span></span><br><span class="line">    <span class="comment">// 它可以对要执行的任务做任何事情，甚至替换掉原来的任务</span></span><br><span class="line">    <span class="comment">// 详情请查看文档</span></span><br><span class="line">	<span class="meta">@Nullable</span></span><br><span class="line">	<span class="keyword">private</span> TaskDecorator taskDecorator;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 封装了真正的ExecutorService，用来来执行任务</span></span><br><span class="line">    <span class="comment">// 不知道为什么不直接用Spring的AsyncTaskExecutor</span></span><br><span class="line">	<span class="meta">@Nullable</span></span><br><span class="line">	<span class="keyword">private</span> ThreadPoolExecutor threadPoolExecutor;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 这个方法是在该Bean实例创建完成后被调用的</span></span><br><span class="line">    <span class="comment">// 因为它的父类实现了InitializingBean接口</span></span><br><span class="line">    <span class="comment">// 它会创建一个ThreadPoolExecutor（JDK里面的）实例</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> ExecutorService <span class="title">initializeExecutor</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">			ThreadFactory threadFactory, RejectedExecutionHandler rejectedExecutionHandler)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 默认值为Integer.MAX_VALUE，所以这里会创建一个LinkedBlockingQueue</span></span><br><span class="line">        <span class="comment">// 如果queueCapacity小于等于0，则会创建一个SynchronousQueue</span></span><br><span class="line">		BlockingQueue&lt;Runnable&gt; queue = createQueue(<span class="keyword">this</span>.queueCapacity);</span><br><span class="line"></span><br><span class="line">		ThreadPoolExecutor executor;</span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>.taskDecorator != <span class="keyword">null</span>) &#123;</span><br><span class="line">			executor = <span class="keyword">new</span> ThreadPoolExecutor(</span><br><span class="line">					<span class="keyword">this</span>.corePoolSize, <span class="keyword">this</span>.maxPoolSize, <span class="keyword">this</span>.keepAliveSeconds, TimeUnit.SECONDS,</span><br><span class="line">					queue, threadFactory, rejectedExecutionHandler) &#123;</span><br><span class="line">				<span class="meta">@Override</span></span><br><span class="line">				<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable command)</span> </span>&#123;</span><br><span class="line">					Runnable decorated = taskDecorator.decorate(command);</span><br><span class="line">					<span class="keyword">if</span> (decorated != command) &#123;</span><br><span class="line">						decoratedTaskMap.put(decorated, command);</span><br><span class="line">					&#125;</span><br><span class="line">					<span class="keyword">super</span>.execute(decorated);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			executor = <span class="keyword">new</span> ThreadPoolExecutor(</span><br><span class="line">					<span class="keyword">this</span>.corePoolSize, <span class="keyword">this</span>.maxPoolSize, <span class="keyword">this</span>.keepAliveSeconds, TimeUnit.SECONDS,</span><br><span class="line">					queue, threadFactory, rejectedExecutionHandler);</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>.allowCoreThreadTimeOut) &#123;</span><br><span class="line">			executor.allowCoreThreadTimeOut(<span class="keyword">true</span>);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">this</span>.threadPoolExecutor = executor;</span><br><span class="line">		<span class="keyword">return</span> executor;</span><br><span class="line">	&#125;	</span><br><span class="line">	<span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在Spring Framework中，没有自己配置线程池话会使用<code>SimpleAsyncTaskExecutor</code>作为taskExecutor来执行异步方法，每调用一个异步方法就创建一个新的线程，而在Springboot里面已经自动给配置了一个taskExecutor，所以就不会使用<code>SimpleAsyncTaskExecutor</code>，而是使用Springboot里面自动配置的<code>ThreadPoolTaskExecutor</code>（虽然默认核心线程数为1，但是总算能复用线程了，比<code>SimpleAsyncTaskExecutor</code>好很多了，而且可以通过配置文件设置这些参数）</p>
+<p>需要注意的是，在Springboot应用里面依然需要加上<code>@EnableAsync</code>注解开启Spring的异步功能，不然即使Springboot配置好了线程池，而且类或者方法上面加上了<code>@Async</code>注解也是无法异步执行的。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Springboot的自动配置功能其实就是通过各种配置类来配置各种需要使用到的Bean，自动配置类从<code>META-INF/spring.factories</code>文件里面加载。这些自动配置类并不是一定会生效的，通常会根据classpath是否包含某个类或者模块来决定是否激活某个Bean配置（主要靠<code>@Conditional</code>注解实现），这使得Springboot变得十分智能，而不只是无脑地配置一堆Bean。</p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/12/24/Spring-IoC原理/" data-toggle="tooltip" data-placement="top"
+                           title="Spring IoC原理">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/12/22/SpringMVC原理浅析/" data-toggle="tooltip" data-placement="top"
+                           title="SpringMVC原理浅析">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8zODUyNi8xNTA1NA==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#效率对比"><span class="toc-text">效率对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原理揭秘"><span class="toc-text">原理揭秘</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一个例子"><span class="toc-text">一个例子</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#启动过程"><span class="toc-text">启动过程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#SpringApplication"><span class="toc-text">SpringApplication</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SpringBootApplication"><span class="toc-text">@SpringBootApplication</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#SpringBootConfiguration"><span class="toc-text">@SpringBootConfiguration</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ComponentScan"><span class="toc-text">@ComponentScan</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#EnableAutoConfiguration"><span class="toc-text">@EnableAutoConfiguration</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自动配置例子"><span class="toc-text">自动配置例子</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/Tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/Tags/#Spring Boot"
+                           title="Spring Boot">Spring Boot</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a href="https://echi.me">echisan</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/plentymorea">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/plentymore">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; PLTM 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    <br>
+                    Theme by <a href="https://github.com/Haojen/hexo-theme-Anisina">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://plentymore.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-123175280-1';
+    var _gaDomain = 'plentymore.github.io';
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<!-- <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script> -->
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="https://avatars3.githubusercontent.com/u/30522768?s=400&amp;u=a2ce54d7c63789391a0ba32b17792b7a21d64fbb&amp;v=4">
+</body>
+
+</html>

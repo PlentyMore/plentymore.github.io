@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BLOG">
+    <meta name="keyword" content="pltm">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <!-- google-site-verification -->
+    <meta name="google-site-verification" content="fgG59EBWTLiWni3UcgCPhkEPiVDNCnLeaocoTWjctOg" />
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="alternate" type="application/atom+xml" title="PLTM" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Spring @Configurable基本用法｜PTLM blog
+        
+    </title>
+
+    <link rel="canonical" href="https://plentymore.github.io/2018/12/11/Spring-Configurable基本用法/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+    <!-- Google AdSense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+             google_ad_client: "ca-pub-1771277850135880",
+             enable_page_level_ads: true
+          });
+    </script>
+<link rel="stylesheet" href="\assets\css\APlayer.min.css" class="aplayer-style-marker">
+<script src="\assets\js\APlayer.min.js" class="aplayer-script-marker"></script>
+<script src="\assets\js\Meting.min.js" class="meting-script-marker"></script>
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    PLTM
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+                        
+							
+								
+							
+						
+                    
+					
+					
+						<li>
+							<a href="/about">About</a>
+						</li>
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="/images/3.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Spring @Configurable基本用法</h1>
+                    
+                    <span class="meta">
+                         作者 plentymore
+                        <span>
+                          日期 2018-12-11
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/Tags/#Spring"
+                           title="Spring">Spring</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Spring @Configurable基本用法
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                
+    <div id="aplayer-DSTtKWqB" class="aplayer aplayer-tag-marker meting-tag-marker" data-id="1316589134" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#ad7a86"></div>
+<p>关于<code>@Configurable</code>的用法，<a href="https://docs.spring.io/spring/docs/5.1.3.RELEASE/spring-framework-reference/core.html#aop-atconfigurable" target="_blank" rel="noopener">Spring文档</a>有详细的描述，不过由于看得比较粗略，后面实际使用的时候踩了不少坑。这个注解有以下几个用途：</p>
+<h3 id="为非Spring管理的对象注入Spring-Bean"><a href="#为非Spring管理的对象注入Spring-Bean" class="headerlink" title="为非Spring管理的对象注入Spring Bean"></a>为非Spring管理的对象注入Spring Bean</h3><p>非Spring管理的对象，这里指的是我们自己new的对象，比如<code>Dog dog = new Dog()</code>，这个dog对象的生命周期不是由Spring管理的，而是我们自己创建的对象，根据文档的说法，我们只要在类上面加上<code>@Configurable</code>注解，就可以让Spring来配置这些非Spring管理的对象了，即为它们注入需要的依赖（实际上还有很多额外的工作要做）。下面有个例子</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Account类，使用new操作符号手动创建，不交由Spring Container管理</span></span><br><span class="line"><span class="meta">@Configurable</span>(autowire = Autowire.BY_TYPE)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Account</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    Dog dog;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">output</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(dog);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的<code>Account</code>类使用的是<code>@Configurable</code>，而不是<code>@Configuration</code>，<code>@Configuration</code>类似于XML配置里面的<code>&lt;beans&gt;&lt;/beans&gt;</code>，我们可以在<code>&lt;beans&gt;&lt;/beans&gt;</code>里面声明要交由Spring Cotainer创建和管理的Bean，因此我们可以在<code>@Configuration</code>注解的类里面使用<code>@Bean</code>注解达到同样的效果，注意被<code>@Configuration</code>标注的类也会被Spring Container创建和管理，因此它也是一个Bean。</p>
+<p>被<code>@Configuration</code>标注的类，能够被Spring配置，然后当我们手动创建<code>Account</code>对象的时候(<code>Account acc = new Account()</code>)，Spring将会用创建一个<code>Account</code>的Bean，然后这个Bean能被Spring正常地注入需要的属性，接着Spring使用这个Bean来设置我们刚刚创建的<br><code>Account</code>对象（acc）的属性，最后返回的对象的属性就和Bean的一样了。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 配置类，使用注解的方式创建Bean</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableLoadTimeWeaving</span></span><br><span class="line"><span class="meta">@EnableSpringConfigured</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Config</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 这个Bean将会被注入到Account的属性中</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function">Dog <span class="title">dog</span><span class="params">()</span></span>&#123;</span><br><span class="line">        Dog d = <span class="keyword">new</span> Dog();</span><br><span class="line">        d.setId(<span class="number">1</span>);</span><br><span class="line">        d.setName(<span class="string">"dog"</span>);</span><br><span class="line">        <span class="keyword">return</span> d;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Dog</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="comment">// set，get和toString方法就不贴了</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 启动类</span></span><br><span class="line"><span class="meta">@ComponentScan</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        AnnotationConfigApplicationContext ctx = <span class="keyword">new</span> AnnotationConfigApplicationContext(App.class);</span><br><span class="line">        Account account = <span class="keyword">new</span> Account();</span><br><span class="line">        account.output();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>程序输入结果如下：</p>
+<p><img src="https://i.imgur.com/AmyJI2t.png" alt="Imgur"></p>
+<p>可以看到，我们自己创建的<code>Account</code>对象，输出了<code>Dog</code>对象，而不是null。因为Spring使用AspectJ的LTW(LoadTimeWeaving)技术为我们自己创建的<code>Account</code>对象注入了<code>Dog</code>对象。</p>
+<p>要使上面的例子正常运行，需要满足几个要求：</p>
+<ul>
+<li><p>spring-core, spring-beans, spring-context, spring-instrument, spring-aspects, aspectjweaver, spring-tx等几个依赖要有，其中spring-tx是可选的，没有的话会输出一些警告信息。</p>
+</li>
+<li><p><code>@EnableLoadTimeWeaving</code>和<code>@EnableSpringConfigured</code>两个注解必须有，可以注解在任意被<code>@Configuration</code>注解的类上面</p>
+</li>
+<li><p>运行前加上<code>-javaagent:/path/to/spring-instrument.jar</code>这个jvm参数，<code>/path/to/spring-instrument.jar</code>为你的<code>spring-instrument</code>jar包的路径</p>
+</li>
+</ul>
+<p>如果用的maven管理依赖，并且IDE为Intellij IDEA，可以打开Project Structure的Libraries选项查看jar包的路径，然后在run/debug里面配置jvm参数。<br><img src="https://i.imgur.com/OaOBYam.png" alt="Imgur"><br><img src="https://i.imgur.com/rotXT5P.png" alt="Imgur"></p>
+<h4 id="How-it-works"><a href="#How-it-works" class="headerlink" title="How it works?"></a>How it works?</h4><p>首先，如果仅仅有<code>@Configuration</code>注解，是不起任何作用的，因此我们这时候手动创建<code>Account</code>对象的话，将会输出null。因为起到关键作用的时候<code>AnnotationBeanConfigurerAspect</code>这个类（它是使用aspect定义的，而不是class，因为我还没用过aspectj编程，所以还不太了解），而这个类的实例在添加<code>@EnableSpringConfigured</code>注解后将会被Spring创建，然后Spring将会结合LWT技术调用这个对象里面的方法对我们手动创建的<code>Account</code>对象的属性进行处理。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Target</span>(ElementType.TYPE)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Import</span>(SpringConfiguredConfiguration.class) <span class="comment">//然后我们去看看SpringConfiguredConfiguration干了什么</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> EnableSpringConfigured &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringConfiguredConfiguration</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * The bean name used for the configurer aspect.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String BEAN_CONFIGURER_ASPECT_BEAN_NAME =</span><br><span class="line">			<span class="string">"org.springframework.context.config.internalBeanConfigurerAspect"</span>;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span>(name = BEAN_CONFIGURER_ASPECT_BEAN_NAME)</span><br><span class="line">	<span class="meta">@Role</span>(BeanDefinition.ROLE_INFRASTRUCTURE)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> AnnotationBeanConfigurerAspect <span class="title">beanConfigurerAspect</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> AnnotationBeanConfigurerAspect.aspectOf();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从上可以看到，一个AnnotationBeanConfigurerAspect类型的Bean将会被Spring Container创建和管理，因此它就是让<code>@Configurable</code>注解起作用的核心。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> aspect AnnotationBeanConfigurerAspect extends AbstractInterfaceDrivenDependencyInjectionAspect</span><br><span class="line">		implements BeanFactoryAware, InitializingBean, DisposableBean&#123;</span><br><span class="line">      <span class="comment">//类的实现就不贴了，从它实现的接口也可以猜到一些东西</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>文档上面还提到，不仅仅是使用new创建的时候，在反序列化的时候，被<code>@Configurable</code>注解的类和使用new创建的时候一样，会被拦截然后注入属性</strong></p>
+<h3 id="方便单元测试"><a href="#方便单元测试" class="headerlink" title="方便单元测试"></a>方便单元测试</h3><p>当类没有被AspectJ动态织入（LoadTimeWeaving）的时候，<code>@Configuration</code>是不起任何作用的，因此对单元测试不会产生影响</p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/12/12/kubernetes简单了解/" data-toggle="tooltip" data-placement="top"
+                           title="kubernetes简单了解">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/09/14/JVM-Basic/" data-toggle="tooltip" data-placement="top"
+                           title="JVM Basic">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8zODUyNi8xNTA1NA==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#为非Spring管理的对象注入Spring-Bean"><span class="toc-text">为非Spring管理的对象注入Spring Bean</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#How-it-works"><span class="toc-text">How it works?</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#方便单元测试"><span class="toc-text">方便单元测试</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/Tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/Tags/#Spring"
+                           title="Spring">Spring</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a href="https://echi.me">echisan</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/plentymorea">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/plentymore">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; PLTM 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    <br>
+                    Theme by <a href="https://github.com/Haojen/hexo-theme-Anisina">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://plentymore.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-123175280-1';
+    var _gaDomain = 'plentymore.github.io';
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<!-- <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script> -->
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="https://avatars3.githubusercontent.com/u/30522768?s=400&amp;u=a2ce54d7c63789391a0ba32b17792b7a21d64fbb&amp;v=4">
+</body>
+
+</html>

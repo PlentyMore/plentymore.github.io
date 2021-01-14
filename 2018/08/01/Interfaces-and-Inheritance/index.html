@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BLOG">
+    <meta name="keyword" content="pltm">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <!-- google-site-verification -->
+    <meta name="google-site-verification" content="fgG59EBWTLiWni3UcgCPhkEPiVDNCnLeaocoTWjctOg" />
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="alternate" type="application/atom+xml" title="PLTM" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Interfaces and Inheritance｜PTLM blog
+        
+    </title>
+
+    <link rel="canonical" href="https://plentymore.github.io/2018/08/01/Interfaces-and-Inheritance/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+    <!-- Google AdSense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+             google_ad_client: "ca-pub-1771277850135880",
+             enable_page_level_ads: true
+          });
+    </script>
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    PLTM
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+                        
+							
+								
+							
+						
+                    
+					
+					
+						<li>
+							<a href="/about">About</a>
+						</li>
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="/images/3.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Interfaces and Inheritance</h1>
+                    
+                    <span class="meta">
+                         作者 plentymore
+                        <span>
+                          日期 2018-08-01
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/Tags/#JavaBasic"
+                           title="JavaBasic">JavaBasic</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Interfaces and Inheritance
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h2 id="Interfaces-in-Java"><a href="#Interfaces-in-Java" class="headerlink" title="Interfaces in Java"></a>Interfaces in Java</h2><blockquote>
+<p>In the Java programming language, an interface is a <em>reference type</em>, similar to a class, that can contain only <strong>constants</strong>, <strong>method signatures</strong>, <strong>default methods</strong>, <strong>static methods</strong>, and <strong>nested types</strong>. Method bodies exist only for default methods and static methods. Interfaces cannot be instantiated—they can only be implemented by classes or extended by other interfaces. Extension is discussed later in this lesson.</p>
+</blockquote>
+<p>接口中可以有instance fields，但只能为常量(final<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 假设两个接口具有相同的成员变量（均为effectively final)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Bike</span> </span>&#123;</span><br><span class="line">   <span class="comment">// 不能改变a的值，改变后a就不是effectively final了 </span></span><br><span class="line">   <span class="keyword">int</span> a = <span class="number">10</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Car</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">10</span>; <span class="comment">//不能改变</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestInterface</span> <span class="keyword">implements</span> <span class="title">Car</span>,<span class="title">Bike</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">f</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">// 直接访问a提示Reference to 'a' is ambiguous</span></span><br><span class="line">   <span class="comment">// 只能通过Car.a或Bike.a访问</span></span><br><span class="line">    System.out.print(Car.a);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//编译后的TestInterface.class文件</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestInterface</span> <span class="keyword">implements</span> <span class="title">Car</span>, <span class="title">Bike</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TestInterface</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">f</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// a已经被替换成字面值</span></span><br><span class="line">        System.out.print(<span class="number">10</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">OperateCar</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">   <span class="comment">// constant declarations, if any</span></span><br><span class="line">  <span class="keyword">int</span> CONSTANT_1 = <span class="number">1</span>; <span class="comment">//never change the value</span></span><br><span class="line">  <span class="keyword">final</span>  <span class="keyword">int</span> CONSTANT_2 = <span class="number">2</span>; <span class="comment">//explicit final</span></span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">int</span> CONSTANT_3 = <span class="number">3</span>; </span><br><span class="line"></span><br><span class="line">   <span class="comment">// method signatures</span></span><br><span class="line">   </span><br><span class="line">   <span class="comment">// An enum with values RIGHT, LEFT</span></span><br><span class="line">   <span class="function"><span class="keyword">int</span> <span class="title">turn</span><span class="params">(Direction direction,</span></span></span><br><span class="line"><span class="function"><span class="params">            <span class="keyword">double</span> radius,</span></span></span><br><span class="line"><span class="function"><span class="params">            <span class="keyword">double</span> startSpeed,</span></span></span><br><span class="line"><span class="function"><span class="params">            <span class="keyword">double</span> endSpeed)</span></span>;</span><br><span class="line">   <span class="function"><span class="keyword">int</span> <span class="title">changeLanes</span><span class="params">(Direction direction,</span></span></span><br><span class="line"><span class="function"><span class="params">                   <span class="keyword">double</span> startSpeed,</span></span></span><br><span class="line"><span class="function"><span class="params">                   <span class="keyword">double</span> endSpeed)</span></span>;</span><br><span class="line">   <span class="function"><span class="keyword">int</span> <span class="title">signalTurn</span><span class="params">(Direction direction,</span></span></span><br><span class="line"><span class="function"><span class="params">                  <span class="keyword">boolean</span> signalOn)</span></span>;</span><br><span class="line">   <span class="function"><span class="keyword">int</span> <span class="title">getRadarFront</span><span class="params">(<span class="keyword">double</span> distanceToCar,</span></span></span><br><span class="line"><span class="function"><span class="params">                     <span class="keyword">double</span> speedOfCar)</span></span>;</span><br><span class="line">   <span class="function"><span class="keyword">int</span> <span class="title">getRadarRear</span><span class="params">(<span class="keyword">double</span> distanceToCar,</span></span></span><br><span class="line"><span class="function"><span class="params">                    <span class="keyword">double</span> speedOfCar)</span></span>;</span><br><span class="line">         ......</span><br><span class="line">   <span class="comment">// more method signatures</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Inheritance"><a href="#Inheritance" class="headerlink" title="Inheritance"></a>Inheritance</h2><h3 id="What-You-Can-Do-in-a-Subclass"><a href="#What-You-Can-Do-in-a-Subclass" class="headerlink" title="What You Can Do in a Subclass"></a>What You Can Do in a Subclass</h3><blockquote>
+<p>A subclass inherits all of the public and protected members of its parent, no matter what package the subclass is in. If the subclass is in the same package as its parent, it also inherits the package-private members of the parent. You can use the inherited members as is, replace them, hide them, or supplement them with new members:</p>
+<ul>
+<li>The inherited fields can be used directly, just like any other fields.</li>
+<li>You can declare a field in the subclass with the same name as the one in the superclass, thus hiding it (not recommended).</li>
+<li>You can declare new fields in the subclass that are not in the superclass.</li>
+<li>The inherited methods can be used directly as they are.</li>
+<li>You can write a new instance method in the subclass that has the same signature as the one in the superclass, thus overriding it.</li>
+<li>You can write a new static method in the subclass that has the same signature as the one in the superclass, thus hiding it.</li>
+<li>You can declare new methods in the subclass that are not in the superclass.</li>
+<li>You can write a subclass constructor that invokes the constructor of the superclass, either implicitly or by using the keyword super.</li>
+</ul>
+</blockquote>
+<h3 id="Private-Members-in-a-Superclass"><a href="#Private-Members-in-a-Superclass" class="headerlink" title="Private Members in a Superclass"></a>Private Members in a Superclass</h3><blockquote>
+<p>A subclass does not inherit the private members of its parent class. (子类不继承父类的private修饰的成员和方法）However, if the superclass has public or protected methods for accessing its private fields, these can also be used by the subclass.</p>
+</blockquote>
+<blockquote>
+<p>A nested class has access to all the private members of its enclosing class—both fields and methods. （嵌套非静态内部类可以访问其外部类的所有私有成员和方法）Therefore, a public or protected nested class inherited by a subclass has indirect access to all of the private members of the superclass.</p>
+</blockquote>
+<h2 id="Multiple-Inheritance-of-State-Implementation-and-Type"><a href="#Multiple-Inheritance-of-State-Implementation-and-Type" class="headerlink" title="Multiple Inheritance of State, Implementation, and Type"></a>Multiple Inheritance of State, Implementation, and Type</h2><h3 id="类不能多继承的原因"><a href="#类不能多继承的原因" class="headerlink" title="类不能多继承的原因"></a>类不能多继承的原因</h3><p>假设可以继承多个类，如果这多个类含有同名的成员变量，则会造成混淆，而接口中不包含成员变量（若包含也只是(effecitively) final的成员变量，相当于常量)，因此接口可以多继承</p>
+<blockquote>
+<p>One reason why the Java programming language does not permit you to extend more than one class is to avoid the issues of multiple inheritance of state, which is the ability to inherit fields from multiple classes. For example, suppose that you are able to define a new class that extends multiple classes. When you create an object by instantiating that class, that object will inherit fields from all of the class’s superclasses. What if methods or constructors from different superclasses instantiate the same field? Which method or constructor will take precedence? Because interfaces do not contain fields, you do not have to worry about problems that result from multiple inheritance of state.</p>
+</blockquote>
+<blockquote>
+<p>Multiple inheritance of implementation is the ability to inherit method definitions from multiple classes. Problems arise with this type of multiple inheritance, such as name conflicts and ambiguity. When compilers of programming languages that support this type of multiple inheritance encounter superclasses that contain methods with the same name, they sometimes cannot determine which member or method to access or invoke. In addition, a programmer can unwittingly introduce a name conflict by adding a new method to a superclass. Default methods introduce one form of multiple inheritance of implementation. A class can implement more than one interface, which can contain default methods that have the same name. The Java compiler provides some rules to determine which default method a particular class uses.</p>
+</blockquote>
+<h3 id="Interface-Methods"><a href="#Interface-Methods" class="headerlink" title="Interface Methods"></a>Interface Methods</h3><blockquote>
+<p>Default methods and abstract methods in interfaces are inherited like instance methods. However, when the supertypes of a class or interface provide multiple default methods with the same signature, the Java compiler follows inheritance rules to resolve the name conflict. These rules are driven by the following two principles:</p>
+<ul>
+<li><strong>Instance methods are preferred over interface default methods.</strong>（实例方法优先级高于接口默认方法）<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Consider the following classes and interfaces:</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Horse</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">identifyMyself</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"I am a horse."</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Flyer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">default</span> <span class="keyword">public</span> String <span class="title">identifyMyself</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"I am able to fly."</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Mythical</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">default</span> <span class="keyword">public</span> String <span class="title">identifyMyself</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"I am a mythical creature."</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Pegasus</span> <span class="keyword">extends</span> <span class="title">Horse</span> <span class="keyword">implements</span> <span class="title">Flyer</span>, <span class="title">Mythical</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String... args)</span> </span>&#123;</span><br><span class="line">        Pegasus myApp = <span class="keyword">new</span> Pegasus();</span><br><span class="line">        System.out.println(myApp.identifyMyself());</span><br><span class="line">        <span class="comment">//output: I am a horse.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</blockquote>
+<ul>
+<li><strong>Methods that are already overridden by other candidates are ignored. This circumstance can arise when supertypes share a common ancestor.</strong>（被重写的父接口的默认方法将被忽略，将调用重写后的子接口方法）<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Consider the following interfaces and classes:</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Animal</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">default</span> <span class="keyword">public</span> String <span class="title">identifyMyself</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"I am an animal."</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">EggLayer</span> <span class="keyword">extends</span> <span class="title">Animal</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">default</span> <span class="keyword">public</span> String <span class="title">identifyMyself</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"I am able to lay eggs."</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">FireBreather</span> <span class="keyword">extends</span> <span class="title">Animal</span> </span>&#123; &#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Dragon</span> <span class="keyword">implements</span> <span class="title">EggLayer</span>, <span class="title">FireBreather</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span> <span class="params">(String... args)</span> </span>&#123;</span><br><span class="line">        Dragon myApp = <span class="keyword">new</span> Dragon();</span><br><span class="line">        System.out.println(myApp.identifyMyself());</span><br><span class="line">        <span class="comment">//output: I am able to lay eggs.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>如果两个相互独立的默认方法冲突了，比如<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">A</span></span>&#123;<span class="function"><span class="keyword">default</span> <span class="keyword">void</span> <span class="title">a</span><span class="params">()</span></span>&#123;&#125;&#125;</span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">B</span> </span>&#123;<span class="function"><span class="keyword">default</span> <span class="keyword">void</span> <span class="title">a</span><span class="params">()</span></span>&#123;&#125; &#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> <span class="keyword">implements</span> <span class="title">A</span>,<span class="title">B</span></span>&#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p> 或者一个默认方法与另一个抽象方法冲突了<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">A</span></span>&#123;<span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">a</span><span class="params">()</span></span>;&#125;</span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">B</span></span>&#123;<span class="function"><span class="keyword">default</span> <span class="keyword">void</span> <span class="title">a</span><span class="params">()</span></span>&#123;&#125;;&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> <span class="keyword">implements</span> <span class="title">A</span>,<span class="title">B</span></span>&#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>编译器会报错，必须重写父类型的方法</p>
+<blockquote>
+<p>If two or more independently defined default methods conflict, or a default method conflicts with an abstract method, then the Java compiler produces a compiler error. You must explicitly override the supertype methods.</p>
+</blockquote>
+<blockquote>
+<p>Consider the example about computer-controlled cars that can now fly. You have two interfaces (OperateCar and FlyCar) that provide default implementations for the same method, (startEngine):<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">OperateCar</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="function"><span class="keyword">default</span> <span class="keyword">public</span> <span class="keyword">int</span> <span class="title">startEngine</span><span class="params">(EncryptedKey key)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Implementation</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">FlyCar</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="function"><span class="keyword">default</span> <span class="keyword">public</span> <span class="keyword">int</span> <span class="title">startEngine</span><span class="params">(EncryptedKey key)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Implementation</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
+<p>A class that implements both OperateCar and FlyCar must override the method startEngine. You could invoke any of the of the default implementations with the super keyword.<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FlyingCar</span> <span class="keyword">implements</span> <span class="title">OperateCar</span>, <span class="title">FlyCar</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">startEngine</span><span class="params">(EncryptedKey key)</span> </span>&#123;</span><br><span class="line">        FlyCar.<span class="keyword">super</span>.startEngine(key);</span><br><span class="line">        OperateCar.<span class="keyword">super</span>.startEngine(key);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
+<p>The name preceding super (in this example, FlyCar or OperateCar) must refer to a direct superinterface that defines or inherits a default for the invoked method. This form of method invocation is not restricted to differentiating between multiple implemented interfaces that contain default methods with the same signature. You can use the super keyword to invoke a default method in both classes and interfaces.</p>
+</blockquote>
+<p>从父类中继承的实例方法会重写接口中的方法（实例方法与接口抽象方法签名相同）</p>
+<blockquote>
+<p>Inherited instance methods from classes can override abstract interface methods. Consider the following interfaces and classes:<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Mammal</span> </span>&#123;</span><br><span class="line">    <span class="function">String <span class="title">identifyMyself</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Horse</span> </span>&#123;</span><br><span class="line"><span class="comment">/*当Horse为接口时，Mustang同时实现Horse和</span></span><br><span class="line"><span class="comment">Mammal借口，重写不会发生*/</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">identifyMyself</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"I am a horse."</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Mustang</span> <span class="keyword">extends</span> <span class="title">Horse</span> <span class="keyword">implements</span> <span class="title">Mammal</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String... args)</span> </span>&#123;</span><br><span class="line">        Mustang myApp = <span class="keyword">new</span> Mustang();</span><br><span class="line">       <span class="comment">/* The class Mustang inherits the method identifyMyself </span></span><br><span class="line"><span class="comment">       from the class Horse, which overrides the abstract method of</span></span><br><span class="line"><span class="comment">        the same name in the interface Mammal. */</span></span><br><span class="line">        System.out.println(myApp.identifyMyself());</span><br><span class="line">        <span class="comment">//output: I am a horse.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<h2 id="summary"><a href="#summary" class="headerlink" title="summary"></a>summary</h2><blockquote>
+<p>The following table summarizes what happens when you define a method with the same signature as a method in a superclass.</p>
+</blockquote>
+<p><strong>Defining a Method with the Same Signature as a Superclass’s Method</strong></p>
+<table>
+<thead>
+<tr>
+<th>_</th>
+<th>Superclass Instance Method</th>
+<th>Superclass Static Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Subclass Instance Method</td>
+<td>Overrides</td>
+<td>Generates a compile-time error</td>
+</tr>
+<tr>
+<td>Subclass Static Method</td>
+<td>Generates a compile-time error</td>
+<td>Hides</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Abstract-Classes-Compared-to-Interfaces"><a href="#Abstract-Classes-Compared-to-Interfaces" class="headerlink" title="Abstract Classes Compared to Interfaces"></a>Abstract Classes Compared to Interfaces</h2><p>Abstract classes are similar to interfaces. You cannot instantiate them, and they may contain a mix of methods declared with or without an implementation. However, with abstract classes, you can declare fields that are not static and final, and define public, protected, and private concrete methods. <strong>With interfaces, all fields are automatically public, static, and final</strong>, and all methods that you declare or define (as default methods) are public. In addition, you can extend only one class, whether or not it is abstract, whereas you can implement any number of interfaces.</p>
+<p>Which should you use, abstract classes or interfaces?</p>
+<ul>
+<li>Consider using <strong>abstract classes</strong> if any of these statements apply to your situation:<ul>
+<li>You want to share code among several closely related classes.</li>
+<li>You expect that classes that extend your abstract class have many common methods or fields, or require access modifiers other than public (such as protected and private).</li>
+<li>You want to declare non-static or non-final fields. This enables you to define methods that can access and modify the state of the object to which they belong.</li>
+</ul>
+</li>
+<li>Consider using <strong>interfaces</strong> if any of these statements apply to your situation:<ul>
+<li>You expect that unrelated classes would implement your interface. For example, the interfaces Comparable and Cloneable are implemented by many unrelated classes.</li>
+<li>You want to specify the behavior of a particular data type, but not concerned about who implements its behavior.</li>
+<li>You want to take advantage of multiple inheritance of type.</li>
+</ul>
+</li>
+</ul>
+<p>笔记来源：<a href="https://docs.oracle.com/javase/tutorial/java/IandI/index.html" target="_blank" rel="noopener">Interfaces and Inheritance</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/08/01/Java-Exceptions/" data-toggle="tooltip" data-placement="top"
+                           title="Java Exceptions">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/08/01/Regex/" data-toggle="tooltip" data-placement="top"
+                           title="Regex">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8zODUyNi8xNTA1NA==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Interfaces-in-Java"><span class="toc-text">Interfaces in Java</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Inheritance"><span class="toc-text">Inheritance</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#What-You-Can-Do-in-a-Subclass"><span class="toc-text">What You Can Do in a Subclass</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Private-Members-in-a-Superclass"><span class="toc-text">Private Members in a Superclass</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Multiple-Inheritance-of-State-Implementation-and-Type"><span class="toc-text">Multiple Inheritance of State, Implementation, and Type</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#类不能多继承的原因"><span class="toc-text">类不能多继承的原因</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Interface-Methods"><span class="toc-text">Interface Methods</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#summary"><span class="toc-text">summary</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Abstract-Classes-Compared-to-Interfaces"><span class="toc-text">Abstract Classes Compared to Interfaces</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/Tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/Tags/#JavaBasic"
+                           title="JavaBasic">JavaBasic</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a href="https://echi.me">echisan</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/plentymorea">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/plentymore">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; PLTM 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    <br>
+                    Theme by <a href="https://github.com/Haojen/hexo-theme-Anisina">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://plentymore.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-123175280-1';
+    var _gaDomain = 'plentymore.github.io';
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<!-- <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script> -->
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="https://avatars3.githubusercontent.com/u/30522768?s=400&amp;u=a2ce54d7c63789391a0ba32b17792b7a21d64fbb&amp;v=4">
+</body>
+
+</html>

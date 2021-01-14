@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BLOG">
+    <meta name="keyword" content="pltm">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <!-- google-site-verification -->
+    <meta name="google-site-verification" content="fgG59EBWTLiWni3UcgCPhkEPiVDNCnLeaocoTWjctOg" />
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="alternate" type="application/atom+xml" title="PLTM" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Collection-Framework(2)｜PTLM blog
+        
+    </title>
+
+    <link rel="canonical" href="https://plentymore.github.io/2018/09/12/Collection-Framework-2/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+    <!-- Google AdSense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+             google_ad_client: "ca-pub-1771277850135880",
+             enable_page_level_ads: true
+          });
+    </script>
+<link rel="stylesheet" href="\assets\css\APlayer.min.css" class="aplayer-style-marker">
+<script src="\assets\js\APlayer.min.js" class="aplayer-script-marker"></script>
+<script src="\assets\js\Meting.min.js" class="meting-script-marker"></script>
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    PLTM
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+                        
+							
+								
+							
+						
+                    
+					
+					
+						<li>
+							<a href="/about">About</a>
+						</li>
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img" src="https://i.imgur.com/RAwKwAj.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('https://i.imgur.com/RAwKwAj.jpg');
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Collection-Framework(2)</h1>
+                    
+                    <span class="meta">
+                         作者 plentymore
+                        <span>
+                          日期 2018-09-12
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/Tags/#Container"
+                           title="Container">Container</a>
+                        
+                        <a class="tag" href="/Tags/#Collection"
+                           title="Collection">Collection</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Collection-Framework(2)
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                
+    <div id="aplayer-OsePCLZj" class="aplayer aplayer-tag-marker meting-tag-marker" data-id="850673" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#ad7a86"></div>
+<p>这部分内容本来是放在Collection-Framework(1)里面的，但是内容太多导致生成html后，部署到github pages发现部分内容丢失，只能拆开分成几个部分了。</p>
+<h1 id="PriorityQueue"><a href="#PriorityQueue" class="headerlink" title="PriorityQueue"></a>PriorityQueue</h1><p>无边界的优先级队列的实现，队列里面的元素按照自然顺序顺序或者用户自定义的Comparator规则进行排序。<br>它不允许插入null元素，不是线程安全的。</p>
+<h2 id="成员变量"><a href="#成员变量" class="headerlink" title="成员变量"></a>成员变量</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_INITIAL_CAPACITY = <span class="number">11</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Priority queue represented as a balanced binary heap: the two</span></span><br><span class="line"><span class="comment"> * children of queue[n] are queue[2*n+1] and queue[2*(n+1)].  The</span></span><br><span class="line"><span class="comment"> * priority queue is ordered by comparator, or by the elements'</span></span><br><span class="line"><span class="comment"> * natural ordering, if comparator is null: For each node n in the</span></span><br><span class="line"><span class="comment"> * heap and each descendant d of n, n &lt;= d.  The element with the</span></span><br><span class="line"><span class="comment"> * lowest value is in queue[0], assuming the queue is nonempty.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">transient</span> Object[] queue; <span class="comment">// non-private to simplify nested class access</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The number of elements in the priority queue.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> size = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The comparator, or null if priority queue uses elements'</span></span><br><span class="line"><span class="comment"> * natural ordering.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Comparator&lt;? <span class="keyword">super</span> E&gt; comparator;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The number of times this priority queue has been</span></span><br><span class="line"><span class="comment"> * &lt;i&gt;structurally modified&lt;/i&gt;.  See AbstractList for gory details.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">transient</span> <span class="keyword">int</span> modCount = <span class="number">0</span>; <span class="comment">// non-private to simplify nested class access</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The maximum size of array to allocate.</span></span><br><span class="line"><span class="comment"> * Some VMs reserve some header words in an array.</span></span><br><span class="line"><span class="comment"> * Attempts to allocate larger arrays may result in</span></span><br><span class="line"><span class="comment"> * OutOfMemoryError: Requested array size exceeds VM limit</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX_ARRAY_SIZE = Integer.MAX_VALUE - <span class="number">8</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Creates a &#123;<span class="doctag">@code</span> PriorityQueue&#125; with the default initial</span></span><br><span class="line"><span class="comment"> * capacity (11) that orders its elements according to their</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@linkplain</span> Comparable natural ordering&#125;.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">PriorityQueue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(DEFAULT_INITIAL_CAPACITY, <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Creates a &#123;<span class="doctag">@code</span> PriorityQueue&#125; with the specified initial</span></span><br><span class="line"><span class="comment"> * capacity that orders its elements according to their</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@linkplain</span> Comparable natural ordering&#125;.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> initialCapacity the initial capacity for this priority queue</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> IllegalArgumentException if &#123;<span class="doctag">@code</span> initialCapacity&#125; is less</span></span><br><span class="line"><span class="comment"> *         than 1</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">PriorityQueue</span><span class="params">(<span class="keyword">int</span> initialCapacity)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(initialCapacity, <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Creates a &#123;<span class="doctag">@code</span> PriorityQueue&#125; with the default initial capacity and</span></span><br><span class="line"><span class="comment"> * whose elements are ordered according to the specified comparator.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>  comparator the comparator that will be used to order this</span></span><br><span class="line"><span class="comment"> *         priority queue.  If &#123;<span class="doctag">@code</span> null&#125;, the &#123;<span class="doctag">@linkplain</span> Comparable</span></span><br><span class="line"><span class="comment"> *         natural ordering&#125; of the elements will be used.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 1.8</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">PriorityQueue</span><span class="params">(Comparator&lt;? <span class="keyword">super</span> E&gt; comparator)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(DEFAULT_INITIAL_CAPACITY, comparator);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Creates a &#123;<span class="doctag">@code</span> PriorityQueue&#125; with the specified initial capacity</span></span><br><span class="line"><span class="comment"> * that orders its elements according to the specified comparator.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>  initialCapacity the initial capacity for this priority queue</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>  comparator the comparator that will be used to order this</span></span><br><span class="line"><span class="comment"> *         priority queue.  If &#123;<span class="doctag">@code</span> null&#125;, the &#123;<span class="doctag">@linkplain</span> Comparable</span></span><br><span class="line"><span class="comment"> *         natural ordering&#125; of the elements will be used.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> IllegalArgumentException if &#123;<span class="doctag">@code</span> initialCapacity&#125; is</span></span><br><span class="line"><span class="comment"> *         less than 1</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">PriorityQueue</span><span class="params">(<span class="keyword">int</span> initialCapacity,</span></span></span><br><span class="line"><span class="function"><span class="params">                     Comparator&lt;? <span class="keyword">super</span> E&gt; comparator)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Note: This restriction of at least one is not actually needed,</span></span><br><span class="line">    <span class="comment">// but continues for 1.5 compatibility</span></span><br><span class="line">    <span class="keyword">if</span> (initialCapacity &lt; <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</span><br><span class="line">    <span class="keyword">this</span>.queue = <span class="keyword">new</span> Object[initialCapacity];</span><br><span class="line">    <span class="keyword">this</span>.comparator = comparator;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Creates a &#123;<span class="doctag">@code</span> PriorityQueue&#125; containing the elements in the</span></span><br><span class="line"><span class="comment"> * specified collection.  If the specified collection is an instance of</span></span><br><span class="line"><span class="comment"> * a &#123;<span class="doctag">@link</span> SortedSet&#125; or is another &#123;<span class="doctag">@code</span> PriorityQueue&#125;, this</span></span><br><span class="line"><span class="comment"> * priority queue will be ordered according to the same ordering.</span></span><br><span class="line"><span class="comment"> * Otherwise, this priority queue will be ordered according to the</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@linkplain</span> Comparable natural ordering&#125; of its elements.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>  c the collection whose elements are to be placed</span></span><br><span class="line"><span class="comment"> *         into this priority queue</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> ClassCastException if elements of the specified collection</span></span><br><span class="line"><span class="comment"> *         cannot be compared to one another according to the priority</span></span><br><span class="line"><span class="comment"> *         queue's ordering</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> NullPointerException if the specified collection or any</span></span><br><span class="line"><span class="comment"> *         of its elements are null</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">PriorityQueue</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (c <span class="keyword">instanceof</span> SortedSet&lt;?&gt;) &#123;</span><br><span class="line">        SortedSet&lt;? extends E&gt; ss = (SortedSet&lt;? extends E&gt;) c;</span><br><span class="line">        <span class="keyword">this</span>.comparator = (Comparator&lt;? <span class="keyword">super</span> E&gt;) ss.comparator();</span><br><span class="line">        initElementsFromCollection(ss);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (c <span class="keyword">instanceof</span> PriorityQueue&lt;?&gt;) &#123;</span><br><span class="line">        PriorityQueue&lt;? extends E&gt; pq = (PriorityQueue&lt;? extends E&gt;) c;</span><br><span class="line">        <span class="keyword">this</span>.comparator = (Comparator&lt;? <span class="keyword">super</span> E&gt;) pq.comparator();</span><br><span class="line">        initFromPriorityQueue(pq);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.comparator = <span class="keyword">null</span>;</span><br><span class="line">        initFromCollection(c);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Creates a &#123;<span class="doctag">@code</span> PriorityQueue&#125; containing the elements in the</span></span><br><span class="line"><span class="comment"> * specified priority queue.  This priority queue will be</span></span><br><span class="line"><span class="comment"> * ordered according to the same ordering as the given priority</span></span><br><span class="line"><span class="comment"> * queue.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>  c the priority queue whose elements are to be placed</span></span><br><span class="line"><span class="comment"> *         into this priority queue</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> ClassCastException if elements of &#123;<span class="doctag">@code</span> c&#125; cannot be</span></span><br><span class="line"><span class="comment"> *         compared to one another according to &#123;<span class="doctag">@code</span> c&#125;'s</span></span><br><span class="line"><span class="comment"> *         ordering</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> NullPointerException if the specified priority queue or any</span></span><br><span class="line"><span class="comment"> *         of its elements are null</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">PriorityQueue</span><span class="params">(PriorityQueue&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.comparator = (Comparator&lt;? <span class="keyword">super</span> E&gt;) c.comparator();</span><br><span class="line">    initFromPriorityQueue(c);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Creates a &#123;<span class="doctag">@code</span> PriorityQueue&#125; containing the elements in the</span></span><br><span class="line"><span class="comment"> * specified sorted set.   This priority queue will be ordered</span></span><br><span class="line"><span class="comment"> * according to the same ordering as the given sorted set.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>  c the sorted set whose elements are to be placed</span></span><br><span class="line"><span class="comment"> *         into this priority queue</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> ClassCastException if elements of the specified sorted</span></span><br><span class="line"><span class="comment"> *         set cannot be compared to one another according to the</span></span><br><span class="line"><span class="comment"> *         sorted set's ordering</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> NullPointerException if the specified sorted set or any</span></span><br><span class="line"><span class="comment"> *         of its elements are null</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">PriorityQueue</span><span class="params">(SortedSet&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.comparator = (Comparator&lt;? <span class="keyword">super</span> E&gt;) c.comparator();</span><br><span class="line">    initElementsFromCollection(c);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h2><ul>
+<li><p>public boolean add(E e)</p>
+</li>
+<li><p>public boolean offer(E e)<br>往队尾插入一个元素</p>
+</li>
+<li><p>public E peek()<br>获取队头的元素</p>
+</li>
+<li><p>public boolean remove(Object o)</p>
+</li>
+<li><p>public boolean contains(Object o)</p>
+</li>
+<li><p>public Iterator<e> iterator()</e></p>
+</li>
+<li><p>public void clear()</p>
+</li>
+<li><p>public E poll()<br>移除队头的元素（队列是FIFO）</p>
+</li>
+<li><p>public Comparator&lt;? super E&gt; comparator()</p>
+</li>
+</ul>
+<h1 id="ArrayBlockingQueue"><a href="#ArrayBlockingQueue" class="headerlink" title="ArrayBlockingQueue"></a>ArrayBlockingQueue</h1><p>有边界的阻塞队列，底层是数组实现的，该类位于concurrent包下，是线程安全的，不允许插入null元素。因为它是有边界的，<br>因此在元素填满队列之后再往里面添加元素将会发生阻塞，直到有空余的位置可以插入元素，往空队列取出元素的时候同理。</p>
+<h2 id="成员变量-1"><a href="#成员变量-1" class="headerlink" title="成员变量"></a>成员变量</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/** The queued items */</span></span><br><span class="line"><span class="keyword">final</span> Object[] items;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** items index for next take, poll, peek or remove */</span></span><br><span class="line"><span class="keyword">int</span> takeIndex;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** items index for next put, offer, or add */</span></span><br><span class="line"><span class="keyword">int</span> putIndex;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Number of elements in the queue */</span></span><br><span class="line"><span class="keyword">int</span> count;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Concurrency control uses the classic two-condition algorithm</span></span><br><span class="line"><span class="comment"> * found in any textbook.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/** Main lock guarding all access */</span></span><br><span class="line"><span class="keyword">final</span> ReentrantLock lock;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Condition for waiting takes */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Condition notEmpty;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Condition for waiting puts */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Condition notFull;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Shared state for currently active iterators, or null if there</span></span><br><span class="line"><span class="comment"> * are known not to be any.  Allows queue operations to update</span></span><br><span class="line"><span class="comment"> * iterator state.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">transient</span> Itrs itrs = <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="构造函数-1"><a href="#构造函数-1" class="headerlink" title="构造函数"></a>构造函数</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Creates an &#123;<span class="doctag">@code</span> ArrayBlockingQueue&#125; with the given (fixed)</span></span><br><span class="line"><span class="comment"> * capacity and default access policy.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> capacity the capacity of this queue</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> IllegalArgumentException if &#123;<span class="doctag">@code</span> capacity &lt; 1&#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayBlockingQueue</span><span class="params">(<span class="keyword">int</span> capacity)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(capacity, <span class="keyword">false</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Creates an &#123;<span class="doctag">@code</span> ArrayBlockingQueue&#125; with the given (fixed)</span></span><br><span class="line"><span class="comment"> * capacity and the specified access policy.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> capacity the capacity of this queue</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> fair if &#123;<span class="doctag">@code</span> true&#125; then queue accesses for threads blocked</span></span><br><span class="line"><span class="comment"> *        on insertion or removal, are processed in FIFO order;</span></span><br><span class="line"><span class="comment"> *        if &#123;<span class="doctag">@code</span> false&#125; the access order is unspecified.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> IllegalArgumentException if &#123;<span class="doctag">@code</span> capacity &lt; 1&#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayBlockingQueue</span><span class="params">(<span class="keyword">int</span> capacity, <span class="keyword">boolean</span> fair)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (capacity &lt;= <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</span><br><span class="line">    <span class="keyword">this</span>.items = <span class="keyword">new</span> Object[capacity];</span><br><span class="line">    lock = <span class="keyword">new</span> ReentrantLock(fair);</span><br><span class="line">    notEmpty = lock.newCondition();</span><br><span class="line">    notFull =  lock.newCondition();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Creates an &#123;<span class="doctag">@code</span> ArrayBlockingQueue&#125; with the given (fixed)</span></span><br><span class="line"><span class="comment"> * capacity, the specified access policy and initially containing the</span></span><br><span class="line"><span class="comment"> * elements of the given collection,</span></span><br><span class="line"><span class="comment"> * added in traversal order of the collection's iterator.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> capacity the capacity of this queue</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> fair if &#123;<span class="doctag">@code</span> true&#125; then queue accesses for threads blocked</span></span><br><span class="line"><span class="comment"> *        on insertion or removal, are processed in FIFO order;</span></span><br><span class="line"><span class="comment"> *        if &#123;<span class="doctag">@code</span> false&#125; the access order is unspecified.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> c the collection of elements to initially contain</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> IllegalArgumentException if &#123;<span class="doctag">@code</span> capacity&#125; is less than</span></span><br><span class="line"><span class="comment"> *         &#123;<span class="doctag">@code</span> c.size()&#125;, or less than 1.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> NullPointerException if the specified collection or any</span></span><br><span class="line"><span class="comment"> *         of its elements are null</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayBlockingQueue</span><span class="params">(<span class="keyword">int</span> capacity, <span class="keyword">boolean</span> fair,</span></span></span><br><span class="line"><span class="function"><span class="params">                          Collection&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(capacity, fair);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> ReentrantLock lock = <span class="keyword">this</span>.lock;</span><br><span class="line">    lock.lock(); <span class="comment">// Lock only for visibility, not mutual exclusion</span></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">for</span> (E e : c) &#123;</span><br><span class="line">                checkNotNull(e);</span><br><span class="line">                items[i++] = e;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ArrayIndexOutOfBoundsException ex) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</span><br><span class="line">        &#125;</span><br><span class="line">        count = i;</span><br><span class="line">        putIndex = (i == capacity) ? <span class="number">0</span> : i;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        lock.unlock();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="常用方法-1"><a href="#常用方法-1" class="headerlink" title="常用方法"></a>常用方法</h2><ul>
+<li><p>public boolean add(E e)<br>往队尾插入一个元素，如果队列已满则抛出IllegalStateException</p>
+</li>
+<li><p>public boolean offer(E e)<br>往队尾插入一个元素，如果队列已满则立即返回false</p>
+</li>
+<li><p>public boolean offer(E e, long timeout, TimeUnit unit)</p>
+</li>
+<li><p>public void put(E e)<br>往队尾插入一个元素，如果队列已满则发生阻塞直到成功插入元素</p>
+</li>
+<li><p>public E poll()<br>取出队头元素，如果队列为空则立即返回null</p>
+</li>
+<li><p>public E poll(long timeout, TimeUnit unit)</p>
+</li>
+<li><p>public E take()<br>取出队头元素，如果队列为空则发生阻塞一直到成功取出元素为止</p>
+</li>
+<li><p>public E peek()<br>获取队头元素（不移除），队列为空则返回null</p>
+</li>
+<li><p>public int size()</p>
+</li>
+<li><p>public int remainingCapacity()</p>
+</li>
+<li><p>public boolean remove(Object o)</p>
+</li>
+<li><p>public boolean contains(Object o)</p>
+</li>
+<li><p>public void clear()</p>
+</li>
+<li><p>public Iterator<e> iterator()</e></p>
+</li>
+</ul>
+<h1 id="LinkedBlockingQueue"><a href="#LinkedBlockingQueue" class="headerlink" title="LinkedBlockingQueue"></a>LinkedBlockingQueue</h1><p>可自定义边界范围的阻塞队列，底层基于链表实现，是线程安全的，不允许存放null</p>
+<h2 id="成员变量-2"><a href="#成员变量-2" class="headerlink" title="成员变量"></a>成员变量</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/** The capacity bound, or Integer.MAX_VALUE if none */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> capacity;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Current number of elements */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> AtomicInteger count = <span class="keyword">new</span> AtomicInteger();</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Head of linked list.</span></span><br><span class="line"><span class="comment"> * Invariant: head.item == null</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">transient</span> Node&lt;E&gt; head;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Tail of linked list.</span></span><br><span class="line"><span class="comment"> * Invariant: last.next == null</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">transient</span> Node&lt;E&gt; last;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Lock held by take, poll, etc */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> ReentrantLock takeLock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Wait queue for waiting takes */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Condition notEmpty = takeLock.newCondition();</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Lock held by put, offer, etc */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> ReentrantLock putLock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Wait queue for waiting puts */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Condition notFull = putLock.newCondition();</span><br></pre></td></tr></table></figure>
+<h2 id="构造函数-2"><a href="#构造函数-2" class="headerlink" title="构造函数"></a>构造函数</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Creates a &#123;<span class="doctag">@code</span> LinkedBlockingQueue&#125; with a capacity of</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> Integer#MAX_VALUE&#125;.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">LinkedBlockingQueue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(Integer.MAX_VALUE);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Creates a &#123;<span class="doctag">@code</span> LinkedBlockingQueue&#125; with the given (fixed) capacity.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> capacity the capacity of this queue</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> IllegalArgumentException if &#123;<span class="doctag">@code</span> capacity&#125; is not greater</span></span><br><span class="line"><span class="comment"> *         than zero</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">LinkedBlockingQueue</span><span class="params">(<span class="keyword">int</span> capacity)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (capacity &lt;= <span class="number">0</span>) <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</span><br><span class="line">    <span class="keyword">this</span>.capacity = capacity;</span><br><span class="line">    last = head = <span class="keyword">new</span> Node&lt;E&gt;(<span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Creates a &#123;<span class="doctag">@code</span> LinkedBlockingQueue&#125; with a capacity of</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> Integer#MAX_VALUE&#125;, initially containing the elements of the</span></span><br><span class="line"><span class="comment"> * given collection,</span></span><br><span class="line"><span class="comment"> * added in traversal order of the collection's iterator.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> c the collection of elements to initially contain</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> NullPointerException if the specified collection or any</span></span><br><span class="line"><span class="comment"> *         of its elements are null</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">LinkedBlockingQueue</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(Integer.MAX_VALUE);</span><br><span class="line">    <span class="keyword">final</span> ReentrantLock putLock = <span class="keyword">this</span>.putLock;</span><br><span class="line">    putLock.lock(); <span class="comment">// Never contended, but necessary for visibility</span></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">int</span> n = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (E e : c) &#123;</span><br><span class="line">            <span class="keyword">if</span> (e == <span class="keyword">null</span>)</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">            <span class="keyword">if</span> (n == capacity)</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Queue full"</span>);</span><br><span class="line">            enqueue(<span class="keyword">new</span> Node&lt;E&gt;(e));</span><br><span class="line">            ++n;</span><br><span class="line">        &#125;</span><br><span class="line">        count.set(n);</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        putLock.unlock();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="常用方法-2"><a href="#常用方法-2" class="headerlink" title="常用方法"></a>常用方法</h2><ul>
+<li><p>public int size()</p>
+</li>
+<li><p>public int remainingCapacity()</p>
+</li>
+<li><p>public void put(E e)<br>往队尾添加一个元素，如果队列已满则发生阻塞直到成功存储元素</p>
+</li>
+<li><p>public boolean offer(E e, long timeout, TimeUnit unit)<br>往队尾添加一个元素，队列已满则等待一段时间（timeout），超时后没能成功添加元素则返回false</p>
+</li>
+<li><p>public boolean offer(E e)<br>往队尾添加一个元素，失败立即返回false，不发生阻塞</p>
+</li>
+<li><p>public E take()<br>取出队头元素（移除），如果队列为空则发生阻塞直到成功取出元素</p>
+</li>
+<li><p>public E poll()<br>取出队头元素（移除），成功则返回该元素，不成功返回null，不发生阻塞</p>
+</li>
+<li><p>public E poll(long timeout, TimeUnit unit)<br>取出队头元素（移除），队列为空则等待一段时间（timeout），超时后仍未成功取出元素则返回null</p>
+</li>
+<li><p>public E peek()<br>获取队头元素（不移除），队列为空则返回null，不发生阻塞</p>
+</li>
+<li><p>public boolean remove(Object o)<br>移除指定元素，成功返回true，不成功返回false，不发生阻塞</p>
+</li>
+<li><p>public boolean contains(Object o)</p>
+</li>
+<li><p>public void clear()</p>
+</li>
+<li><p>public Iterator<e> iterator()</e></p>
+</li>
+</ul>
+<h1 id="ConcurrentLinkedQueue"><a href="#ConcurrentLinkedQueue" class="headerlink" title="ConcurrentLinkedQueue"></a>ConcurrentLinkedQueue</h1><p>无边界的非阻塞队列，底层基于链表，线程安全，不允许存放null元素。</p>
+<h2 id="成员变量-3"><a href="#成员变量-3" class="headerlink" title="成员变量"></a>成员变量</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * A node from which the first live (non-deleted) node (if any)</span></span><br><span class="line"><span class="comment"> * can be reached in O(1) time.</span></span><br><span class="line"><span class="comment"> * Invariants:</span></span><br><span class="line"><span class="comment"> * - all live nodes are reachable from head via succ()</span></span><br><span class="line"><span class="comment"> * - head != null</span></span><br><span class="line"><span class="comment"> * - (tmp = head).next != tmp || tmp != head</span></span><br><span class="line"><span class="comment"> * Non-invariants:</span></span><br><span class="line"><span class="comment"> * - head.item may or may not be null.</span></span><br><span class="line"><span class="comment"> * - it is permitted for tail to lag behind head, that is, for tail</span></span><br><span class="line"><span class="comment"> *   to not be reachable from head!</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">volatile</span> Node&lt;E&gt; head;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * A node from which the last node on list (that is, the unique</span></span><br><span class="line"><span class="comment"> * node with node.next == null) can be reached in O(1) time.</span></span><br><span class="line"><span class="comment"> * Invariants:</span></span><br><span class="line"><span class="comment"> * - the last node is always reachable from tail via succ()</span></span><br><span class="line"><span class="comment"> * - tail != null</span></span><br><span class="line"><span class="comment"> * Non-invariants:</span></span><br><span class="line"><span class="comment"> * - tail.item may or may not be null.</span></span><br><span class="line"><span class="comment"> * - it is permitted for tail to lag behind head, that is, for tail</span></span><br><span class="line"><span class="comment"> *   to not be reachable from head!</span></span><br><span class="line"><span class="comment"> * - tail.next may or may not be self-pointing to tail.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">volatile</span> Node&lt;E&gt; tail;</span><br></pre></td></tr></table></figure>
+<h2 id="构造函数-3"><a href="#构造函数-3" class="headerlink" title="构造函数"></a>构造函数</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Creates a &#123;<span class="doctag">@code</span> ConcurrentLinkedQueue&#125; that is initially empty.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ConcurrentLinkedQueue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    head = tail = <span class="keyword">new</span> Node&lt;E&gt;(<span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Creates a &#123;<span class="doctag">@code</span> ConcurrentLinkedQueue&#125;</span></span><br><span class="line"><span class="comment"> * initially containing the elements of the given collection,</span></span><br><span class="line"><span class="comment"> * added in traversal order of the collection's iterator.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> c the collection of elements to initially contain</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> NullPointerException if the specified collection or any</span></span><br><span class="line"><span class="comment"> *         of its elements are null</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ConcurrentLinkedQueue</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">    Node&lt;E&gt; h = <span class="keyword">null</span>, t = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">for</span> (E e : c) &#123;</span><br><span class="line">        checkNotNull(e);</span><br><span class="line">        Node&lt;E&gt; newNode = <span class="keyword">new</span> Node&lt;E&gt;(e);</span><br><span class="line">        <span class="keyword">if</span> (h == <span class="keyword">null</span>)</span><br><span class="line">            h = t = newNode;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            t.lazySetNext(newNode);</span><br><span class="line">            t = newNode;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (h == <span class="keyword">null</span>)</span><br><span class="line">        h = t = <span class="keyword">new</span> Node&lt;E&gt;(<span class="keyword">null</span>);</span><br><span class="line">    head = h;</span><br><span class="line">    tail = t;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="常用方法-3"><a href="#常用方法-3" class="headerlink" title="常用方法"></a>常用方法</h2><ul>
+<li><p>public boolean add(E e)<br>往队尾插入一个元素，因为这是一个无边界的队列，因此该方法永远不会抛出IllegalStateException或者返回false</p>
+</li>
+<li><p>public boolean offer(E e)<br>往队尾插入一个元素，和上面的方法一样，该方法能返回ture或者抛出空指针异常</p>
+</li>
+<li><p>public E poll()<br>取出队头元素（移除），不发生阻塞</p>
+</li>
+<li><p>public E peek()<br>获取队头元素（不移除），不发生阻塞</p>
+</li>
+<li><p>public boolean isEmpty()</p>
+</li>
+<li><p>public int size()<br>如果队列中的元素数量大于Integer.MAX_VALUE，则返回Integer.MAX_VALUE，该方法的时间复杂度不为O(1)，而是 O(n)</p>
+</li>
+<li><p>public boolean contains(Object o)</p>
+</li>
+<li><p>public boolean remove(Object o)<br>移除元素，不发生阻塞</p>
+</li>
+<li><p>public boolean addAll(Collection&lt;? extends E&gt; c)<br>试图将添加自己的元素到队列中将抛出IllegalArgumentException，比如<code>queue.add(queue)</code></p>
+</li>
+<li><p>public Iterator<e> iterator()</e></p>
+</li>
+</ul>
+<h1 id="Queue总结"><a href="#Queue总结" class="headerlink" title="Queue总结"></a>Queue总结</h1><ul>
+<li>队列是FIFO（先进先出）的</li>
+<li>有阻塞队列和非阻塞队列，阻塞队列的阻塞是基于Condition实现的</li>
+<li>peek()只获取队头元素，而不移除元素，而且不发生阻塞</li>
+<li>在阻塞队列中，poll()和offer()均不发生阻塞，take()可能发生阻塞 </li>
+</ul>
+<h1 id="ArrayDeque"><a href="#ArrayDeque" class="headerlink" title="ArrayDeque"></a>ArrayDeque</h1><p>双向队列，底层基于数组实现，大小可以动态变化，因此没有容量限制，不是线程安全的，</p>
+<h2 id="成员变量-4"><a href="#成员变量-4" class="headerlink" title="成员变量"></a>成员变量</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The array in which the elements of the deque are stored.</span></span><br><span class="line"><span class="comment"> * The capacity of the deque is the length of this array, which is</span></span><br><span class="line"><span class="comment"> * always a power of two. The array is never allowed to become</span></span><br><span class="line"><span class="comment"> * full, except transiently within an addX method where it is</span></span><br><span class="line"><span class="comment"> * resized (see doubleCapacity) immediately upon becoming full,</span></span><br><span class="line"><span class="comment"> * thus avoiding head and tail wrapping around to equal each</span></span><br><span class="line"><span class="comment"> * other.  We also guarantee that all array cells not holding</span></span><br><span class="line"><span class="comment"> * deque elements are always null.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">transient</span> Object[] elements; <span class="comment">// non-private to simplify nested class access</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The index of the element at the head of the deque (which is the</span></span><br><span class="line"><span class="comment"> * element that would be removed by remove() or pop()); or an</span></span><br><span class="line"><span class="comment"> * arbitrary number equal to tail if the deque is empty.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">transient</span> <span class="keyword">int</span> head;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The index at which the next element would be added to the tail</span></span><br><span class="line"><span class="comment"> * of the deque (via addLast(E), add(E), or push(E)).</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">transient</span> <span class="keyword">int</span> tail;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The minimum capacity that we'll use for a newly created deque.</span></span><br><span class="line"><span class="comment"> * Must be a power of 2.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MIN_INITIAL_CAPACITY = <span class="number">8</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="构造函数-4"><a href="#构造函数-4" class="headerlink" title="构造函数"></a>构造函数</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Constructs an empty array deque with an initial capacity</span></span><br><span class="line"><span class="comment"> * sufficient to hold 16 elements.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayDeque</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    elements = <span class="keyword">new</span> Object[<span class="number">16</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Constructs an empty array deque with an initial capacity</span></span><br><span class="line"><span class="comment"> * sufficient to hold the specified number of elements.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> numElements  lower bound on initial capacity of the deque</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayDeque</span><span class="params">(<span class="keyword">int</span> numElements)</span> </span>&#123;</span><br><span class="line">    allocateElements(numElements);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Constructs a deque containing the elements of the specified</span></span><br><span class="line"><span class="comment"> * collection, in the order they are returned by the collection's</span></span><br><span class="line"><span class="comment"> * iterator.  (The first element returned by the collection's</span></span><br><span class="line"><span class="comment"> * iterator becomes the first element, or &lt;i&gt;front&lt;/i&gt; of the</span></span><br><span class="line"><span class="comment"> * deque.)</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> c the collection whose elements are to be placed into the deque</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> NullPointerException if the specified collection is null</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayDeque</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">    allocateElements(c.size());</span><br><span class="line">    addAll(c);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="常用方法-4"><a href="#常用方法-4" class="headerlink" title="常用方法"></a>常用方法</h2><ul>
+<li><p>public void addFirst(E e)<br>添加元素到队头，没有返回值</p>
+</li>
+<li><p>public void addLast(E e)<br>添加元素到队尾</p>
+</li>
+<li><p>public boolean offerFirst(E e)<br>插入元素到队头，只返回true或者抛出异常</p>
+</li>
+<li><p>public boolean offerLast(E e)<br>插入元素到队尾，只返回true或者抛出异常</p>
+</li>
+<li><p>public E removeFirst()<br>移除队头元素，没有元素则抛出异常</p>
+</li>
+<li><p>public E removeLast()<br>移除队尾元素，没有元素则抛出异常</p>
+</li>
+<li><p>public E pollFirst()<br>移除队头元素，没有元素则返回null</p>
+</li>
+<li><p>public E pollLast()<br>移除队尾元素，没有元素则返回null</p>
+</li>
+<li><p>public E getFirst()<br>获取队头元素（不移除），不存在则抛出异常</p>
+</li>
+<li><p>public E getLast()<br>获取队尾元素（不移除），不存在则抛出异常</p>
+</li>
+<li><p>public E peekFirst()<br>获取队头元素（不移除），不存在则返回null</p>
+</li>
+<li><p>public E peekLast()<br>获取队尾元素（不移除），不存在则返回null</p>
+</li>
+<li><p>public boolean removeFirstOccurrence(Object o)<br>移除第一个出现的特定队列元素（从队头到队尾遍历），元素不存在返回false</p>
+</li>
+<li><p>public boolean removeLastOccurrence(Object o)<br>移除最后一个出现的特定队列元素（从队尾到队头遍历），元素不存在返回false</p>
+</li>
+<li><p>public boolean add(E e)<br>同addLast</p>
+</li>
+<li><p>public boolean offer(E e)<br>同offerLast</p>
+</li>
+<li><p>public E remove()<br>移除队头元素，如果队列中没有元素则抛出异常</p>
+</li>
+<li><p>public E poll()<br>移除队头元素，如果队列中没有元素则返回null</p>
+</li>
+<li><p>public E element()<br>获取队头元素（不移除），如果队列中没有元素则抛出异常</p>
+</li>
+<li><p>public E peek()<br>获取队头元素（不移除），如果队列中没有元素则返回null</p>
+</li>
+<li><p>public void push(E e)<br>同addFirst，模拟栈的push操作，这里将向队头添加一个元素</p>
+</li>
+<li><p>public E pop()<br>同removeFirst，模拟栈的pop操作，这里将移除队头元素，队列中元素为空则抛出异常</p>
+</li>
+<li><p>public int size()</p>
+</li>
+<li><p>public boolean isEmpty()</p>
+</li>
+<li><p>public Iterator<e> iterator()</e></p>
+</li>
+<li><p>public Iterator<e> descendingIterator()</e></p>
+</li>
+<li><p>public boolean contains(Object o)</p>
+</li>
+<li><p>public boolean remove(Object o)<br>元素不存在则返回false</p>
+</li>
+<li><p>public void clear()</p>
+</li>
+</ul>
+<h1 id="LinkedBlockingDeque"><a href="#LinkedBlockingDeque" class="headerlink" title="LinkedBlockingDeque"></a>LinkedBlockingDeque</h1><p>可设置边界的阻塞队列，底层实现基于链表，不是线程安全的。</p>
+<p></p><p>Most operations run in constant time (ignoring time spent<br>blocking).  Exceptions include {@link #remove(Object) remove},<br>{@link #removeFirstOccurrence removeFirstOccurrence}, {@link</p>
+<p>#removeLastOccurrence removeLastOccurrence}, {@link #contains<br>contains}, {@link #iterator iterator.remove()}, and the bulk<br>operations, all of which run in linear time.</p>
+<p>该类的大多数操作都只需要常量时间O(1)，<code>remove</code>，<code>removeFirstOccurrence</code>，<br><code>removeLastOccurrence</code>，<code>contains</code>，<code>iterator</code>，<code>iterator.remove</code>等方法和其它聚集操作需要线性时间O(n)</p>
+<h2 id="成员变量-5"><a href="#成员变量-5" class="headerlink" title="成员变量"></a>成员变量</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Pointer to first node.</span></span><br><span class="line"><span class="comment"> * Invariant: (first == null &amp;&amp; last == null) ||</span></span><br><span class="line"><span class="comment"> *            (first.prev == null &amp;&amp; first.item != null)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">transient</span> Node&lt;E&gt; first;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Pointer to last node.</span></span><br><span class="line"><span class="comment"> * Invariant: (first == null &amp;&amp; last == null) ||</span></span><br><span class="line"><span class="comment"> *            (last.next == null &amp;&amp; last.item != null)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">transient</span> Node&lt;E&gt; last;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Number of items in the deque */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">int</span> count;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Maximum number of items in the deque */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> capacity;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Main lock guarding all access */</span></span><br><span class="line"><span class="keyword">final</span> ReentrantLock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Condition for waiting takes */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Condition notEmpty = lock.newCondition();</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Condition for waiting puts */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Condition notFull = lock.newCondition();</span><br></pre></td></tr></table></figure>
+<h2 id="构造函数-5"><a href="#构造函数-5" class="headerlink" title="构造函数"></a>构造函数</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Creates a &#123;<span class="doctag">@code</span> LinkedBlockingDeque&#125; with a capacity of</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> Integer#MAX_VALUE&#125;.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">LinkedBlockingDeque</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(Integer.MAX_VALUE);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Creates a &#123;<span class="doctag">@code</span> LinkedBlockingDeque&#125; with the given (fixed) capacity.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> capacity the capacity of this deque</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> IllegalArgumentException if &#123;<span class="doctag">@code</span> capacity&#125; is less than 1</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">LinkedBlockingDeque</span><span class="params">(<span class="keyword">int</span> capacity)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (capacity &lt;= <span class="number">0</span>) <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</span><br><span class="line">    <span class="keyword">this</span>.capacity = capacity;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Creates a &#123;<span class="doctag">@code</span> LinkedBlockingDeque&#125; with a capacity of</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> Integer#MAX_VALUE&#125;, initially containing the elements of</span></span><br><span class="line"><span class="comment"> * the given collection, added in traversal order of the</span></span><br><span class="line"><span class="comment"> * collection's iterator.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> c the collection of elements to initially contain</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> NullPointerException if the specified collection or any</span></span><br><span class="line"><span class="comment"> *         of its elements are null</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">LinkedBlockingDeque</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(Integer.MAX_VALUE);</span><br><span class="line">    <span class="keyword">final</span> ReentrantLock lock = <span class="keyword">this</span>.lock;</span><br><span class="line">    lock.lock(); <span class="comment">// Never contended, but necessary for visibility</span></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (E e : c) &#123;</span><br><span class="line">            <span class="keyword">if</span> (e == <span class="keyword">null</span>)</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">            <span class="keyword">if</span> (!linkLast(<span class="keyword">new</span> Node&lt;E&gt;(e)))</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Deque full"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        lock.unlock();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="常用方法-5"><a href="#常用方法-5" class="headerlink" title="常用方法"></a>常用方法</h2><ul>
+<li><p>public void addFirst(E e)<br>添加元素到队头，如果队列已满则抛出异常，不发生阻塞</p>
+</li>
+<li><p>public void addLast(E e)<br>添加元素到队尾部，如果队列已满则抛出异常，不发生阻塞</p>
+</li>
+<li><p>public boolean offerFirst(E e)<br>添加元素到队头，如果队列已满则返回false，不发生阻塞</p>
+</li>
+<li><p>public boolean offerLast(E e)<br>添加元素到队尾，如果队列已满则返回false，不发生阻塞</p>
+</li>
+<li><p>public void putFirst(E e)<br>添加元素到队头，如果队列已满则抛发生阻塞直到成功放入元素</p>
+</li>
+<li><p>public void putLast(E e)<br>添加元素到队尾，如果队列已满则抛发生阻塞直到成功放入元素</p>
+</li>
+<li><p>public boolean offerFirst(E e, long timeout, TimeUnit unit)<br>添加元素到队头，队列已满则等待一定时间（timeout），超时后返回false</p>
+</li>
+<li><p>public boolean offerLast(E e, long timeout, TimeUnit unit)<br>添加元素到队尾，队列已满则等待一定时间（timeout），超时后返回false</p>
+</li>
+<li><p>public E removeFirst()<br>移除队头元素，队列为空则抛出异常，不发生阻塞</p>
+</li>
+<li><p>public E removeLast()<br>移除队尾元素，队列为空则抛出异常，不发生阻塞</p>
+</li>
+<li><p>public E pollFirst()<br>移除队头元素，队列为空则返回null，不发生阻塞</p>
+</li>
+<li><p>public E pollLast()<br>移除队尾元素，队列为空则返回null，不发生阻塞</p>
+</li>
+<li><p>public E takeFirst()<br>获取并移除队头元素，对垒为空则一直阻塞到成功取出元素</p>
+</li>
+<li><p>public E takeLast()<br>获取并移除队尾元素，对垒为空则一直阻塞到成功取出元素</p>
+</li>
+<li><p>public E pollFirst(long timeout, TimeUnit unit)</p>
+</li>
+<li><p>public E pollLast(long timeout, TimeUnit unit)</p>
+</li>
+<li><p>public E getFirst()<br>获取（不移除）队头元素，如果队列为空则抛出异常</p>
+</li>
+<li><p>public E getLast()<br>获取（不移除）队尾元素，如果队列为空则抛出异常</p>
+</li>
+<li><p>public E peekFirst()<br>同getFirst，不过队列为空时返回null，不抛出异常</p>
+</li>
+<li><p>public E peekLast()</p>
+</li>
+<li><p>public boolean removeFirstOccurrence(Object o) </p>
+</li>
+<li><p>public boolean removeLastOccurrence(Object o) </p>
+</li>
+<li><p>public boolean add(E e)<br>同addLast</p>
+</li>
+<li><p>public boolean offer(E e)<br>调用了offerLast</p>
+</li>
+<li><p>public void put(E e)<br>调用了putLast</p>
+</li>
+<li><p>public boolean offer(E e, long timeout, TimeUnit unit)</p>
+</li>
+<li><p>public E poll()<br>和removeFirst相同，但是该方法在队列为空时抛出异常</p>
+</li>
+<li><p>public E take()<br>调用了takeFirst</p>
+</li>
+<li><p>public E poll(long timeout, TimeUnit unit) </p>
+</li>
+<li><p>public E element()<br>调用了getFirst</p>
+</li>
+<li><p>public E peek()<br>调用了peekFirst</p>
+</li>
+<li><p>public int remainingCapacity() </p>
+</li>
+<li><p>public void push(E e)<br>调用了addFirst</p>
+</li>
+<li><p>public E pop()<br>调用了removeFirst</p>
+</li>
+<li><p>public boolean remove(Object o)<br>调用了removeFirstOccurrence</p>
+</li>
+<li><p>public int size()</p>
+</li>
+<li><p>public boolean contains(Object o) </p>
+</li>
+<li><p>public void clear()</p>
+</li>
+<li><p>public Iterator<e> iterator()</e></p>
+</li>
+<li><p>public Iterator<e> descendingIterator()</e></p>
+</li>
+</ul>
+<h1 id="ConcurrentLinkedDeque"><a href="#ConcurrentLinkedDeque" class="headerlink" title="ConcurrentLinkedDeque"></a>ConcurrentLinkedDeque</h1><p>基于链表的无边界非阻塞双向队列，是线程安全的。</p>
+<h2 id="成员变量-6"><a href="#成员变量-6" class="headerlink" title="成员变量"></a>成员变量</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * A node from which the first node on list (that is, the unique node p</span></span><br><span class="line"><span class="comment"> * with p.prev == null &amp;&amp; p.next != p) can be reached in O(1) time.</span></span><br><span class="line"><span class="comment"> * Invariants:</span></span><br><span class="line"><span class="comment"> * - the first node is always O(1) reachable from head via prev links</span></span><br><span class="line"><span class="comment"> * - all live nodes are reachable from the first node via succ()</span></span><br><span class="line"><span class="comment"> * - head != null</span></span><br><span class="line"><span class="comment"> * - (tmp = head).next != tmp || tmp != head</span></span><br><span class="line"><span class="comment"> * - head is never gc-unlinked (but may be unlinked)</span></span><br><span class="line"><span class="comment"> * Non-invariants:</span></span><br><span class="line"><span class="comment"> * - head.item may or may not be null</span></span><br><span class="line"><span class="comment"> * - head may not be reachable from the first or last node, or from tail</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">volatile</span> Node&lt;E&gt; head;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * A node from which the last node on list (that is, the unique node p</span></span><br><span class="line"><span class="comment"> * with p.next == null &amp;&amp; p.prev != p) can be reached in O(1) time.</span></span><br><span class="line"><span class="comment"> * Invariants:</span></span><br><span class="line"><span class="comment"> * - the last node is always O(1) reachable from tail via next links</span></span><br><span class="line"><span class="comment"> * - all live nodes are reachable from the last node via pred()</span></span><br><span class="line"><span class="comment"> * - tail != null</span></span><br><span class="line"><span class="comment"> * - tail is never gc-unlinked (but may be unlinked)</span></span><br><span class="line"><span class="comment"> * Non-invariants:</span></span><br><span class="line"><span class="comment"> * - tail.item may or may not be null</span></span><br><span class="line"><span class="comment"> * - tail may not be reachable from the first or last node, or from head</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">volatile</span> Node&lt;E&gt; tail;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Node&lt;Object&gt; PREV_TERMINATOR, NEXT_TERMINATOR;</span><br></pre></td></tr></table></figure>
+<h2 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Constructs an empty deque.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ConcurrentLinkedDeque</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    head = tail = <span class="keyword">new</span> Node&lt;E&gt;(<span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Constructs a deque initially containing the elements of</span></span><br><span class="line"><span class="comment"> * the given collection, added in traversal order of the</span></span><br><span class="line"><span class="comment"> * collection's iterator.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> c the collection of elements to initially contain</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> NullPointerException if the specified collection or any</span></span><br><span class="line"><span class="comment"> *         of its elements are null</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ConcurrentLinkedDeque</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Copy c into a private chain of Nodes</span></span><br><span class="line">    Node&lt;E&gt; h = <span class="keyword">null</span>, t = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">for</span> (E e : c) &#123;</span><br><span class="line">        checkNotNull(e);</span><br><span class="line">        Node&lt;E&gt; newNode = <span class="keyword">new</span> Node&lt;E&gt;(e);</span><br><span class="line">        <span class="keyword">if</span> (h == <span class="keyword">null</span>)</span><br><span class="line">            h = t = newNode;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            t.lazySetNext(newNode);</span><br><span class="line">            newNode.lazySetPrev(t);</span><br><span class="line">            t = newNode;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    initHeadTail(h, t);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="常用方法-6"><a href="#常用方法-6" class="headerlink" title="常用方法"></a>常用方法</h2><p>和LinkedBlockingDeque差不多，不过方法都是非阻塞的</p>
+<h1 id="Deque总结"><a href="#Deque总结" class="headerlink" title="Deque总结"></a>Deque总结</h1><ul>
+<li>Deque是双向队列，队列两端都可以进行插入和移除操作</li>
+<li>一般add在队列满时抛出异常，offer不抛出异常，remove和poll同理</li>
+<li>put和take在阻塞队列中是阻塞的</li>
+<li>peek和get只获取元素而不移除元素，get在队列为空时抛出异常，peek不抛出异常</li>
+<li>push和pop模拟栈的操作，push是往队头添加一个元素，pop是移除队头元素，队列为空或者满时都将抛出异常</li>
+</ul>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/09/14/JVM-Basic/" data-toggle="tooltip" data-placement="top"
+                           title="JVM Basic">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/09/09/Collection-Framework-1/" data-toggle="tooltip" data-placement="top"
+                           title="Collection Framework(1)">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8zODUyNi8xNTA1NA==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#PriorityQueue"><span class="toc-text">PriorityQueue</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#成员变量"><span class="toc-text">成员变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构造函数"><span class="toc-text">构造函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用方法"><span class="toc-text">常用方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ArrayBlockingQueue"><span class="toc-text">ArrayBlockingQueue</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#成员变量-1"><span class="toc-text">成员变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构造函数-1"><span class="toc-text">构造函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用方法-1"><span class="toc-text">常用方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LinkedBlockingQueue"><span class="toc-text">LinkedBlockingQueue</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#成员变量-2"><span class="toc-text">成员变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构造函数-2"><span class="toc-text">构造函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用方法-2"><span class="toc-text">常用方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ConcurrentLinkedQueue"><span class="toc-text">ConcurrentLinkedQueue</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#成员变量-3"><span class="toc-text">成员变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构造函数-3"><span class="toc-text">构造函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用方法-3"><span class="toc-text">常用方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Queue总结"><span class="toc-text">Queue总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ArrayDeque"><span class="toc-text">ArrayDeque</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#成员变量-4"><span class="toc-text">成员变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构造函数-4"><span class="toc-text">构造函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用方法-4"><span class="toc-text">常用方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LinkedBlockingDeque"><span class="toc-text">LinkedBlockingDeque</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#成员变量-5"><span class="toc-text">成员变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构造函数-5"><span class="toc-text">构造函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用方法-5"><span class="toc-text">常用方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ConcurrentLinkedDeque"><span class="toc-text">ConcurrentLinkedDeque</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#成员变量-6"><span class="toc-text">成员变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构造方法"><span class="toc-text">构造方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用方法-6"><span class="toc-text">常用方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Deque总结"><span class="toc-text">Deque总结</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/Tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/Tags/#Container"
+                           title="Container">Container</a>
+                        
+                        <a class="tag" href="/Tags/#Collection"
+                           title="Collection">Collection</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a href="https://echi.me">echisan</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/plentymorea">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/plentymore">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; PLTM 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    <br>
+                    Theme by <a href="https://github.com/Haojen/hexo-theme-Anisina">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://plentymore.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-123175280-1';
+    var _gaDomain = 'plentymore.github.io';
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<!-- <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script> -->
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="https://avatars3.githubusercontent.com/u/30522768?s=400&amp;u=a2ce54d7c63789391a0ba32b17792b7a21d64fbb&amp;v=4">
+</body>
+
+</html>

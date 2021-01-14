@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BLOG">
+    <meta name="keyword" content="pltm">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <!-- google-site-verification -->
+    <meta name="google-site-verification" content="fgG59EBWTLiWni3UcgCPhkEPiVDNCnLeaocoTWjctOg" />
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="alternate" type="application/atom+xml" title="PLTM" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        ClassLoader资源加载机制｜PTLM blog
+        
+    </title>
+
+    <link rel="canonical" href="https://plentymore.github.io/2019/01/12/ClassLoader资源加载机制/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+    <!-- Google AdSense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+             google_ad_client: "ca-pub-1771277850135880",
+             enable_page_level_ads: true
+          });
+    </script>
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    PLTM
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+                        
+							
+								
+							
+						
+                    
+					
+					
+						<li>
+							<a href="/about">About</a>
+						</li>
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="/images/3.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>ClassLoader资源加载机制</h1>
+                    
+                    <span class="meta">
+                         作者 plentymore
+                        <span>
+                          日期 2019-01-12
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/Tags/#JavaBasic"
+                           title="JavaBasic">JavaBasic</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            ClassLoader资源加载机制
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>Java的类加载器（<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html" target="_blank" rel="noopener">ClassLoader</a>）不仅可以加载类，还可以加载资源（文本文件，图片，视频等各种文件资源）。</p>
+<h2 id="三个重要的类加载器"><a href="#三个重要的类加载器" class="headerlink" title="三个重要的类加载器"></a>三个重要的类加载器</h2><p>在Java中，一般有三个类加载器， <strong>Bootstrap Class Loader</strong>，<strong>ExtClassLoader</strong> 和 <strong>AppClassLoader</strong>。</p>
+<h3 id="Bootstrap-Class-Loader"><a href="#Bootstrap-Class-Loader" class="headerlink" title="Bootstrap Class Loader"></a>Bootstrap Class Loader</h3><p><strong>Bootstrap Class Loader</strong> 称为根类加载器，它是JVM实现的，使用C++语言编写，虚拟机启动的时候会使用Bootstrap Class Loader来加载Java核心类库，比如下面的图里面的类库（比如rt.jar）：</p>
+<p><img src="https://i.imgur.com/ai6MuEE.png" alt="Imgur"></p>
+<p>需要注意的是并不是图里面的所有类库都是根加载器加载的，里面有部分类库是拓展类加载器（ExtClassLoader）加载的。具体加载过程可以查看<a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-5.html#jvms-5.3" target="_blank" rel="noopener">JVM规范</a></p>
+<h3 id="ExtClassLoader"><a href="#ExtClassLoader" class="headerlink" title="ExtClassLoader"></a>ExtClassLoader</h3><p><strong>ExtClassLoader</strong>（拓展类加载器） 是sun.misc包下的<code>Launcher</code>类的一个静态内部类，它是用来加载ext目录下的类库的（这些类库成为拓展类库）。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * The class loader used for loading installed extensions.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ExtClassLoader</span> <span class="keyword">extends</span> <span class="title">URLClassLoader</span> </span>&#123;</span><br><span class="line">	<span class="comment">// 只贴出getExtDirs方法</span></span><br><span class="line">	<span class="comment">// 在这个方法里面可以看到它或获取java.ext.dirs这个系统变量</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> File[] getExtDirs() &#123;</span><br><span class="line">        String s = System.getProperty(<span class="string">"java.ext.dirs"</span>);</span><br><span class="line">        File[] dirs;</span><br><span class="line">        <span class="keyword">if</span> (s != <span class="keyword">null</span>) &#123;</span><br><span class="line">            StringTokenizer st =</span><br><span class="line">                <span class="keyword">new</span> StringTokenizer(s, File.pathSeparator);</span><br><span class="line">            <span class="keyword">int</span> count = st.countTokens();</span><br><span class="line">            dirs = <span class="keyword">new</span> File[count];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</span><br><span class="line">                dirs[i] = <span class="keyword">new</span> File(st.nextToken());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            dirs = <span class="keyword">new</span> File[<span class="number">0</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dirs;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>那么ext目录是哪个目录呢？从<code>ExtClassLoader</code>里面的getExtDirs方法可以看到，ext目录是从 <strong>java.ext.dirs</strong> 这个个系统变量获取的，执行下面的方法，可以得到这个系统变量的默认值<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String s = System.getProperty(<span class="string">"java.ext.dirs"</span>);</span><br><span class="line">        System.out.println(s);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个系统变量的值默认如下图：</p>
+<p><img src="https://i.imgur.com/IOBnAKN.png" alt="Imgur"></p>
+<p>可以看到一共有两个路径，<code>/opt/java/jdk1.8.0_192/jre/lib/ext</code>和<code>/usr/java/packages/lib/ext</code><br>在我的机器上面，后面的路径是不存在的，前面的路径是存在的。</p>
+<p><img src="https://i.imgur.com/aZzbWnf.png" alt="Imgur"></p>
+<p>上面的图中的所有类库都是由拓展类加载器（ExtClassLoader）加载的（分别有cldrdata.jar，jfxrt.jar，nashorn.jar，sunpkcs11.jar，dnsns.jar，localedata.jar，sunec.jar，zipfs.jar，jaccess.jar，meta-index，sunjce_provider.jar）</p>
+<h3 id="AppClassLoader"><a href="#AppClassLoader" class="headerlink" title="AppClassLoader"></a>AppClassLoader</h3><p><strong>AppClassLoader</strong>（系统类加载器，也就SystemClassLoader）也是sun.misc包下的<code>Launcher</code>类的一个静态内部类，它是用来加载classpath里面的类库的。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The class loader used for loading from java.class.path.</span></span><br><span class="line"><span class="comment"> * runs in a restricted security context.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">AppClassLoader</span> <span class="keyword">extends</span> <span class="title">URLClassLoader</span> </span>&#123;</span><br><span class="line">	        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ClassLoader <span class="title">getAppClassLoader</span><span class="params">(<span class="keyword">final</span> ClassLoader extcl)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> IOException</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">    	<span class="comment">// 可以看到它将获取java.class.path这个系统变量，也就是classpath的值</span></span><br><span class="line">        <span class="keyword">final</span> String s = System.getProperty(<span class="string">"java.class.path"</span>);</span><br><span class="line">        <span class="keyword">final</span> File[] path = (s == <span class="keyword">null</span>) ? <span class="keyword">new</span> File[<span class="number">0</span>] : getClassPath(s);</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>AppClassLoader</strong> 是用来加载我们自己的类和我们依赖的其它第三方类库的，我们的类和依赖的类库都在classpath中（需要在启动jvm的时候通过<code>-classpath</code>参数指定）。</p>
+<p>那么classpath的值是什么？在<code>AppClassLoader</code>类的getAppClassLoader方法里面，可以看到classpath实际上就是系统变量java.class.path的值。运行下面的方法：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">final</span> String s = System.getProperty(<span class="string">"java.class.path"</span>);</span><br><span class="line">        <span class="keyword">for</span>(String ss:s.split(<span class="string">":"</span>))&#123;</span><br><span class="line">            System.out.println(ss);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>结果如下图</p>
+<p><img src="https://i.imgur.com/jRFFhqU.png" alt="Imgur"></p>
+<p><del>可以看到，第三方依赖包也属于classpath，我自己的工程目录也属于classpath，还有java核心类库的目录和ext目录也属于classpath</del> 实际上，使用IDE运行的时候它自动通过<code>-classpath</code>参数把图上面的jar添加到classpath（所以不要过分依赖IDE），当运行某个类的main方法的时候，默认只会把当前目录添加到classpath，如果使用了其它的第三方类库，需要使用<code>-classpath</code>指定，不然会提示无法找到依赖的类。所以，classpath的默认值如下图：</p>
+<p><img src="https://i.imgur.com/ldEPg6w.png" alt="Imgur"></p>
+<p>只有一个目录<code>.</code>，表示当前目录</p>
+<h2 id="类加载器的关系"><a href="#类加载器的关系" class="headerlink" title="类加载器的关系"></a>类加载器的关系</h2><p>Bootstrap Class Loader是最顶层的类加载器，它是ExtClassLoader的父类加载器，而ExtClassLoader是AppClassLoader的父类加载器。</p>
+<p>在sun.misc包下的<code>Launcher</code>类和java.lang包下的<code>ClassLoader</code>类里面可以看到它们直接的关系。</p>
+<p><code>ClassLoader</code>的getSystemClassLoader方法<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ClassLoader <span class="title">getSystemClassLoader</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    initSystemClassLoader(); <span class="comment">// 调用了initSystemClassLoader方法</span></span><br><span class="line">    <span class="keyword">if</span> (scl == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    SecurityManager sm = System.getSecurityManager();</span><br><span class="line">    <span class="keyword">if</span> (sm != <span class="keyword">null</span>) &#123;</span><br><span class="line">        checkClassLoaderPermission(scl, Reflection.getCallerClass());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> scl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">initSystemClassLoader</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!sclSet) &#123;</span><br><span class="line">        <span class="keyword">if</span> (scl != <span class="keyword">null</span>)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"recursive invocation"</span>);</span><br><span class="line">        <span class="comment">// 创建Launcher，使用它获取系统类加载器</span></span><br><span class="line">        sun.misc.Launcher l = sun.misc.Launcher.getLauncher();</span><br><span class="line">        <span class="keyword">if</span> (l != <span class="keyword">null</span>) &#123;</span><br><span class="line">            Throwable oops = <span class="keyword">null</span>;</span><br><span class="line">            scl = l.getClassLoader();</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                scl = AccessController.doPrivileged(</span><br><span class="line">                    <span class="keyword">new</span> SystemClassLoaderAction(scl));</span><br><span class="line">            &#125; <span class="keyword">catch</span> (PrivilegedActionException pae) &#123;</span><br><span class="line">                oops = pae.getCause();</span><br><span class="line">                <span class="keyword">if</span> (oops <span class="keyword">instanceof</span> InvocationTargetException) &#123;</span><br><span class="line">                    oops = oops.getCause();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (oops != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (oops <span class="keyword">instanceof</span> Error) &#123;</span><br><span class="line">                    <span class="keyword">throw</span> (Error) oops;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">// wrap the exception</span></span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> Error(oops);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        sclSet = <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在调用<code>ClassLoader</code>的getSystemClassLoader获取系统类加载器的时候，会创建一个<code>sun.misc.Launcher</code>实例，然后用这个实例获取系统类加载器。下面来看系统类加载器是怎么创建的</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Launcher</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Launcher</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Create the extension class loader</span></span><br><span class="line">        ClassLoader extcl;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">        	<span class="comment">// 这里创建了ExtClassLoader的实例</span></span><br><span class="line">            extcl = ExtClassLoader.getExtClassLoader();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> InternalError(</span><br><span class="line">                <span class="string">"Could not create extension class loader"</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Now create the class loader to use to launch the application</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">        	<span class="comment">// 这里创建了AppClassLoader的实例，</span></span><br><span class="line">        	<span class="comment">// 同时将AppClassLoader父加器设为ExtClassLoader</span></span><br><span class="line">            loader = AppClassLoader.getAppClassLoader(extcl);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> InternalError(</span><br><span class="line">                <span class="string">"Could not create application class loader"</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Also set the context class loader for the primordial thread.</span></span><br><span class="line">        Thread.currentThread().setContextClassLoader(loader);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Finally, install a security manager if requested</span></span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到在<code>sun.misc.Launcher</code>的无参构造器里面，创建了<code>ExtClassLoader</code>和<code>AppClassLoader</code>的实例，创建<code>AppClassLoader</code>的时候，使用的是<code>AppClassLoader</code>的getAppClassLoader方法，该方法最终会返回<code>AppClassLoader</code>的实例，所以调用ClassLoader.getSystemClassLoader得到的系统类加载器就是<code>AppClassLoader</code>了<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ClassLoader <span class="title">getAppClassLoader</span><span class="params">(<span class="keyword">final</span> ClassLoader extcl)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">throws</span> IOException</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">final</span> String s = System.getProperty(<span class="string">"java.class.path"</span>);</span><br><span class="line">    <span class="keyword">final</span> File[] path = (s == <span class="keyword">null</span>) ? <span class="keyword">new</span> File[<span class="number">0</span>] : getClassPath(s);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Note: on bugid 4256530</span></span><br><span class="line">    <span class="comment">// Prior implementations of this doPrivileged() block supplied</span></span><br><span class="line">    <span class="comment">// a rather restrictive ACC via a call to the private method</span></span><br><span class="line">    <span class="comment">// AppClassLoader.getContext(). This proved overly restrictive</span></span><br><span class="line">    <span class="comment">// when loading  classes. Specifically it prevent</span></span><br><span class="line">    <span class="comment">// accessClassInPackage.sun.* grants from being honored.</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="keyword">return</span> AccessController.doPrivileged(</span><br><span class="line">        <span class="keyword">new</span> PrivilegedAction&lt;AppClassLoader&gt;() &#123;</span><br><span class="line">            <span class="function"><span class="keyword">public</span> AppClassLoader <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            URL[] urls =</span><br><span class="line">                (s == <span class="keyword">null</span>) ? <span class="keyword">new</span> URL[<span class="number">0</span>] : pathToURLs(path);</span><br><span class="line">            <span class="comment">// 这里会把ExtClassLoader设置成AppClassLoader的父类加载器</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> AppClassLoader(urls, extcl);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到最后调用了<code>AppClassLoader</code>的构造方法，最终会将设置<code>ExtClassLoader</code>设置成它的父类加载器。</p>
+<p>所以<code>AppClassLoader</code>的父类加载器为<code>ExtClassLoader</code>。那么<code>ExtClassLoader</code>的父类加载器为什么是Bootstrap Class Loader？来看到<code>ExtClassLoader</code>的构造方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ExtClassLoader</span><span class="params">(File[] dirs)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    <span class="comment">// ExtClassLoader的父加器将设置为null</span></span><br><span class="line">    <span class="keyword">super</span>(getExtURLs(dirs), <span class="keyword">null</span>, factory);</span><br><span class="line">    SharedSecrets.getJavaNetAccess().</span><br><span class="line">        getURLClassPath(<span class="keyword">this</span>).initLookupCache(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到<code>ExtClassLoader</code>的父类加载器将被设置为<code>null</code>，为什么设置为<code>null</code>就说它的父类加载器是Bootstrap Class Loader了？这是由Java的类加载机制————双亲委派机决定的。</p>
+<h2 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制"></a>双亲委派机制</h2><p>双亲委派机制，就是当要使用类加载器加载某个类的时候，先委托该类加载器的父类加载器加载这个类，如果这个父类加载器还有父类加载器（该类加载器的parent变量不为<code>null</code>），则继续委托它的父类加载器加载这个类，直到父类加载器的parent变量为<code>null</code>的时候，就使用findBootstrapClass方法找到Bootstrap Class Loader，然后使用Bootstrap Class Loader加载类，如果加载成功了，则返回，如果加载失败了，则让刚刚委派它的父类加载器来加载类，如果也加载失败了，则让委派这个父类加载器加载的类加载器来加载类，然后如果一直加载失败，最后会回到一开始使用的类加载器，然后使用这个类加器加载类。具体过程如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> Class&lt;?&gt; loadClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">    <span class="keyword">return</span> loadClass(name, <span class="keyword">false</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">protected</span> Class&lt;?&gt; loadClass(String name, <span class="keyword">boolean</span> resolve)</span><br><span class="line">    <span class="keyword">throws</span> ClassNotFoundException</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (getClassLoadingLock(name)) &#123;</span><br><span class="line">        <span class="comment">// First, check if the class has already been loaded</span></span><br><span class="line">        Class&lt;?&gt; c = findLoadedClass(name);</span><br><span class="line">        <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">long</span> t0 = System.nanoTime();</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    c = parent.loadClass(name, <span class="keyword">false</span>);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    c = findBootstrapClassOrNull(name);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">                <span class="comment">// ClassNotFoundException thrown if class not found</span></span><br><span class="line">                <span class="comment">// from the non-null parent class loader</span></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="comment">// If still not found, then invoke findClass in order</span></span><br><span class="line">                <span class="comment">// to find the class.</span></span><br><span class="line">                <span class="keyword">long</span> t1 = System.nanoTime();</span><br><span class="line">                c = findClass(name);</span><br><span class="line"></span><br><span class="line">                <span class="comment">// this is the defining class loader; record the stats</span></span><br><span class="line">                sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);</span><br><span class="line">                sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);</span><br><span class="line">                sun.misc.PerfCounter.getFindClasses().increment();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (resolve) &#123;</span><br><span class="line">            resolveClass(c);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> c;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>所以，当一个加载器的parent变量为<code>null</code>的时候，就认为它的父类加载器为Bootstrap Class Loader，而Bootstrap Class Loader是最顶层的父类加载器，它已经没有父类加载器了，所以不会再委派其父类加载器加载类。</p>
+<p>需要注意的是loadClass方法不是final的，所以是可以被子类重写的，所以理论上我们也可以不使用双亲委派机制来加载类。</p>
+<p>所以，为什么要让父类加载器先加载呢？假设不让父类加载器先加载类（即不按照双亲委派机制来进行加载），JVM启动的时候，会使用Bootstrap Class Loader加载核心的类库，比如rt.jar，然后使用ExtClassLoader加载拓展类库，然后使用AppClassLoader来加载classpath中的类库，如果没有双亲委派机制，那么AppClassLoader可能会把Bootstrap Class Loader和ExtClassLoader加载过的类又重新加载一遍（假设Bootstrap Class Loader和ExtClassLoader加载的类库都被添加到了classpath中），使得同一个类被不同的类加载器多次加载，这样的话会造成同一个类有不同的类加载器。如果让父类加载器先加载，那么rt.jar里面的类只会被Bootstrap Class Loader加载，拓展类库里面的类只会被ExtClassLoader加载（因为它的父类加载器为Bootstrap Class Loader，而Bootstrap Class Loader只能加载核心类库），这样就保证了JVM中的同一个类不会有不同的类加载器。</p>
+<h2 id="资源加载机制"><a href="#资源加载机制" class="headerlink" title="资源加载机制"></a>资源加载机制</h2><p><code>ClassLoader</code>的资源加载机制和类加载机制一样，都遵循双亲委派机制。</p>
+<h3 id="ClassLoader的getResource方法"><a href="#ClassLoader的getResource方法" class="headerlink" title="ClassLoader的getResource方法"></a>ClassLoader的getResource方法</h3><p>下面看到它的getResource方法<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> URL <span class="title">getResource</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">    URL url;</span><br><span class="line">    <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">    	<span class="comment">// 使用父类加载器的的getResource加载</span></span><br><span class="line">        url = parent.getResource(name);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    	<span class="comment">// parent为null，所没父加器为根加载器，使用根加载器进行加载</span></span><br><span class="line">        url = getBootstrapResource(name);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (url == <span class="keyword">null</span>) &#123;</span><br><span class="line">    	<span class="comment">// 父类加载器没有加载到资源，则自己加载</span></span><br><span class="line">        url = findResource(name);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> url;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>ClassLoader</code>的getResource方法和类加载一样，遵循双亲委派机制。<code>ClassLoader</code>的getSystemResource方法和<code>Class</code>的getResource方法实际上最终都会调用<code>ClassLoader</code>的getResource方法按照双亲委派机制加载资源（如果类加载器重写了getResource方法，则不一定会按照该机制加载资源），如果父类加载器没有成功加载到资源，则会调用自己的findResource方法加载资源。</p>
+<p><code>URLClassLoader</code>实现了findResource方法，而ExtClassLoader和AppClassLoader都继承了<code>URLClassLoader</code>，并且都没有重写这个方法，所以调用它们的findResource方法的时候实际上是调用<code>URLClassLoader</code>实现的findResource方法。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> URL <span class="title">findResource</span><span class="params">(<span class="keyword">final</span> String name)</span> </span>&#123;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * The same restriction to finding classes applies to resources</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    URL url = AccessController.doPrivileged(</span><br><span class="line">        <span class="keyword">new</span> PrivilegedAction&lt;URL&gt;() &#123;</span><br><span class="line">            <span class="function"><span class="keyword">public</span> URL <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> ucp.findResource(name, <span class="keyword">true</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;, acc);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> url != <span class="keyword">null</span> ? ucp.checkURL(url) : <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到是调用了ucp来加载资源，ucp是<code>sun.misc.URLClassPath</code>类型的</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">URLClassPath</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> URL <span class="title">findResource</span><span class="params">(String name, <span class="keyword">boolean</span> check)</span> </span>&#123;</span><br><span class="line">        Loader loader;</span><br><span class="line">        <span class="keyword">int</span>[] cache = getLookupCache(name);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; (loader = getNextLoader(cache, i)) != <span class="keyword">null</span>; i++) &#123;</span><br><span class="line">        	<span class="comment">// 调用了loader的findResource</span></span><br><span class="line">            URL url = loader.findResource(name, check);</span><br><span class="line">            <span class="keyword">if</span> (url != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> url;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然而<code>sun.misc.URLClassPath</code>实际上是使用<code>Loader</code>加载资源的，<code>Loader</code>是它的一个内部类，它是用来加载网络资源的，<code>Loader</code>还有两个子类，分别为<code>FileLoader</code>（用来加载本地资源）和<code>JarLoader</code>（用来加载jar里面的资源）<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> Loader <span class="title">getLoader</span><span class="params">(<span class="keyword">final</span> URL url)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> java.security.AccessController.doPrivileged(</span><br><span class="line">            <span class="keyword">new</span> java.security.PrivilegedExceptionAction&lt;Loader&gt;() &#123;</span><br><span class="line">            <span class="function"><span class="keyword">public</span> Loader <span class="title">run</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">                String file = url.getFile();</span><br><span class="line">                <span class="keyword">if</span> (file != <span class="keyword">null</span> &amp;&amp; file.endsWith(<span class="string">"/"</span>)) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (<span class="string">"file"</span>.equals(url.getProtocol())) &#123;</span><br><span class="line">                    	<span class="comment">// url以file开头，职责创建FileLoader</span></span><br><span class="line">                        <span class="keyword">return</span> <span class="keyword">new</span> FileLoader(url);</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    	<span class="comment">// 不以file开头说明是网络资源，创建Loader</span></span><br><span class="line">                        <span class="keyword">return</span> <span class="keyword">new</span> Loader(url);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                	<span class="comment">// 是jar资源，创建JarLoader</span></span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">new</span> JarLoader(url, jarHandler, lmap);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (java.security.PrivilegedActionException pae) &#123;</span><br><span class="line">        <span class="keyword">throw</span> (IOException)pae.getException();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="ClassLoader的getSystemResource方法"><a href="#ClassLoader的getSystemResource方法" class="headerlink" title="ClassLoader的getSystemResource方法"></a>ClassLoader的getSystemResource方法</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> URL <span class="title">getSystemResource</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 获取SystemClassLoader</span></span><br><span class="line">    ClassLoader system = getSystemClassLoader();</span><br><span class="line">    <span class="keyword">if</span> (system == <span class="keyword">null</span>) &#123;</span><br><span class="line">    	<span class="comment">// 系统SystemClassLoader为空，则使用根类加载器</span></span><br><span class="line">        <span class="keyword">return</span> getBootstrapResource(name);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 使用类加载器加载资源</span></span><br><span class="line">    <span class="keyword">return</span> system.getResource(name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>getSystemResource方法会调用getSystemClassLoader方法获取SystemClassLoader（系统类加载器），SystemClassLoader就是<code>AppClassLoader</code>，下面查看getSystemClassLoader进行验证：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ClassLoader <span class="title">getSystemClassLoader</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 这里将初始化SystemClassLoader</span></span><br><span class="line">    initSystemClassLoader();</span><br><span class="line">    <span class="keyword">if</span> (scl == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    SecurityManager sm = System.getSecurityManager();</span><br><span class="line">    <span class="keyword">if</span> (sm != <span class="keyword">null</span>) &#123;</span><br><span class="line">        checkClassLoaderPermission(scl, Reflection.getCallerClass());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> scl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>getSystemClassLoader方法调用了initSystemClassLoader方法来初始化SystemClassLoader：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">initSystemClassLoader</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!sclSet) &#123;</span><br><span class="line">        <span class="keyword">if</span> (scl != <span class="keyword">null</span>)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"recursive invocation"</span>);</span><br><span class="line">        <span class="comment">// 创建了Launcher实例</span></span><br><span class="line">        sun.misc.Launcher l = sun.misc.Launcher.getLauncher();</span><br><span class="line">        <span class="keyword">if</span> (l != <span class="keyword">null</span>) &#123;</span><br><span class="line">            Throwable oops = <span class="keyword">null</span>;</span><br><span class="line">            <span class="comment">// 调用那个Launcher的getClassLoader方法</span></span><br><span class="line">            <span class="comment">// 该方法会返回Launcher的loader变量</span></span><br><span class="line">            <span class="comment">// 而这个变量的值就是AppClassLoader实例</span></span><br><span class="line">            scl = l.getClassLoader();</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">            	<span class="comment">// 这里还会调用SystemClassLoaderAction</span></span><br><span class="line">            	<span class="comment">// 它会获取系统变量的值，使用该值创建SystemClassLoader</span></span><br><span class="line">                scl = AccessController.doPrivileged(</span><br><span class="line">                    <span class="keyword">new</span> SystemClassLoaderAction(scl));</span><br><span class="line">            &#125; <span class="keyword">catch</span> (PrivilegedActionException pae) &#123;</span><br><span class="line">                oops = pae.getCause();</span><br><span class="line">                <span class="keyword">if</span> (oops <span class="keyword">instanceof</span> InvocationTargetException) &#123;</span><br><span class="line">                    oops = oops.getCause();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// ...</span></span><br><span class="line">        &#125;</span><br><span class="line">        sclSet = <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>首先它会创建一个<code>sun.misc.Launcher</code>实例，然后用该实例的getLauncher方法获取SystemClassLoader，实际上getLauncher会返回<code>sun.misc.Lanucher</code>的loader变量，而该变量是在<code>sun.misc.Lanucher</code>的构造器里面这这样初始化的：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">loader = AppClassLoader.getAppClassLoader(extcl);</span><br></pre></td></tr></table></figure></p>
+<p>所以返回的loader为<code>AppClassLoader</code>，然而这还没有结束，后面还会调用<code>SystemClassLoaderAction</code>的run方法来获取显式指定的SystemClassLoader：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SystemClassLoaderAction</span></span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">PrivilegedExceptionAction</span>&lt;<span class="title">ClassLoader</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> ClassLoader parent;</span><br><span class="line"></span><br><span class="line">    SystemClassLoaderAction(ClassLoader parent) &#123;</span><br><span class="line">        <span class="keyword">this</span>.parent = parent;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ClassLoader <span class="title">run</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    	<span class="comment">// 获取java.system.class.loader系统变量</span></span><br><span class="line">    	<span class="comment">// 如果为空，则直接返回parent，即AppClassLoader</span></span><br><span class="line">    	<span class="comment">// 否则使用该值创建ClassLoader，并作为SystemClassLoader返回</span></span><br><span class="line">        String cls = System.getProperty(<span class="string">"java.system.class.loader"</span>);</span><br><span class="line">        <span class="keyword">if</span> (cls == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> parent;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Constructor&lt;?&gt; ctor = Class.forName(cls, <span class="keyword">true</span>, parent)</span><br><span class="line">            .getDeclaredConstructor(<span class="keyword">new</span> Class&lt;?&gt;[] &#123; ClassLoader.class &#125;);</span><br><span class="line">        ClassLoader sys = (ClassLoader) ctor.newInstance(</span><br><span class="line">            <span class="keyword">new</span> Object[] &#123; parent &#125;);</span><br><span class="line">        Thread.currentThread().setContextClassLoader(sys);</span><br><span class="line">        <span class="keyword">return</span> sys;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>首先<code>SystemClassLoaderAction</code>的run方法会获取系统变量java.system.class.loader的值，这个值如果不在jvm参数里面指定的话是默认为空的。如果该值为空，则直接返回parent变量，也就是<code>AppClassLoader</code>变量，所以默认情况下，SystemClassLoader（系统类加载器）为<code>AppClassLoader</code>，如果在jvm参数里面指定了java.system.class.loader，则会使用java.system.class.loader指定的类作为SystemClassLoader，也就是说SystemClassLoader是可以改变的，不一定为<code>AppClassLoader</code>。</p>
+<p>现在我们已经知道了getSystemClassLoader方法默认会返回<code>AppClassLoader</code>了，回到ClassLoader的getSystemResource方法，因为现在已经获取到了SystemClassLoader（类型为<code>AppClassLoader</code>），所以将调用这个SystemClassLoader的getResource方法加载资源，也就是<code>AppClassLoader</code>的getResource方法。</p>
+<p>实际上<code>AppClassLoader</code>没有getResource方法，它的getResource方法是从<code>ClassLoader</code>继承的，上面已经提到了<code>ClassLoader</code>的getResource方法，这里就不再复读了。</p>
+<p>所以，在默认情况下，ClassLoader的getSystemResource方法将使用<code>AppClassLoader</code>来加载资源。</p>
+<h3 id="Class的getResource方法"><a href="#Class的getResource方法" class="headerlink" title="Class的getResource方法"></a>Class的getResource方法</h3><p>在<code>Class</code>中也有一个getResource方法<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Class</span>&lt;<span class="title">T</span>&gt; <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span>,</span></span><br><span class="line"><span class="class">                              <span class="title">GenericDeclaration</span>,</span></span><br><span class="line"><span class="class">                              <span class="title">Type</span>,</span></span><br><span class="line"><span class="class">                              <span class="title">AnnotatedElement</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> java.net.<span class="function">URL <span class="title">getResource</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 调用resolveName解析资源名称</span></span><br><span class="line">        <span class="comment">// 如果name是以/开头，则会去掉/然后返回</span></span><br><span class="line">        <span class="comment">// 如果不是一/开头，则在name前面加上该类的包名</span></span><br><span class="line">        name = resolveName(name);</span><br><span class="line">        <span class="comment">// 这里将获取加载该类的加载器</span></span><br><span class="line">        ClassLoader cl = getClassLoader0();</span><br><span class="line">        <span class="keyword">if</span> (cl==<span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// A system class.</span></span><br><span class="line">            <span class="comment">// 如果获取到的类加载器为空，则使用系统类加载器来加载资源</span></span><br><span class="line">            <span class="keyword">return</span> ClassLoader.getSystemResource(name);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> cl.getResource(name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个方法在加载资源之前，会先调用resolveName方法解析资源名称：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> String <span class="title">resolveName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (name == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// name不是以/开头，表示从包名的路径开始查找</span></span><br><span class="line">    <span class="keyword">if</span> (!name.startsWith(<span class="string">"/"</span>)) &#123;</span><br><span class="line">        Class&lt;?&gt; c = <span class="keyword">this</span>;</span><br><span class="line">        <span class="keyword">while</span> (c.isArray()) &#123;</span><br><span class="line">            c = c.getComponentType();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 获取类的全限定名</span></span><br><span class="line">        String baseName = c.getName();</span><br><span class="line">        <span class="comment">// 后面将获取类所在的包的包名</span></span><br><span class="line">        <span class="keyword">int</span> index = baseName.lastIndexOf(<span class="string">'.'</span>);</span><br><span class="line">        <span class="keyword">if</span> (index != -<span class="number">1</span>) &#123;</span><br><span class="line">        	<span class="comment">// 将包名的.符号替换成/，也就是变成路径的形式</span></span><br><span class="line">            name = baseName.substring(<span class="number">0</span>, index).replace(<span class="string">'.'</span>, <span class="string">'/'</span>)</span><br><span class="line">                +<span class="string">"/"</span>+name;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    	<span class="comment">// 如果是/开头，则说明是从classpath开始查找，去掉/，保留后面的名称</span></span><br><span class="line">        name = name.substring(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以这个方法会判断name是不是以<code>/</code>开头，如果是，则说明是从classpath加载相应的资源，如果不是，则说明是从当前的类所在的包的路径开始查找。下面有一个例子：</p>
+<p>假设有一个类，全限定名称为<code>com.pltm.App</code><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.pltm;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">		Class&lt;App&gt; clazz = App.class;</span><br><span class="line">		clazz.getResource(<span class="string">"a.txt"</span>);</span><br><span class="line">		clazz.getResource(<span class="string">"/a.txt"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>调用clazz.getResource(“a.txt”)的时候，将会先调用resolveName解析name，因为”a.txt”不是以<code>/</code>开头，所以最后的name将变成<code>com/pltm/a.txt</code>，所以相当于从包名开始解析资源<br>调用clazz.getResource(“/a.txt”)的时候，也是先调用resolveName解析name，因为”/a.txt”是以<code>/</code>开头的，所以最后的name将变成<code>a.txt</code>，所以相当于从classpath解析资源</p>
+<p>回到<code>Class</code>的getResource方法，在解析完name之后，将调用getClassLoader0方法获取加载这个类的类加载器：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Package-private to allow ClassLoader access</span></span><br><span class="line"><span class="function">ClassLoader <span class="title">getClassLoader0</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> classLoader; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Initialized in JVM not by private constructor</span></span><br><span class="line"><span class="comment">// This field is filtered from reflection access, i.e. getDeclaredField</span></span><br><span class="line"><span class="comment">// will throw NoSuchFieldException</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> ClassLoader classLoader;</span><br></pre></td></tr></table></figure></p>
+<p>getClassLoader0返回的是classLoader变量，这个变量是通过<code>Class</code>的私有构造器初始化的：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Private constructor. Only the Java Virtual Machine creates Class objects.</span></span><br><span class="line"><span class="comment"> * This constructor is not used and prevents the default constructor being</span></span><br><span class="line"><span class="comment"> * generated.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">Class</span><span class="params">(ClassLoader loader)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Initialize final field for classLoader.  The initialization value of non-null</span></span><br><span class="line">    <span class="comment">// prevents future JIT optimizations from assuming this final field is null.</span></span><br><span class="line">    classLoader = loader;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>从注释上了解到，只有JVM才能创建<code>Class</code>对象，所以这个ClassLoader到底是什么？我们可以通过设置断点的方式查看这个ClassLoader的值，在<code>Class</code>的getResource(String name)方法中的<code>ClassLoader cl = getClassLoader0();</code>这行代码设置一个断点，然后运行下面的代码：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.pltm;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">		Class&lt;App&gt; clazz = App.class;</span><br><span class="line">		clazz.getResource(<span class="string">"a.txt"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>结果如下图：</p>
+<p><img src="https://i.imgur.com/S9vqzPQ.png" alt="Imgur"></p>
+<p>是<code>Launcher$AppClassLoader</code>，也就是默认的SystemClassLoader（系统类加载器），它是用来加载classpath中的类的，所以上面例子中的<code>App</code>类是又它加载的，所以可以猜测getClassLoader0方法返回的ClassLoader为负责加载当前的<code>Class</code>的ClassLoader。</p>
+<p>这里获取到了ClassLoader，后面将会使用这个ClassLoader加载资源，也就是使用<code>AppClassLoader</code>加载资源，这不就和ClassLoader的getSystemResource方法一样了吗？是的，如果<code>Class</code>是由<code>AppClassLoader</code>加载的，并且默认的SystemClassLoader为<code>AppClassLoader</code>，那么除了在加载资源前会调用resolveName解析资源名之外，<code>Class</code>的getResource方法和ClassLoader的getSystemResource方法几乎是一样的。</p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>运行下面的程序，会输出什么（不打包成jar）？<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.pltm.rt;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        Class&lt;App&gt; clazz = App.class;</span><br><span class="line">        ClassLoader loader = clazz.getClassLoader();</span><br><span class="line">        System.out.println(clazz.getResource(<span class="string">"/"</span>));</span><br><span class="line">        System.out.println(loader.getResource(<span class="string">"/"</span>));</span><br><span class="line">        System.out.println(ClassLoader.getSystemResource(<span class="string">"/"</span>));</span><br><span class="line">        System.out.println(clazz.getResource(<span class="string">""</span>));</span><br><span class="line">        System.out.println(loader.getResource(<span class="string">""</span>));</span><br><span class="line">        System.out.println(ClassLoader.getSystemResource(<span class="string">""</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>程序的目录结构如下图</p>
+<p><img src="https://i.imgur.com/2hdxmOa.png" alt="Imgur"></p>
+<p>程序输出如下图</p>
+<p><img src="https://i.imgur.com/ZZM2Xgp.png" alt="Imgur"></p>
+<p>我是在 <strong>/home/plentymore/projects/javabasic/target/classes</strong> 目录运行程序的，所以这个目录会被添加到classpath。</p>
+<p>输出结果为<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">file:/home/plentymore/projects/javabasic/target/classes/</span><br><span class="line">null</span><br><span class="line">null</span><br><span class="line">file:/home/plentymore/projects/javabasic/target/classes/com/pltm/rt/</span><br><span class="line">file:/home/plentymore/projects/javabasic/target/classes/</span><br><span class="line">file:/home/plentymore/projects/javabasic/target/classes/</span><br></pre></td></tr></table></figure></p>
+<p>接下来分析为什么会是这样的结果：<br>clazz.getResource(“/“)将调用<code>Class</code>的方法解析资源名称，因为资源名称是<code>/</code>开头的，所以<code>name = name.substring(1);</code>，所以最终的name为空字符串<code>”“</code>，接着使用加载<code>App</code>类的类加载器，即系统类加载器（实际类型为<code>AppClassLoader</code>）来加载资源，loader变量为<code>AppClassLoader</code>，ClassLoader.getSystemResource也是使用<code>AppClassLoader</code>来加载资源的，所以clazz.getResource(“/“)也就等同于loader.getResource(“”)和ClassLoader.getSystemResource(“”)，所以这三个的输出结果都是<code>file:/home/plentymore/projects/javabasic/target/classes/</code>。</p>
+<p>然后看到loader.getResource(“/“)和ClassLoader.getSystemResource(“/“)，它们都不会解析name，所以，将会在classpath中查找<code>/</code>这个资源，然而这个资源不存在于classpath，所以返回<code>null</code>。</p>
+<p>最后看到clazz.getResource(“”)，它先会调用<code>Class</code>的resolveName方法解析资源名称，因为资源名称不是以<code>/</code>开头的，所以会被加上类所在的包名，即<code>name = &quot;com/pltm/rt&quot; + &quot;/&quot; + name</code>，最终name的值为<code>com/pltm/rt/</code>，它是一个目录，而且这个目录是存在的，所以最终的结果为<code>file:/home/plentymore/projects/javabasic/target/classes/com/pltm/rt/</code></p>
+<p>如果把程序打包成jar再运行，得到的输出结果和上面的也不一样，打包成jar后运行的结果如下：</p>
+<p><img src="https://i.imgur.com/0cKapRI.png" alt="Imgur"></p>
+<p>输出结果为<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">null</span><br><span class="line">null</span><br><span class="line">null</span><br><span class="line">jar:file:/home/plentymore/projects/javabasic/target/java-basic-1.0.jar!/com/pltm/rt/</span><br><span class="line">null</span><br><span class="line">null</span><br></pre></td></tr></table></figure></p>
+<p>可以看到只有clazz.getResource(“”)这个调用结果不为空，为什么会变成这样呢？</p>
+<p>实际上是因为classpath的值不一样了。</p>
+<p>当没有打包成jar的时候，会把当前路径<code>.</code>（也就是<code>/home/plentymore/projects/javabasic/target/classes/</code>）这个路径添加到classpath。而在打包成jar之后，会把jar所在的路径<code>java-basic-1.0.jar</code>（也就是<code>/home/plentymore/projects/javabasic/target/java-basic-1.0.jar</code>）加入classpath，区别就是，一个是路径，一个是jar文件，为路径的时候，会创建FileLoader加载资源，为jar的时候，会创建JarLoader加载资源，JarLoader只能加载JarLoader里面的资源。</p>
+<p>clazz.getResource(“/“)和loader.getResource(“”)还有ClassLoader.getSystemResource(“”)含义是相同的，即它们都是查找classpath中的<code>&quot;&quot;</code>资源，但是<code>JarLoader</code>对于<code>&quot;&quot;</code>的解析和<code>FileLoader</code>不一样，<code>JarLoader</code>遇到查找的资源名称为<code>&quot;&quot;</code>的时候，最终会返回<code>null</code>，而<code>FileLoader</code>则是返回路径的目录对应的<code>URL</code>，所以打包成jar后这三个方法都返回<code>null</code>。</p>
+<p>loader.getResource(“/“)和ClassLoader.getSystemResource(“/“)的含义也是一样的，都是在classpath中查找名称为<code>/</code>的资源，这个资源是不存在的，所以返回<code>null</code>。</p>
+<p>最后看clazz.getResource(“”)，它会首先调用<code>Class</code>的resolveName方法解析资源名称，最终名称变成<code>com/pltm/rt/</code>，所以它实际上会在classpath中查找名称为<code>com/pltm/rt/</code>资源，因为jar文件是有这个目录的，所以就返回这个目录的路径对应的<code>URL</code>，所以结果为<code>jar:file:/home/plentymore/projects/javabasic/target/java-basic-1.0.jar!/com/pltm/rt/</code></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在Spring的项目中，经常能看到某个方法或者构造器需要接收<code>ClassLoader</code>，其中一个很重要的作用就是使用接收的<code>ClassLoader</code>加载资源，如果传入的<code>ClassLoader</code>为空，就会使用SystemClassLoader（系统类加载器）来加载资源，该加载器能加载classpath里面的资源。还要注意的是<code>Class</code>的getResource方法，这个方法在加载资源之前会对资源名称进行解析，如果资源名称以<code>/</code>开头，则去掉资源名称的<code>/</code>，然后从classpath中查找相应的资源，如果资源名称不以<code>/</code>开头，则说明要在类对应的包下查找资源，资源的名称会加上包名对应的目录名，然后在classpath中查找该资源。</p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/01/12/HTTP消息格式/" data-toggle="tooltip" data-placement="top"
+                           title="HTTP消息格式">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8zODUyNi8xNTA1NA==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#三个重要的类加载器"><span class="toc-text">三个重要的类加载器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Bootstrap-Class-Loader"><span class="toc-text">Bootstrap Class Loader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ExtClassLoader"><span class="toc-text">ExtClassLoader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AppClassLoader"><span class="toc-text">AppClassLoader</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类加载器的关系"><span class="toc-text">类加载器的关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#双亲委派机制"><span class="toc-text">双亲委派机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#资源加载机制"><span class="toc-text">资源加载机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ClassLoader的getResource方法"><span class="toc-text">ClassLoader的getResource方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ClassLoader的getSystemResource方法"><span class="toc-text">ClassLoader的getSystemResource方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Class的getResource方法"><span class="toc-text">Class的getResource方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试"><span class="toc-text">测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/Tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/Tags/#JavaBasic"
+                           title="JavaBasic">JavaBasic</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a href="https://echi.me">echisan</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/plentymorea">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/plentymore">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; PLTM 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    <br>
+                    Theme by <a href="https://github.com/Haojen/hexo-theme-Anisina">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://plentymore.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-123175280-1';
+    var _gaDomain = 'plentymore.github.io';
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<!-- <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script> -->
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="https://avatars3.githubusercontent.com/u/30522768?s=400&amp;u=a2ce54d7c63789391a0ba32b17792b7a21d64fbb&amp;v=4">
+</body>
+
+</html>

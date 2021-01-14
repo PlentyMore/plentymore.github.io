@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BLOG">
+    <meta name="keyword" content="pltm">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <!-- google-site-verification -->
+    <meta name="google-site-verification" content="fgG59EBWTLiWni3UcgCPhkEPiVDNCnLeaocoTWjctOg" />
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="alternate" type="application/atom+xml" title="PLTM" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Java Basic｜PTLM blog
+        
+    </title>
+
+    <link rel="canonical" href="https://plentymore.github.io/2018/08/01/Java-Basic/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+    <!-- Google AdSense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+             google_ad_client: "ca-pub-1771277850135880",
+             enable_page_level_ads: true
+          });
+    </script>
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    PLTM
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+                        
+							
+								
+							
+						
+                    
+					
+					
+						<li>
+							<a href="/about">About</a>
+						</li>
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="/images/3.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Java Basic</h1>
+                    
+                    <span class="meta">
+                         作者 plentymore
+                        <span>
+                          日期 2018-08-01
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/Tags/#JavaBasic"
+                           title="JavaBasic">JavaBasic</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Java Basic
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h1 id="Variables"><a href="#Variables" class="headerlink" title="Variables"></a>Variables</h1><h2 id="Terminology"><a href="#Terminology" class="headerlink" title="Terminology"></a>Terminology</h2><h3 id="“field”-and-“variable”"><a href="#“field”-and-“variable”" class="headerlink" title="“field” and “variable”"></a>“field” and “variable”</h3><h4 id="4-kinds-of-variables"><a href="#4-kinds-of-variables" class="headerlink" title="4 kinds of variables:"></a>4 kinds of variables:</h4><ul>
+<li>Instance Variables (Non-Static Fields)（实例变量</li>
+<li>Class Variables (Static Fields)（类/静态变量</li>
+<li>Local Variables（本地/局部变量 </li>
+<li>Parameters （参数<blockquote>
+<p>If we are talking about “fields in general” (excluding local variables and parameters), we may simply say “fields”. If the discussion applies to “all of the above”, we may simply say “variables”. If the context calls for a distinction, we will use specific terms (static field, local variables, etc.) as appropriate. You may also occasionally see the term “member” used as well. A type’s fields, methods, and nested types are collectively called its members.</p>
+</blockquote>
+</li>
+</ul>
+<p>域(fields)不包括局部变量和参数，变量(variables)包括全部(fields, local variables, parameters)</p>
+<h2 id="Primitive-Data-Type"><a href="#Primitive-Data-Type" class="headerlink" title="Primitive Data Type"></a>Primitive Data Type</h2><table>
+<thead>
+<tr>
+<th>Data Type</th>
+<th>Default Value(for fields)</th>
+<th>Size</th>
+<th>Min</th>
+<th>Max</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>byte</td>
+<td>0</td>
+<td>8-bit</td>
+<td>-128</td>
+<td>127</td>
+</tr>
+<tr>
+<td>short</td>
+<td>0</td>
+<td>16-bit</td>
+<td>-32,768</td>
+<td>32767</td>
+</tr>
+<tr>
+<td>int</td>
+<td>0</td>
+<td>32-bit</td>
+<td>-2^31</td>
+<td>-2^31 -1</td>
+</tr>
+<tr>
+<td>long</td>
+<td>0L</td>
+<td>64-bit</td>
+<td>-2^63</td>
+<td>-2^63 -1</td>
+</tr>
+<tr>
+<td>float</td>
+<td>0.0f</td>
+<td>32-bit</td>
+<td><a href="https://docs.oracle.com/javase/specs/jls/se7/html/jls-4.html#jls-4.2.3" target="_blank" rel="noopener">link</a></td>
+<td><a href="https://docs.oracle.com/javase/specs/jls/se7/html/jls-4.html#jls-4.2.3" target="_blank" rel="noopener">link</a></td>
+</tr>
+<tr>
+<td>double</td>
+<td>0.0d</td>
+<td>64-bit</td>
+<td>above link</td>
+<td>above link </td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>false</td>
+<td>not precisely defined.</td>
+<td>false</td>
+<td>true</td>
+</tr>
+<tr>
+<td>char</td>
+<td>‘\u0000’</td>
+<td>16-bit</td>
+<td>‘\u0000’</td>
+<td>‘\uffff’</td>
+</tr>
+</tbody>
+</table>
+<h2 id="在数字字面值中使用下划线"><a href="#在数字字面值中使用下划线" class="headerlink" title="在数字字面值中使用下划线"></a>在数字字面值中使用下划线</h2><blockquote>
+<p>In Java SE 7 and later, any number of underscore characters (_) can appear anywhere between digits in a numerical literal. This feature enables you, for example. to separate groups of digits in numeric literals, which can improve the readability of your code.</p>
+</blockquote>
+<blockquote>
+<p>For instance, if your code contains numbers with many digits, you can use an underscore character to separate digits in groups of three, similar to how you would use a punctuation mark like a comma, or a space, as a separator.</p>
+</blockquote>
+<blockquote>
+<p>The following example shows other ways you can use the underscore in numeric literals:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">long creditCardNumber = 1234_5678_9012_3456L;</span><br><span class="line">long socialSecurityNumber = 999_99_9999L;</span><br><span class="line">float pi =  3.14_15F;</span><br><span class="line">long hexBytes = 0xFF_EC_DE_5E;</span><br><span class="line">long hexWords = 0xCAFE_BABE;</span><br><span class="line">long maxLong = 0x7fff_ffff_ffff_ffffL;</span><br><span class="line">byte nybbles = 0b0010_0101;</span><br><span class="line">long bytes = 0b11010010_01101001_10010100_10010010;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
+<p>You can place underscores only between digits; you <strong>cannot</strong> place underscores in the following places:</p>
+<ul>
+<li>At the beginning or end of a number</li>
+<li>Adjacent to a decimal point in a floating point literal</li>
+<li>Prior to an F or L suffix</li>
+<li>In positions where a string of digits is expected</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>The following examples demonstrate valid and invalid underscore placements (which are highlighted) in numeric literals:</p>
+</blockquote>
+<p>// <strong>Invalid: cannot put underscores</strong></p>
+<p><strong>// adjacent to a decimal point</strong></p>
+<p>float pi1 = 3_.1415F;</p>
+<p>// <strong>Invalid: cannot put underscores</strong></p>
+<p>// <strong>adjacent to a decimal point</strong></p>
+<p>float pi2 = 3._1415F;</p>
+<p>// <strong>Invalid: cannot put underscores</strong></p>
+<p>// <strong>prior to an L suffix</strong></p>
+<p>long socialSecurityNumber1 = 999_99_9999_L;</p>
+<p>// OK (decimal literal)</p>
+<p>int x1 = 5_2;</p>
+<p>// <strong>Invalid: cannot put underscores</strong></p>
+<p>// <strong>At the end of a literal</strong></p>
+<p>int x2 = 52_;</p>
+<p>// OK (decimal literal)</p>
+<p>int x3 = 5_______2;</p>
+<p>// <strong>Invalid: cannot put underscores</strong></p>
+<p>// <strong>in the 0x radix prefix</strong></p>
+<p>int x4 = 0_x52;</p>
+<p>// <strong>Invalid: cannot put underscores</strong></p>
+<p>// <strong>at the beginning of a number</strong></p>
+<p>int x5 = 0x_52;</p>
+<p>// OK (hexadecimal literal)</p>
+<p>int x6 = 0x5_2;</p>
+<p>// <strong>Invalid: cannot put underscores</strong></p>
+<p>// <strong>at the end of a number</strong></p>
+<p>int x7 = 0x52_;</p>
+<h1 id="Operators"><a href="#Operators" class="headerlink" title="Operators"></a>Operators</h1><p><strong>Operator Precedence</strong></p>
+<p>优先级相同的运算符，除了分配运算符（=）以外，都算从左往右运算</p>
+<table>
+<thead>
+<tr>
+<th>Operators</th>
+<th>Precendence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>postfix</td>
+<td>expr++&nbsp;expr--  </td>
+</tr>
+<tr>
+<td>unary</td>
+<td>++expr&nbsp;--expr&nbsp;+expr&nbsp;-expr&nbsp;~&nbsp;!</td>
+</tr>
+<tr>
+<td>multiplicative</td>
+<td>*&nbsp;/&nbsp;%</td>
+</tr>
+<tr>
+<td>additive</td>
+<td>+&nbsp;-</td>
+</tr>
+<tr>
+<td>shift</td>
+<td>&lt;&lt;&nbsp;&gt;&gt;&nbsp;&gt;&gt;&gt;</td>
+</tr>
+<tr>
+<td>relational</td>
+<td>&lt;&nbsp;&gt;&nbsp;&lt;=&nbsp;&gt;=&nbsp;instanceof</td>
+</tr>
+<tr>
+<td>equality</td>
+<td>==&nbsp;!=</td>
+</tr>
+<tr>
+<td>bitwise AND</td>
+<td>&amp;</td>
+</tr>
+<tr>
+<td>bitwise exclusive OR</td>
+<td>^</td>
+</tr>
+<tr>
+<td>bitwise inclusive OR</td>
+<td>&#124;</td>
+</tr>
+<tr>
+<td>logical AND</td>
+<td>&amp;&amp;</td>
+</tr>
+<tr>
+<td>logical OR</td>
+<td>&#124;&#124;</td>
+</tr>
+<tr>
+<td>ternary</td>
+<td>? :</td>
+</tr>
+<tr>
+<td>assignment</td>
+<td>=&nbsp;+=&nbsp;-=&nbsp;*=&nbsp;/=&nbsp;%=&nbsp;&amp;=&nbsp;^=&nbsp;&lt;&lt;=&nbsp;&gt;&gt;=&nbsp;&gt;&gt;&gt;=&nbsp;&#124;=</td>
+</tr>
+</tbody>
+</table>
+<p>笔记来源： <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/index.html" target="_blank" rel="noopener">Language Basics</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/08/01/Java-meta-annotations/" data-toggle="tooltip" data-placement="top"
+                           title="Java meta-annotations">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/08/01/sslibev/" data-toggle="tooltip" data-placement="top"
+                           title="sslibev">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8zODUyNi8xNTA1NA==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Variables"><span class="toc-text">Variables</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Terminology"><span class="toc-text">Terminology</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#“field”-and-“variable”"><span class="toc-text">“field” and “variable”</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-kinds-of-variables"><span class="toc-text">4 kinds of variables:</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Primitive-Data-Type"><span class="toc-text">Primitive Data Type</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在数字字面值中使用下划线"><span class="toc-text">在数字字面值中使用下划线</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Operators"><span class="toc-text">Operators</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/Tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/Tags/#JavaBasic"
+                           title="JavaBasic">JavaBasic</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a href="https://echi.me">echisan</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/plentymorea">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/plentymore">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; PLTM 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    <br>
+                    Theme by <a href="https://github.com/Haojen/hexo-theme-Anisina">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://plentymore.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-123175280-1';
+    var _gaDomain = 'plentymore.github.io';
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<!-- <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script> -->
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="https://avatars3.githubusercontent.com/u/30522768?s=400&amp;u=a2ce54d7c63789391a0ba32b17792b7a21d64fbb&amp;v=4">
+</body>
+
+</html>

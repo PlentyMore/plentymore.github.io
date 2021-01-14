@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BLOG">
+    <meta name="keyword" content="pltm">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <!-- google-site-verification -->
+    <meta name="google-site-verification" content="fgG59EBWTLiWni3UcgCPhkEPiVDNCnLeaocoTWjctOg" />
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="alternate" type="application/atom+xml" title="PLTM" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        使用VPS下载bt资源｜PTLM blog
+        
+    </title>
+
+    <link rel="canonical" href="https://plentymore.github.io/2019/01/11/使用VPS下载bt资源/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+    <!-- Google AdSense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+             google_ad_client: "ca-pub-1771277850135880",
+             enable_page_level_ads: true
+          });
+    </script>
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    PLTM
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+                        
+							
+								
+							
+						
+                    
+					
+					
+						<li>
+							<a href="/about">About</a>
+						</li>
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="/images/3.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>使用VPS下载bt资源</h1>
+                    
+                    <span class="meta">
+                         作者 plentymore
+                        <span>
+                          日期 2019-01-11
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/Tags/#Misc"
+                           title="Misc">Misc</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            使用VPS下载bt资源
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>迅雷无法下载一些bt资源，而且迅雷没有Linux版，用别的bt下载软件来下载的话因为没有公网ip所以速度比较尴尬，刚好手上有几台vps，有公网ip，而且每个月剩下900多G流量用过不完，刚好可以用来下载这些资源。</p>
+<h2 id="安装docker"><a href="#安装docker" class="headerlink" title="安装docker"></a>安装docker</h2><p>docker的安装可以参考我的<a href="https://plentymore.github.io/2018/08/01/sslibev/#%E5%AE%89%E8%A3%85docker">另一篇博客</a></p>
+<h2 id="编写docker-cocmpose-yml"><a href="#编写docker-cocmpose-yml" class="headerlink" title="编写docker-cocmpose.yml"></a>编写docker-cocmpose.yml</h2><p>文件我已经写好了，根据自己的需要修改里面的参数就行。文件放在了<a href="https://github.com/PlentyMore/vps-deluge-nginx.git" target="_blank" rel="noopener">github项目</a>上</p>
+<h3 id="克隆项目"><a href="#克隆项目" class="headerlink" title="克隆项目"></a>克隆项目</h3><p>首先登录上vps，把项目克隆下来，然后进入克隆的项目目录。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/PlentyMore/vps-deluge-nginx.git</span><br><span class="line"><span class="built_in">cd</span> vps-deluge-nginx/</span><br></pre></td></tr></table></figure>
+<h3 id="修改deluge和nginx配置"><a href="#修改deluge和nginx配置" class="headerlink" title="修改deluge和nginx配置"></a>修改deluge和nginx配置</h3><p>打开<code>docker-compose.yml</code>文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">version: <span class="string">"3"</span></span><br><span class="line">services:</span><br><span class="line">  deluge:</span><br><span class="line">    image: linuxserver/deluge</span><br><span class="line">    container_name: deluge</span><br><span class="line">    network_mode: host</span><br><span class="line">    environment:</span><br><span class="line">      - PUID=0 <span class="comment"># 需要修改</span></span><br><span class="line">      - PGID=0 <span class="comment"># 需要修改</span></span><br><span class="line">      - TZ=Europe/London <span class="comment"># 改不改都行</span></span><br><span class="line">    volumes:</span><br><span class="line">      - ./deluge:/config</span><br><span class="line">      - ./downloads:/root/Downloads</span><br><span class="line">    restart: unless-stopped</span><br><span class="line">  nginx:</span><br><span class="line">    image: nginx</span><br><span class="line">    container_name: nginx</span><br><span class="line">    volumes:</span><br><span class="line">    - ./downloads:/usr/share/nginx/html</span><br><span class="line">    - ./nginx:/etc/nginx/conf.d</span><br><span class="line">    ports:</span><br><span class="line">    - <span class="string">"80:80"</span> <span class="comment"># 可以修改前面的端口</span></span><br><span class="line">    restart: unless-stopped</span><br></pre></td></tr></table></figure>
+<p>需要修改的地方只有下面这个地方<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">- PUID=你的UID</span><br><span class="line">- PGID=你的GID</span><br></pre></td></tr></table></figure></p>
+<p>在命令行输入id，会得到下面的结果：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">uid=0(root) gid=0(root) groups=0(root)</span><br></pre></td></tr></table></figure></p>
+<p>根据得到的结果修改就行了。还可以根据需要改很多东西，可以参考<a href="https://hub.docker.com/r/linuxserver/deluge" target="_blank" rel="noopener">文档</a></p>
+<p>修改完<code>docker-compose.yml</code>文件后，还需要修改<code>default.conf</code>文件，该文件在<code>vps-deluge-nginx/nginx</code>目录下<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen  80;</span><br><span class="line">    server_name    2.3.3.3; <span class="comment"># 替换成你的vps公网ip</span></span><br><span class="line">    charset utf-8; <span class="comment"># 避免中文乱码</span></span><br><span class="line">    root /usr/share/nginx/html;</span><br><span class="line">    location / &#123;</span><br><span class="line">        autoindex on; <span class="comment"># 索引</span></span><br><span class="line">        autoindex_exact_size on; <span class="comment"># 显示文件大小</span></span><br><span class="line">        autoindex_localtime on; <span class="comment"># 显示文件时间</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>只需要修改server_name后面的ip，改成你的vps的公网ip就可以了。</p>
+<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><p>在<code>vps-deluge-nginx</code>目录输入如下命令<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure></p>
+<p>然后就可以使用了。</p>
+<h3 id="使用deluge"><a href="#使用deluge" class="headerlink" title="使用deluge"></a>使用deluge</h3><p>在浏览器输入http://你的ip:8112就可以访问了，第一次访问需要输入密码，默认密码为deluge，最好修改一下密码，当然登录后它会提示你修改密码。</p>
+<p><img src="https://i.imgur.com/OYpziJH.png" alt="Imgur"></p>
+<p>登入后，提示修改密码，选择yes</p>
+<p><img src="https://i.imgur.com/3OI4ci9.png" alt="Imgur"></p>
+<p>输入旧密码和新密码，点击change</p>
+<p><img src="https://i.imgur.com/WAUOS0r.png" alt="Imgur"></p>
+<p>修改完成后选择Connection Manage</p>
+<p><img src="https://i.imgur.com/5dHV9wd.png" alt="Imgur"></p>
+<p>然后选中里面唯一一个online状态的连接，然后点击connect</p>
+<p><img src="https://i.imgur.com/AIjtx7y.png" alt="Imgur"></p>
+<p>连接之后就可以添加bt任务下载资源了，可以从本地选择种子，也可以提供链接</p>
+<p><img src="https://i.imgur.com/RRxYfw2.png" alt="Imgur"></p>
+<p>添加完任务后，就会自动下载了</p>
+<p><img src="https://i.imgur.com/T6i4YXT.png" alt="Imgur"></p>
+<h3 id="使用nginx"><a href="#使用nginx" class="headerlink" title="使用nginx"></a>使用nginx</h3><p>在浏览器输入http://你的ip，如果你改了nginx的端口，则需要加上端口</p>
+<p>可以直接看到下载的资源，点击资源还可以在线观看，也可以复制地址栏的链接粘贴到下载器下载</p>
+<p><img src="https://i.imgur.com/13BixW3.png" alt="Imgur"></p>
+<p><img src="https://i.imgur.com/xfdah6r.png" alt="Imgur"></p>
+<h3 id="关闭"><a href="#关闭" class="headerlink" title="关闭"></a>关闭</h3><p>在<code>vps-deluge-nginx</code>目录下面输入以下命令：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker-compose stop</span><br></pre></td></tr></table></figure></p>
+<p>这样就可以关闭deluge和nginx了。</p>
+<p>如果需要彻底移除，可以输入如下命令：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker-compose down</span><br></pre></td></tr></table></figure></p>
+<p>然后把<code>vps-deluge-nginx</code>目录整个删除</p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/01/12/HTTP消息格式/" data-toggle="tooltip" data-placement="top"
+                           title="HTTP消息格式">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/01/09/Java-Map接口常用实现类/" data-toggle="tooltip" data-placement="top"
+                           title="Java Map接口常用实现类">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8zODUyNi8xNTA1NA==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装docker"><span class="toc-text">安装docker</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编写docker-cocmpose-yml"><span class="toc-text">编写docker-cocmpose.yml</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#克隆项目"><span class="toc-text">克隆项目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改deluge和nginx配置"><span class="toc-text">修改deluge和nginx配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运行"><span class="toc-text">运行</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用deluge"><span class="toc-text">使用deluge</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用nginx"><span class="toc-text">使用nginx</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#关闭"><span class="toc-text">关闭</span></a></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/Tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/Tags/#Misc"
+                           title="Misc">Misc</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a href="https://echi.me">echisan</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/plentymorea">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/plentymore">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; PLTM 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    <br>
+                    Theme by <a href="https://github.com/Haojen/hexo-theme-Anisina">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://plentymore.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-123175280-1';
+    var _gaDomain = 'plentymore.github.io';
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<!-- <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script> -->
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="https://avatars3.githubusercontent.com/u/30522768?s=400&amp;u=a2ce54d7c63789391a0ba32b17792b7a21d64fbb&amp;v=4">
+</body>
+
+</html>

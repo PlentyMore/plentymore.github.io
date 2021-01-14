@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BLOG">
+    <meta name="keyword" content="pltm">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <!-- google-site-verification -->
+    <meta name="google-site-verification" content="fgG59EBWTLiWni3UcgCPhkEPiVDNCnLeaocoTWjctOg" />
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="alternate" type="application/atom+xml" title="PLTM" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Type Erasure｜PTLM blog
+        
+    </title>
+
+    <link rel="canonical" href="https://plentymore.github.io/2018/08/02/Type-Erasure/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+    <!-- Google AdSense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+             google_ad_client: "ca-pub-1771277850135880",
+             enable_page_level_ads: true
+          });
+    </script>
+<link rel="stylesheet" href="\assets\css\APlayer.min.css" class="aplayer-style-marker">
+<script src="\assets\js\APlayer.min.js" class="aplayer-script-marker"></script>
+<script src="\assets\js\Meting.min.js" class="meting-script-marker"></script>
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    PLTM
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+                        
+							
+								
+							
+						
+                    
+					
+					
+						<li>
+							<a href="/about">About</a>
+						</li>
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="/images/3.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Type Erasure</h1>
+                    
+                    <span class="meta">
+                         作者 plentymore
+                        <span>
+                          日期 2018-08-02
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/Tags/#JavaBasic"
+                           title="JavaBasic">JavaBasic</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Type Erasure
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                
+    <div id="aplayer-EFbXLxsb" class="aplayer aplayer-tag-marker meting-tag-marker" data-id="692193" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#ad7a86"></div>
+<h2 id="类型擦除的目的"><a href="#类型擦除的目的" class="headerlink" title="类型擦除的目的"></a>类型擦除的目的</h2><blockquote>
+<p>Generics were introduced to the Java language to provide tighter type checks at compile time and to support generic programming. To implement generics, the Java compiler applies type erasure to:</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>Replace all type parameters in generic types with their bounds or Object if the type parameters are unbounded. The produced bytecode, therefore, contains only ordinary classes, interfaces, and methods.</li>
+<li>Insert type casts if necessary to preserve type safety.</li>
+<li>Generate bridge methods to preserve polymorphism in extended generic types.</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>Type erasure ensures that no new classes are created for parameterized types; consequently, generics incur no runtime overhead.（类型擦除保证了不产生新的classes，使得泛型不会增加运行开销</p>
+</blockquote>
+<h2 id="通过class文件观察类型擦除"><a href="#通过class文件观察类型擦除" class="headerlink" title="通过class文件观察类型擦除"></a>通过class文件观察类型擦除</h2><p>使用Intellij自带的反编译工具查看class文件时，由于这个工具过于智能，会将类型擦除后<br>的信息根据常量池和其他地方的信息还原回去，<br>导致最终看到的class文件内容和源代码几乎没有区别</p>
+<p>源文件</p>
+<p><img src="https://i.imgur.com/s6cdOt7.png" alt="Cla.java"></p>
+<p>class文件</p>
+<p><img src="https://i.imgur.com/ExG6fqV.png" alt="Cla.class"></p>
+<p>因此，要查看类型擦除后的class文件，可以使用javap或者<a href="https://github.com/ClassViewer/ClassViewer.git" target="_blank" rel="noopener">ClassViewer</a></p>
+<ul>
+<li><p>使用javap查看class文件信息<br>在终端运行<code>javap -v -c 文件名.class</code>即可看到class文件详细信息，如下图：<br><img src="https://i.imgur.com/iCuC3xx.png" alt="javap"></p>
+</li>
+<li><p>使用ClassViewer<br>为了方便可以直接下载release的<a href="https://github.com/ClassViewer/ClassViewer/releases" target="_blank" rel="noopener">jar文件</a>运行，界面如下图：<br><img src="https://i.imgur.com/1ia1fBk.png" alt="CLassViewer"></p>
+</li>
+</ul>
+<p>你需要对class文件结构有一定的了解，<a href="https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-4.html" target="_blank" rel="noopener">了解一下</a></p>
+<p>接下来就可以通过class文件观察类型擦除了<br>源文件代码为：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cla</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T t;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Cla</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setT</span><span class="params">(T t)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.t = t;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getT</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.t;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Cla raw = <span class="keyword">new</span> Cla();</span><br><span class="line">        raw.setT(<span class="string">"a"</span>);</span><br><span class="line">        Object o = raw.getT();</span><br><span class="line">        Cla&lt;String&gt; gen = <span class="keyword">new</span> Cla&lt;&gt;();</span><br><span class="line">        gen.setT(<span class="string">"abc"</span>);</span><br><span class="line">        String s = gen.getT();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>运行<code>javap -v -c Cla.class</code>后得到：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Classfile /home/plentymore/Downloads/basicjava/target/classes/com/pltm/basicjava/gc/Cla.class</span><br><span class="line">  Last modified Aug 3, 2018; size 1149 bytes</span><br><span class="line">  MD5 checksum d095b63ee57fb71c1fa4f47904c8693e</span><br><span class="line">  Compiled from &quot;Cla.java&quot;</span><br><span class="line">public class com.pltm.basicjava.gc.Cla&lt;T extends java.lang.Object&gt; extends java.lang.Object</span><br><span class="line">  minor version: 0</span><br><span class="line">  major version: 52</span><br><span class="line">  flags: ACC_PUBLIC, ACC_SUPER</span><br><span class="line">Constant pool:</span><br><span class="line">   #1 = Methodref          #10.#43        // java/lang/Object.&quot;&lt;init&gt;&quot;:()V</span><br><span class="line">   #2 = Fieldref           #3.#44         // com/pltm/basicjava/gc/Cla.t:Ljava/lang/Object;</span><br><span class="line">   #3 = Class              #45            // com/pltm/basicjava/gc/Cla</span><br><span class="line">   #4 = Methodref          #3.#43         // com/pltm/basicjava/gc/Cla.&quot;&lt;init&gt;&quot;:()V</span><br><span class="line">   #5 = String             #46            // a</span><br><span class="line">   #6 = Methodref          #3.#47         // com/pltm/basicjava/gc/Cla.setT:(Ljava/lang/Object;)V</span><br><span class="line">   #7 = Methodref          #3.#48         // com/pltm/basicjava/gc/Cla.getT:()Ljava/lang/Object;</span><br><span class="line">   #8 = String             #49            // abc</span><br><span class="line">   #9 = Class              #50            // java/lang/String</span><br><span class="line">  #10 = Class              #51            // java/lang/Object</span><br><span class="line">  #11 = Utf8               t</span><br><span class="line">  #12 = Utf8               Ljava/lang/Object;</span><br><span class="line">  #13 = Utf8               Signature</span><br><span class="line">  #14 = Utf8               TT;</span><br><span class="line">  #15 = Utf8               &lt;init&gt;</span><br><span class="line">  #16 = Utf8               ()V</span><br><span class="line">  #17 = Utf8               Code</span><br><span class="line">  #18 = Utf8               LineNumberTable</span><br><span class="line">  #19 = Utf8               LocalVariableTable</span><br><span class="line">  #20 = Utf8               this</span><br><span class="line">  #21 = Utf8               Lcom/pltm/basicjava/gc/Cla;</span><br><span class="line">  #22 = Utf8               LocalVariableTypeTable</span><br><span class="line">  #23 = Utf8               Lcom/pltm/basicjava/gc/Cla&lt;TT;&gt;;</span><br><span class="line">  #24 = Utf8               setT</span><br><span class="line">  #25 = Utf8               (Ljava/lang/Object;)V</span><br><span class="line">  #26 = Utf8               (TT;)V</span><br><span class="line">  #27 = Utf8               getT</span><br><span class="line">  #28 = Utf8               ()Ljava/lang/Object;</span><br><span class="line">  #29 = Utf8               ()TT;</span><br><span class="line">  #30 = Utf8               main</span><br><span class="line">  #31 = Utf8               ([Ljava/lang/String;)V</span><br><span class="line">  #32 = Utf8               args</span><br><span class="line">  #33 = Utf8               [Ljava/lang/String;</span><br><span class="line">  #34 = Utf8               raw</span><br><span class="line">  #35 = Utf8               o</span><br><span class="line">  #36 = Utf8               gen</span><br><span class="line">  #37 = Utf8               s</span><br><span class="line">  #38 = Utf8               Ljava/lang/String;</span><br><span class="line">  #39 = Utf8               Lcom/pltm/basicjava/gc/Cla&lt;Ljava/lang/String;&gt;;</span><br><span class="line">  #40 = Utf8               &lt;T:Ljava/lang/Object;&gt;Ljava/lang/Object;</span><br><span class="line">  #41 = Utf8               SourceFile</span><br><span class="line">  #42 = Utf8               Cla.java</span><br><span class="line">  #43 = NameAndType        #15:#16        // &quot;&lt;init&gt;&quot;:()V</span><br><span class="line">  #44 = NameAndType        #11:#12        // t:Ljava/lang/Object;</span><br><span class="line">  #45 = Utf8               com/pltm/basicjava/gc/Cla</span><br><span class="line">  #46 = Utf8               a</span><br><span class="line">  #47 = NameAndType        #24:#25        // setT:(Ljava/lang/Object;)V</span><br><span class="line">  #48 = NameAndType        #27:#28        // getT:()Ljava/lang/Object;</span><br><span class="line">  #49 = Utf8               abc</span><br><span class="line">  #50 = Utf8               java/lang/String</span><br><span class="line">  #51 = Utf8               java/lang/Object</span><br><span class="line">&#123;</span><br><span class="line">  public com.pltm.basicjava.gc.Cla();</span><br><span class="line">    descriptor: ()V</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=1, locals=1, args_size=1</span><br><span class="line">         0: aload_0</span><br><span class="line">         1: invokespecial #1                  // Method java/lang/Object.&quot;&lt;init&gt;&quot;:()V</span><br><span class="line">         4: return</span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line 24: 0</span><br><span class="line">      LocalVariableTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            0       5     0  this   Lcom/pltm/basicjava/gc/Cla;</span><br><span class="line">      LocalVariableTypeTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            0       5     0  this   Lcom/pltm/basicjava/gc/Cla&lt;TT;&gt;;</span><br><span class="line"></span><br><span class="line">  public void setT(T);</span><br><span class="line">    descriptor: (Ljava/lang/Object;)V</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=2, locals=2, args_size=2</span><br><span class="line">         0: aload_0</span><br><span class="line">         1: aload_1</span><br><span class="line">         2: putfield      #2                  // Field t:Ljava/lang/Object;</span><br><span class="line">         5: return</span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line 26: 0</span><br><span class="line">        line 27: 5</span><br><span class="line">      LocalVariableTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            0       6     0  this   Lcom/pltm/basicjava/gc/Cla;</span><br><span class="line">            0       6     1     t   Ljava/lang/Object;</span><br><span class="line">      LocalVariableTypeTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            0       6     0  this   Lcom/pltm/basicjava/gc/Cla&lt;TT;&gt;;</span><br><span class="line">            0       6     1     t   TT;</span><br><span class="line">    Signature: #26                          // (TT;)V</span><br><span class="line"></span><br><span class="line">  public T getT();</span><br><span class="line">    descriptor: ()Ljava/lang/Object;</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=1, locals=1, args_size=1</span><br><span class="line">         0: aload_0</span><br><span class="line">         1: getfield      #2                  // Field t:Ljava/lang/Object;</span><br><span class="line">         4: areturn</span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line 29: 0</span><br><span class="line">      LocalVariableTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            0       5     0  this   Lcom/pltm/basicjava/gc/Cla;</span><br><span class="line">      LocalVariableTypeTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            0       5     0  this   Lcom/pltm/basicjava/gc/Cla&lt;TT;&gt;;</span><br><span class="line">    Signature: #29                          // ()TT;</span><br><span class="line"></span><br><span class="line">  public static void main(java.lang.String[]);</span><br><span class="line">    descriptor: ([Ljava/lang/String;)V</span><br><span class="line">    flags: ACC_PUBLIC, ACC_STATIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=2, locals=5, args_size=1</span><br><span class="line">         0: new           #3                  // class com/pltm/basicjava/gc/Cla</span><br><span class="line">         3: dup</span><br><span class="line">         4: invokespecial #4                  // Method &quot;&lt;init&gt;&quot;:()V</span><br><span class="line">         7: astore_1</span><br><span class="line">         8: aload_1</span><br><span class="line">         9: ldc           #5                  // String a</span><br><span class="line">        11: invokevirtual #6                  // Method setT:(Ljava/lang/Object;)V</span><br><span class="line">        14: aload_1</span><br><span class="line">        15: invokevirtual #7                  // Method getT:()Ljava/lang/Object;</span><br><span class="line">        18: astore_2</span><br><span class="line">        19: new           #3                  // class com/pltm/basicjava/gc/Cla</span><br><span class="line">        22: dup</span><br><span class="line">        23: invokespecial #4                  // Method &quot;&lt;init&gt;&quot;:()V</span><br><span class="line">        26: astore_3</span><br><span class="line">        27: aload_3</span><br><span class="line">        28: ldc           #8                  // String abc</span><br><span class="line">        30: invokevirtual #6                  // Method setT:(Ljava/lang/Object;)V</span><br><span class="line">        33: aload_3</span><br><span class="line">        34: invokevirtual #7                  // Method getT:()Ljava/lang/Object;</span><br><span class="line">        37: checkcast     #9                  // class java/lang/String</span><br><span class="line">        40: astore        4</span><br><span class="line">        42: return</span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line 33: 0</span><br><span class="line">        line 34: 8</span><br><span class="line">        line 35: 14</span><br><span class="line">        line 36: 19</span><br><span class="line">        line 37: 27</span><br><span class="line">        line 38: 33</span><br><span class="line">        line 39: 42</span><br><span class="line">      LocalVariableTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            0      43     0  args   [Ljava/lang/String;</span><br><span class="line">            8      35     1   raw   Lcom/pltm/basicjava/gc/Cla;</span><br><span class="line">           19      24     2     o   Ljava/lang/Object;</span><br><span class="line">           27      16     3   gen   Lcom/pltm/basicjava/gc/Cla;</span><br><span class="line">           42       1     4     s   Ljava/lang/String;</span><br><span class="line">      LocalVariableTypeTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">           27      16     3   gen   Lcom/pltm/basicjava/gc/Cla&lt;Ljava/lang/String;&gt;;</span><br><span class="line">&#125;</span><br><span class="line">Signature: #40                          // &lt;T:Ljava/lang/Object;&gt;Ljava/lang/Object;</span><br><span class="line">SourceFile: &quot;Cla.java&quot;</span><br></pre></td></tr></table></figure></p>
+<p>我们重点观察这里<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> 0: new           #3                  // class com/pltm/basicjava/gc/Cla</span><br><span class="line"> 3: dup</span><br><span class="line"> 4: invokespecial #4                  // Method &quot;&lt;init&gt;&quot;:()V</span><br><span class="line"> 7: astore_1</span><br><span class="line"> 8: aload_1</span><br><span class="line"> 9: ldc           #5                  // String a</span><br><span class="line">11: invokevirtual #6                  // Method setT:(Ljava/lang/Object;)V</span><br><span class="line">14: aload_1</span><br><span class="line">15: invokevirtual #7                  // Method getT:()Ljava/lang/Object;</span><br><span class="line">//由于使用了原生态类型，编译器不会插入类型转换</span><br><span class="line">18: astore_2</span><br><span class="line">19: new           #3                  // class com/pltm/basicjava/gc/Cla</span><br><span class="line">22: dup</span><br><span class="line">23: invokespecial #4                  // Method &quot;&lt;init&gt;&quot;:()V</span><br><span class="line">26: astore_3</span><br><span class="line">27: aload_3</span><br><span class="line">28: ldc           #8                  // String abc</span><br><span class="line">30: invokevirtual #6                  // Method setT:(Ljava/lang/Object;)V</span><br><span class="line">33: aload_3</span><br><span class="line">34: invokevirtual #7                  // Method getT:()Ljava/lang/Object;</span><br><span class="line">37: checkcast     #9                  // class java/lang/String</span><br><span class="line">//可以发现编译器自动插入了一个类型转换，转换为String类型</span><br><span class="line">40: astore        4</span><br></pre></td></tr></table></figure></p>
+<p>再看看其他地方，比如这里<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setT</span><span class="params">(T)</span></span>;</span><br><span class="line">    descriptor: (Ljava/lang/Object;)V</span><br><span class="line">    <span class="comment">//可以发现T被替换成了Object类型，其他地方也一样</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="Erasure-of-Generic-Types"><a href="#Erasure-of-Generic-Types" class="headerlink" title="Erasure of Generic Types"></a>Erasure of Generic Types</h2><ul>
+<li><h3 id="类型参数无边界时"><a href="#类型参数无边界时" class="headerlink" title="类型参数无边界时"></a>类型参数无边界时</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GenClass</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T data;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setData</span><span class="params">(T d)</span></span>&#123;<span class="keyword">this</span>.data = data;&#125; </span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getData</span><span class="params">()</span></span>&#123;<span class="keyword">return</span> <span class="keyword">this</span>.data;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>类型擦除后，将变成：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GenClass</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Object data;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setData</span><span class="params">(Object d)</span></span>&#123;<span class="keyword">this</span>.data = data;&#125; </span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getData</span><span class="params">()</span></span>&#123;<span class="keyword">return</span> <span class="keyword">this</span>.data;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><h3 id="类型参数有边界时"><a href="#类型参数有边界时" class="headerlink" title="类型参数有边界时"></a>类型参数有边界时</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GenBounded</span>&lt;<span class="title">T</span> <span class="keyword">extends</span> <span class="title">Number</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T data;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setData</span><span class="params">(T data)</span></span>&#123;<span class="keyword">this</span>.data = data;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getData</span><span class="params">()</span></span>&#123;<span class="keyword">return</span> <span class="keyword">this</span>.data;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>类型擦除后，将变成：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GenBounded</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Number data;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setData</span><span class="params">(Number data)</span></span>&#123;<span class="keyword">this</span>.data = data;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Number <span class="title">getData</span><span class="params">()</span></span>&#123; <span class="keyword">return</span> <span class="keyword">this</span>.data;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="使用泛型类时"><a href="#使用泛型类时" class="headerlink" title="使用泛型类时"></a>使用泛型类时</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">    GenBounded&lt;Integer&gt; gb = <span class="keyword">new</span> GenBounded&lt;&gt;();</span><br><span class="line">    gb.setData(<span class="number">1</span>);</span><br><span class="line">    Integer num = gb.getData(); </span><br><span class="line">&#125;</span><br><span class="line">编译后将变成：</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">    GenBounded gb = <span class="keyword">new</span> GenBounded();</span><br><span class="line">    gb.setData(<span class="number">1</span>);</span><br><span class="line">    Integer num = (Integer) gb.getData(); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Erasure-of-Generic-Methods"><a href="#Erasure-of-Generic-Methods" class="headerlink" title="Erasure of Generic Methods"></a>Erasure of Generic Methods</h2><ul>
+<li><h3 id="类型参数无边界时-1"><a href="#类型参数无边界时-1" class="headerlink" title="类型参数无边界时"></a>类型参数无边界时</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> &lt;T&gt; method(T[] arrays)&#123;</span><br><span class="line">    <span class="keyword">for</span>(T a:arrays)&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line">类型擦除后：</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">method</span><span class="params">(Object[] arrays)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(Object a:arrays)&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><h3 id="类型参数有边界时-1"><a href="#类型参数有边界时-1" class="headerlink" title="类型参数有边界时"></a>类型参数有边界时</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T extend Number&gt; <span class="function">T <span class="title">methodBounded</span><span class="params">(T number)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> number;</span><br><span class="line">&#125;</span><br><span class="line">类型擦除后：</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Number <span class="title">methodBounded</span><span class="params">(Number number)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> number;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="类型擦除导致的问题"><a href="#类型擦除导致的问题" class="headerlink" title="类型擦除导致的问题"></a>类型擦除导致的问题</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GenClass</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T data;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setData</span><span class="params">(T data)</span></span>&#123;<span class="keyword">this</span>.data = data;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getData</span><span class="params">()</span></span>&#123;<span class="keyword">return</span> <span class="keyword">this</span>.data;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubGenClass</span> <span class="title">extend</span> <span class="title">GenClass</span>&lt;<span class="title">String</span>&gt;</span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setData</span><span class="params">(String s)</span></span>&#123;<span class="keyword">super</span>.setData(s)&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getData</span><span class="params">()</span></span>&#123;<span class="keyword">return</span> <span class="keyword">this</span>.data;&#125;  </span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    SubGenClass sub = <span class="keyword">new</span> SubGenClass();</span><br><span class="line">    GenClass genClass = sub;</span><br><span class="line">    genClass.setData(<span class="number">1</span>);</span><br><span class="line">    String str = sub.getData();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>类型擦除后：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GenClass</span>&lt;<span class="title">Object</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Object data;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setData</span><span class="params">(Object data)</span></span>&#123;<span class="keyword">this</span>.data = data;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getData</span><span class="params">()</span></span>&#123;<span class="keyword">return</span> <span class="keyword">this</span>.data;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubGenClass</span> <span class="title">extend</span> <span class="title">GenClass</span>&lt;<span class="title">String</span>&gt;</span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setData</span><span class="params">(String s)</span></span>&#123;<span class="keyword">super</span>.setData(s)&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getData</span><span class="params">()</span></span>&#123;<span class="keyword">return</span> <span class="keyword">this</span>.data;&#125;  </span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    SubGenClass sub = <span class="keyword">new</span> SubGenClass();</span><br><span class="line">    GenClass genClass = sub;<span class="comment">//genClass的引用为原生态类型，编译器将发出警告</span></span><br><span class="line">    genClass.setData(<span class="number">1</span>);<span class="comment">//将直接调用GenClass中的setData(Object data)方法</span></span><br><span class="line">    String str = (String) sub.getData();<span class="comment">//编译器自动插入的类型转换，将抛出ClassCastException</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>sub.getData()将调用super.getData()，而类型擦除后super.getData()返回的对象为Object类型，<br>引用指向的对象为Integer类型，因此super.getData()将返回一个引用为Object类型的指向<br>Integer类型的对象，最终将Integer类型转换成String类型时将抛出异常</p>
+<h2 id="Bridge-Methods"><a href="#Bridge-Methods" class="headerlink" title="Bridge Methods"></a>Bridge Methods</h2><p>桥接方法是编译器自动添加的，不需要开发者手动添加，<br>桥接方法是为了解决泛型类继承之后多态性丢失的问题<br>这里仍然用上面的GenClass类进行讲解</p>
+<p>假设没有桥接方法，类型擦除后，GenClass类变成了这样子：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GenClass</span>&lt;<span class="title">Object</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Object data;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setData</span><span class="params">(Object data)</span></span>&#123;<span class="keyword">this</span>.data = data;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getData</span><span class="params">()</span></span>&#123;<span class="keyword">return</span> <span class="keyword">this</span>.data;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>SubGenClass类变成了这样子：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubGenClass</span> <span class="title">extend</span> <span class="title">GenClass</span>&lt;<span class="title">String</span>&gt;</span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setData</span><span class="params">(String s)</span></span>&#123;<span class="keyword">super</span>.setData(s)&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getData</span><span class="params">()</span></span>&#123;<span class="keyword">return</span> <span class="keyword">this</span>.data;&#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样的话，SubGenClass的setData和getData方法就没有重写到其父类GenClass的<br>setData和getData方法，因为这两个类在类型擦除之后方法签名不一致了，这样就失去了多态性<br>什么是多态性，举个例子：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//Animal为Bird和Cat的父类</span></span><br><span class="line">Animal a;</span><br><span class="line">Bird b = <span class="keyword">new</span> Bird();</span><br><span class="line">Cat c = <span class="keyword">new</span> Cat();</span><br><span class="line"><span class="comment">//假设Bird和Cat都重写了Animal的某个方法，比如eat()</span></span><br><span class="line">a = b;</span><br><span class="line">a.eat();<span class="comment">//这里将调用Bird的eat方法</span></span><br><span class="line">a = c;</span><br><span class="line">a.eat();<span class="comment">//这里将调用Cat的eat方法</span></span><br></pre></td></tr></table></figure></p>
+<p>再回到上面的SubGenClass，<strong>没有桥接方法时</strong>，当我们这样子尝试使用多态特性时候：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">GenClass&lt;Integer&gt; gen;</span><br><span class="line">SubGenClass subGen = <span class="keyword">new</span> SubClass();</span><br><span class="line">gen = subGen;</span><br><span class="line">gen.setData(<span class="number">1</span>);</span><br></pre></td></tr></table></figure></p>
+<p>因为SubGenClass的setData方法接收的参数为Integer，和GenClass的方法签名不一致，SubGenClass没能重写GenClass的setData方法，<br>所以这里将调用GenClass的setData(Object)方法。</p>
+<p>GenClass的setData方法经过类型擦擦后变成了setData(Object),导致SubGenClass没能成功重写setData方法，这样是不符合预期的。</p>
+<p>我们的本意是调用SubGenClass的setData(Integer)方法,<br>现在要调用这个方法只能通过强制类型转换将gen转换成SubGenClass类型才能调用。</p>
+<p>一般地我们会下意识地认为，GenClass的setData方法也应该是setData(Integer)这种形式的，这样SubGenClass<br>就一定能够重写GenClass的setData方法，就能实现多态了。</p>
+<p>但是类型擦擦后GenClass的setData方法变成了setData(Object)，<br>因此GenSubClass并不能成功重写GenClass的setData方法,所以上面将直接调用GenClass的setData方法</p>
+<p>编译器添加的桥街方法如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setData</span><span class="params">(Object s)</span></span>&#123;</span><br><span class="line">  setData((Integer) s)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 桥街方法也为Object类型，这样SubGenClass的setData方法签名就和GenClass的一样了</span></span><br><span class="line"><span class="comment">// setData(Object)里面调用了原来的setData(Integer)方法</span></span><br><span class="line"><span class="comment">// 这样就成功地重写了setData方法，保留了多态性</span></span><br></pre></td></tr></table></figure></p>
+<p>桥接方法是编译器自动添加的，无需开发者手动添加，我们可以通过<code>javap -c 文件名.class</code>查看<br>同样的，使用Intellij idea里面自带的java bytecode decompiler是看不到编译器添加的桥接方法的，<br>需要使用上面的命令或者ClassVidwer查看。</p>
+<h2 id="堆污染"><a href="#堆污染" class="headerlink" title="堆污染"></a>堆污染</h2><p>当一个泛型类的引用指向一个原生态类型的对象时，就导致堆污染<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;String&gt; list = <span class="keyword">new</span> ArrayList();<span class="comment">//将发生堆污染</span></span><br></pre></td></tr></table></figure></p>
+<p>堆污染可能会导致类型转换错误，看下面的例子：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span><span class="params">(List&lt;String&gt; l)</span></span>&#123;</span><br><span class="line">  l.set(<span class="string">"str"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">  List list = <span class="keyword">new</span> ArrayList();</span><br><span class="line">  set(list);</span><br><span class="line">  Inerator&lt;Integer&gt; iter = list.iteraotr();</span><br><span class="line">  <span class="keyword">while</span>(iter.hasNext())&#123;</span><br><span class="line">    Integer i = iter.next();</span><br><span class="line">    <span class="comment">//运行时将抛出ClassCastException</span></span><br><span class="line">    <span class="comment">//因为String类型不能转换成Integer类型</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="NonReifiableVarargsType"><a href="#NonReifiableVarargsType" class="headerlink" title="NonReifiableVarargsType"></a>NonReifiableVarargsType</h2><p>官方文档讲得比较简单，详情请看链接<br><a href="http://www.angelikalanger.com/GenericsFAQ/FAQSections/ProgrammingIdioms.html#FAQ300" target="_blank" rel="noopener">NonReifiableVarargsType</a></p>
+<p>笔记来源： <a href="https://docs.oracle.com/javase/tutorial/java/generics/erasure.html" target="_blank" rel="noopener">Type Erasure</a><br>参考资料： <a href="https://blog.csdn.net/zxm317122667/article/details/78400398" target="_blank" rel="noopener">Heap Pollution</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/08/02/Generics/" data-toggle="tooltip" data-placement="top"
+                           title="Generics">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/08/01/File-I-O-NIO/" data-toggle="tooltip" data-placement="top"
+                           title="File I/O(NIO)">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8zODUyNi8xNTA1NA==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#类型擦除的目的"><span class="toc-text">类型擦除的目的</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通过class文件观察类型擦除"><span class="toc-text">通过class文件观察类型擦除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Erasure-of-Generic-Types"><span class="toc-text">Erasure of Generic Types</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#类型参数无边界时"><span class="toc-text">类型参数无边界时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#类型参数有边界时"><span class="toc-text">类型参数有边界时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用泛型类时"><span class="toc-text">使用泛型类时</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Erasure-of-Generic-Methods"><span class="toc-text">Erasure of Generic Methods</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#类型参数无边界时-1"><span class="toc-text">类型参数无边界时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#类型参数有边界时-1"><span class="toc-text">类型参数有边界时</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类型擦除导致的问题"><span class="toc-text">类型擦除导致的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bridge-Methods"><span class="toc-text">Bridge Methods</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#堆污染"><span class="toc-text">堆污染</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NonReifiableVarargsType"><span class="toc-text">NonReifiableVarargsType</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/Tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/Tags/#JavaBasic"
+                           title="JavaBasic">JavaBasic</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a href="https://echi.me">echisan</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/plentymorea">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/plentymore">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; PLTM 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    <br>
+                    Theme by <a href="https://github.com/Haojen/hexo-theme-Anisina">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://plentymore.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-123175280-1';
+    var _gaDomain = 'plentymore.github.io';
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<!-- <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script> -->
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="https://avatars3.githubusercontent.com/u/30522768?s=400&amp;u=a2ce54d7c63789391a0ba32b17792b7a21d64fbb&amp;v=4">
+</body>
+
+</html>

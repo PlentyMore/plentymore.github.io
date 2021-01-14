@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BLOG">
+    <meta name="keyword" content="pltm">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <!-- google-site-verification -->
+    <meta name="google-site-verification" content="fgG59EBWTLiWni3UcgCPhkEPiVDNCnLeaocoTWjctOg" />
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="alternate" type="application/atom+xml" title="PLTM" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        SpringMVC DispatcherServlet的创建流程｜PTLM blog
+        
+    </title>
+
+    <link rel="canonical" href="https://plentymore.github.io/2018/12/21/SpringMVC-DispatcherServlet的创建流程/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+    <!-- Google AdSense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+             google_ad_client: "ca-pub-1771277850135880",
+             enable_page_level_ads: true
+          });
+    </script>
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    PLTM
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+                        
+							
+								
+							
+						
+                    
+					
+					
+						<li>
+							<a href="/about">About</a>
+						</li>
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="/images/3.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>SpringMVC DispatcherServlet的创建流程</h1>
+                    
+                    <span class="meta">
+                         作者 plentymore
+                        <span>
+                          日期 2018-12-21
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/Tags/#SpringMVC"
+                           title="SpringMVC">SpringMVC</a>
+                        
+                        <a class="tag" href="/Tags/#Web"
+                           title="Web">Web</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            SpringMVC DispatcherServlet的创建流程
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>在spring-mvc里面，一般所有的请求都会被匹配到<code>DispatcherServlet</code>，然后由它调用相应的<code>Interceptor</code>，<code>Hnadler</code>处理请求（<code>Filter</code>是在Servlet之前执行的），因此DispatcherServlet可以说是spring-mvc里面很核心的一个东西，下面我们来看看它是怎么被创建和初始化的还有如何注册到Servlet容器中的（因为我一般用纯注解的方式，因此只讲注解相关的）</p>
+<h2 id="创建和初始化"><a href="#创建和初始化" class="headerlink" title="创建和初始化"></a>创建和初始化</h2><p>一般我们使用注解的方式来开发基于spring-mvc的web应用，首先要继承<code>AbstractAnnotationConfigDispatcherServletInitializer</code>，重写它的getRootConfigClasses和getServletConfigClasses和它的父类的<code>getServletMappings</code>方法，这几个方法的作用在另一篇博客有讲到。</p>
+<p><code>AbstractAnnotationConfigDispatcherServletInitializer</code>继承了<code>AbstractDispatcherServletInitializer</code>类，<code>AbstractDispatcherServletInitializer</code>类继承了<code>AbstractContextLoaderInitializer</code>类，<code>AbstractContextLoaderInitializer</code>类实现了<code>WebApplicationInitializer</code>接口<br><img src="https://i.imgur.com/88A7itZ.png" alt="Imgur"></p>
+<p>先来看<code>AbstractDispatcherServletInitializer</code>类，它重写了父类的onStartup方法<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onStartup</span><span class="params">(ServletContext servletContext)</span> <span class="keyword">throws</span> ServletException </span>&#123;</span><br><span class="line">	<span class="keyword">super</span>.onStartup(servletContext);</span><br><span class="line">	registerDispatcherServlet(servletContext);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在它重写的onStartup方法中，和父类相比，增加了注册DispatcherServlet的逻辑，即增加了registerDispatcherServlet方法<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">registerDispatcherServlet</span><span class="params">(ServletContext servletContext)</span> </span>&#123;</span><br><span class="line">	String servletName = getServletName();  <span class="comment">// 默认返回dispatcher</span></span><br><span class="line">	Assert.hasLength(servletName, <span class="string">"getServletName() must not return null or empty"</span>);</span><br><span class="line"></span><br><span class="line">       <span class="comment">// 这里创建servletAppContext，就是每个Servlet私有的WebApplicationContext</span></span><br><span class="line">       <span class="comment">// 可以通过我们重写的getRootConfigClasses方法来配置它</span></span><br><span class="line">	WebApplicationContext servletAppContext = createServletApplicationContext();</span><br><span class="line">	Assert.notNull(servletAppContext, <span class="string">"createServletApplicationContext() must not return null"</span>);</span><br><span class="line"></span><br><span class="line">       <span class="comment">// 这里创建DispatcherServlet的实例，FrameworkServlet是它的父类</span></span><br><span class="line">	FrameworkServlet dispatcherServlet = createDispatcherServlet(servletAppContext);</span><br><span class="line">	Assert.notNull(dispatcherServlet, <span class="string">"createDispatcherServlet(WebApplicationContext) must not return null"</span>);</span><br><span class="line">	dispatcherServlet.setContextInitializers(getServletApplicationContextInitializers());</span><br><span class="line"></span><br><span class="line">       <span class="comment">// 动态注册Servlet，这里是注册刚刚创建的DiapatcherServlet到Servlet容器中</span></span><br><span class="line">	ServletRegistration.Dynamic registration = servletContext.addServlet(servletName, dispatcherServlet);</span><br><span class="line">	<span class="keyword">if</span> (registration == <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Failed to register servlet with name '"</span> + servletName + <span class="string">"'. "</span> +</span><br><span class="line">				<span class="string">"Check if there is another servlet registered under the same name."</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	registration.setLoadOnStartup(<span class="number">1</span>);</span><br><span class="line">	<span class="comment">// 这里将调用getServletMappings方法设置DispatcherServlet要匹配的url</span></span><br><span class="line">	<span class="comment">// 我们可以在子类重写getServletMappings来自定义要匹配的url</span></span><br><span class="line">	registration.addMapping(getServletMappings());</span><br><span class="line">	registration.setAsyncSupported(isAsyncSupported());</span><br><span class="line"></span><br><span class="line">       <span class="comment">// 可以在子类重写getServletFilters方法来添加Filter</span></span><br><span class="line">	Filter[] filters = getServletFilters();</span><br><span class="line">	<span class="keyword">if</span> (!ObjectUtils.isEmpty(filters)) &#123;</span><br><span class="line">		<span class="keyword">for</span> (Filter filter : filters) &#123;</span><br><span class="line">			registerServletFilter(servletContext, filter);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">       <span class="comment">// 可以在子类重写这个方法来注册自定义的Servlet到Servlet容器中</span></span><br><span class="line">	customizeRegistration(registration);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>registerDispatcherServlet方法将调用createServletApplicationContext方法来创建<code>WebApplicationContext</code>，这个方法是个抽象方法，它的子类<code>AbstractAnnotationConfigDispatcherServletInitializer</code>重写了这个方法（出现了！模板方法模式）<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> WebApplicationContext <span class="title">createServletApplicationContext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	AnnotationConfigWebApplicationContext context = <span class="keyword">new</span> AnnotationConfigWebApplicationContext();</span><br><span class="line">	<span class="comment">// 将调用getServletConfigClasses来获取配置类</span></span><br><span class="line">	<span class="comment">// 这个方法需要子类重写</span></span><br><span class="line">	Class&lt;?&gt;[] configClasses = getServletConfigClasses();</span><br><span class="line">	<span class="keyword">if</span> (!ObjectUtils.isEmpty(configClasses)) &#123;</span><br><span class="line">		context.register(configClasses);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> context;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>AbstractAnnotationConfigDispatcherServletInitializer</code>的createServletApplicationContext方法调用了getServletConfigClasses方法，这个方法也是抽象方法，需要它的子类来实现（就是我们自己创建的类，继承了<code>AbstractAnnotationConfigDispatcherServletInitializer</code>，又出现了！模板方法模式）</p>
+<p>这样一路看下来发现，getRootConfigClasses方法好像没被调用？这不是配置rootApplicationContext的吗？怎么没有被调用？？？其实已经在<code>AbstractAnnotationConfigDispatcherServletInitializer</code>的父类的父类<code>AbstractContextLoaderInitializer</code>里面调用了<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">   <span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onStartup</span><span class="params">(ServletContext servletContext)</span> <span class="keyword">throws</span> ServletException </span>&#123;</span><br><span class="line">	<span class="comment">// 这个方法会调用到getRootConfigClasses方法获取rootWebApplicationContext的配置类</span></span><br><span class="line">	registerContextLoaderListener(servletContext);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">registerContextLoaderListener</span><span class="params">(ServletContext servletContext)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// 这个createRootApplicationContext方法，也是抽象方法，它需要子类去实现（又双出现了！模板方法模式）</span></span><br><span class="line">	<span class="comment">// 然后它的子类的子类实现了这个方法，里面真正调用了getRootConfigClasses方法</span></span><br><span class="line">	WebApplicationContext rootAppContext = createRootApplicationContext();</span><br><span class="line">	<span class="keyword">if</span> (rootAppContext != <span class="keyword">null</span>) &#123;</span><br><span class="line">		ContextLoaderListener listener = <span class="keyword">new</span> ContextLoaderListener(rootAppContext);</span><br><span class="line">		listener.setContextInitializers(getRootApplicationContextInitializers());</span><br><span class="line">		servletContext.addListener(listener);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		logger.debug(<span class="string">"No ContextLoaderListener registered, as "</span> +</span><br><span class="line">				<span class="string">"createRootApplicationContext() did not return an application context"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>创建完servletAppContext之后（rootApplicationContext在之前已经创建完了，具体看onStartUp方法），就创建DispatcherServlet的实例了，将调用createDispatcherServlet方法进行创建<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> FrameworkServlet <span class="title">createDispatcherServlet</span><span class="params">(WebApplicationContext servletAppContext)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> DispatcherServlet(servletAppContext);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个方法直接用前面创建的servletAppContext作为构造参数创建<code>DispatcherServlet</code>的实例（创建完DispatcherServlet后还有注册Filter和注册自定义Servlet等步骤，这里不细讲），我们先来看看看<code>DispatcherServlet</code>的类图<br><img src="https://i.imgur.com/onJ5QuS.png" alt="Imgur"><br>可以看到<code>DispatcherServlet</code>继承了<code>FrameworkServlet</code>，<code>FrameworkServlet</code>继承了<code>HttpServletBean</code>，<code>HttpServletBean</code>继承了<code>HttpServlet</code>，因此DispatcherServlet是一个Servlet。</p>
+<p><code>DispatcherServlet</code>的构造函数<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">DispatcherServlet</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">super</span>();</span><br><span class="line">	setDispatchOptionsRequest(<span class="keyword">true</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">DispatcherServlet</span><span class="params">(WebApplicationContext webApplicationContext)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">super</span>(webApplicationContext);</span><br><span class="line">	setDispatchOptionsRequest(<span class="keyword">true</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面创建<code>DispatcherServlet</code>的实例用的而第二个构造函数，这个构造函数调用了<code>FrameworkServlet</code>的构造函数<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">FrameworkServlet</span><span class="params">(WebApplicationContext webApplicationContext)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.webApplicationContext = webApplicationContext;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>看起来好像就设置了一下webApplicationContext，这就完事了？是的，DispatcherServlet的实例已经创建完成了，不过好像还有很多事情没做，比如默认的视图解析器，主题解析器等都没有设置好，实例都创建完了，怎么还这些属性还没设置呢？其实已经设置好了。</p>
+<p>？？？那么究竟是在什么时候设置的呢？一般都会觉得是在构造器里面有一个initXXX的方法会把这些东西设置好，然后这里并没有这样做，而是巧妙地利用了Servlet的生命周期进行这些属性设置（不要忘了DispatcherServlet也是一个Servlet），回想一下Servlet的生命周期，首先，创建Servlet的时候，Servlet容器会调用它的init方法，然后，移除Servlet的时候，会调用它的destroy方法，处理请求的时候，会调用它的service方法，其中init和destroy方法仅仅会被调用最多一次，service则会被调用任意次（每一处理请求都会调用）。</p>
+<p><code>FrameworkServlet</code>继承了<code>HttpServletBean</code>，<code>HttpServletBean</code>继承了<code>HttpServlet</code>。然后我们来看<code>HttpServletBean</code>的init方法<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> <span class="keyword">throws</span> ServletException </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Set bean properties from init parameters.</span></span><br><span class="line">	PropertyValues pvs = <span class="keyword">new</span> ServletConfigPropertyValues(getServletConfig(), <span class="keyword">this</span>.requiredProperties);</span><br><span class="line">	<span class="keyword">if</span> (!pvs.isEmpty()) &#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(<span class="keyword">this</span>);</span><br><span class="line">			ResourceLoader resourceLoader = <span class="keyword">new</span> ServletContextResourceLoader(getServletContext());</span><br><span class="line">			bw.registerCustomEditor(Resource.class, <span class="keyword">new</span> ResourceEditor(resourceLoader, getEnvironment()));</span><br><span class="line">			initBeanWrapper(bw);</span><br><span class="line">			bw.setPropertyValues(pvs, <span class="keyword">true</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (BeansException ex) &#123;</span><br><span class="line">			<span class="keyword">if</span> (logger.isErrorEnabled()) &#123;</span><br><span class="line">				logger.error(<span class="string">"Failed to set bean properties on servlet '"</span> + getServletName() + <span class="string">"'"</span>, ex);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">throw</span> ex;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Let subclasses do whatever initialization they like.</span></span><br><span class="line">	initServletBean();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个方法在Servlet被容器创建的之后会（在Servlet开始处理请求之前必须要被执行）被执行。在最后面发现了一个可疑的initServletBean方法<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Subclasses may override this to perform custom initialization.</span></span><br><span class="line"><span class="comment"> * All bean properties of this servlet will have been set before this</span></span><br><span class="line"><span class="comment"> * method is invoked.</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;This default implementation is empty.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> ServletException if subclass initialization fails</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initServletBean</span><span class="params">()</span> <span class="keyword">throws</span> ServletException </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>竟然什么也没做，看了下方法上面的注释，发现是留给子类实现的，它子类是<code>FrameworkServlet</code>，好像快发现些什么了，赶紧去看<code>FrameworkServlet</code>的initServletBean方法<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">initServletBean</span><span class="params">()</span> <span class="keyword">throws</span> ServletException </span>&#123;</span><br><span class="line">	getServletContext().log(<span class="string">"Initializing Spring "</span> + getClass().getSimpleName() + <span class="string">" '"</span> + getServletName() + <span class="string">"'"</span>);</span><br><span class="line">	<span class="keyword">if</span> (logger.isInfoEnabled()) &#123;</span><br><span class="line">		logger.info(<span class="string">"Initializing Servlet '"</span> + getServletName() + <span class="string">"'"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">long</span> startTime = System.currentTimeMillis();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		<span class="keyword">this</span>.webApplicationContext = initWebApplicationContext();</span><br><span class="line">		initFrameworkServlet();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">catch</span> (ServletException | RuntimeException ex) &#123;</span><br><span class="line">		logger.error(<span class="string">"Context initialization failed"</span>, ex);</span><br><span class="line">		<span class="keyword">throw</span> ex;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (logger.isDebugEnabled()) &#123;</span><br><span class="line">		String value = <span class="keyword">this</span>.enableLoggingRequestDetails ?</span><br><span class="line">				<span class="string">"shown which may lead to unsafe logging of potentially sensitive data"</span> :</span><br><span class="line">				<span class="string">"masked to prevent unsafe logging of potentially sensitive data"</span>;</span><br><span class="line">		logger.debug(<span class="string">"enableLoggingRequestDetails='"</span> + <span class="keyword">this</span>.enableLoggingRequestDetails +</span><br><span class="line">				<span class="string">"': request parameters and headers will be "</span> + value);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (logger.isInfoEnabled()) &#123;</span><br><span class="line">		logger.info(<span class="string">"Completed initialization in "</span> + (System.currentTimeMillis() - startTime) + <span class="string">" ms"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后又发现两个可疑的方法，initWebApplicationContext和initFrameworkServlet，先来看initWebApplicationContext，从名字上看，是用来初始化WebApplicationContext的<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Initialize and publish the WebApplicationContext for this servlet.</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;Delegates to &#123;<span class="doctag">@link</span> #createWebApplicationContext&#125; for actual creation</span></span><br><span class="line"><span class="comment"> * of the context. Can be overridden in subclasses.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> the WebApplicationContext instance</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> #FrameworkServlet(WebApplicationContext)</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> #setContextClass</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> #setContextConfigLocation</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> WebApplicationContext <span class="title">initWebApplicationContext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="comment">// 获取rootWebApplicationContext</span></span><br><span class="line">	WebApplicationContext rootContext =</span><br><span class="line">			WebApplicationContextUtils.getWebApplicationContext(getServletContext());</span><br><span class="line">	WebApplicationContext wac = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">this</span>.webApplicationContext != <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="comment">// A context instance was injected at construction time -&gt; use it</span></span><br><span class="line">		wac = <span class="keyword">this</span>.webApplicationContext;</span><br><span class="line">		<span class="keyword">if</span> (wac <span class="keyword">instanceof</span> ConfigurableWebApplicationContext) &#123;</span><br><span class="line">			ConfigurableWebApplicationContext cwac = (ConfigurableWebApplicationContext) wac;</span><br><span class="line">			<span class="keyword">if</span> (!cwac.isActive()) &#123;</span><br><span class="line">				<span class="comment">// The context has not yet been refreshed -&gt; provide services such as</span></span><br><span class="line">				<span class="comment">// setting the parent context, setting the application context id, etc</span></span><br><span class="line">				<span class="keyword">if</span> (cwac.getParent() == <span class="keyword">null</span>) &#123;</span><br><span class="line">					<span class="comment">// The context instance was injected without an explicit parent -&gt; set</span></span><br><span class="line">					<span class="comment">// the root application context (if any; may be null) as the parent</span></span><br><span class="line">					cwac.setParent(rootContext);</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="comment">// refresh完成后Spring IOC容器创建的bean就可以使用了</span></span><br><span class="line">				configureAndRefreshWebApplicationContext(cwac);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (wac == <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="comment">// No context instance was injected at construction time -&gt; see if one</span></span><br><span class="line">		<span class="comment">// has been registered in the servlet context. If one exists, it is assumed</span></span><br><span class="line">		<span class="comment">// that the parent context (if any) has already been set and that the</span></span><br><span class="line">		<span class="comment">// user has performed any initialization such as setting the context id</span></span><br><span class="line">		wac = findWebApplicationContext();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (wac == <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="comment">// No context instance is defined for this servlet -&gt; create a local one</span></span><br><span class="line">		wac = createWebApplicationContext(rootContext);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (!<span class="keyword">this</span>.refreshEventReceived) &#123;</span><br><span class="line">		<span class="comment">// Either the context is not a ConfigurableApplicationContext with refresh</span></span><br><span class="line">		<span class="comment">// support or the context injected at construction time had already been</span></span><br><span class="line">		<span class="comment">// refreshed -&gt; trigger initial onRefresh manually here.</span></span><br><span class="line">		onRefresh(wac);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">this</span>.publishContext) &#123;</span><br><span class="line">		<span class="comment">// Publish the context as a servlet context attribute.</span></span><br><span class="line">		String attrName = getServletContextAttributeName();</span><br><span class="line">		getServletContext().setAttribute(attrName, wac);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> wac;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>重点看onRefresh方法<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Template method which can be overridden to add servlet-specific refresh work.</span></span><br><span class="line"><span class="comment"> * Called after successful context refresh.</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;This implementation is empty.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> context the current WebApplicationContext</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> #refresh()</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onRefresh</span><span class="params">(ApplicationContext context)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// For subclasses: do nothing by default.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>看了一下注释，发现也是让子类实现的，也就是将会由<code>DispatcherServlet</code>实现，于是马上去看它的实现<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * This implementation calls &#123;<span class="doctag">@link</span> #initStrategies&#125;.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onRefresh</span><span class="params">(ApplicationContext context)</span> </span>&#123;</span><br><span class="line">	initStrategies(context);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>只调用了一个initStrategies方法，说明设置DispatcherServlet的各种默认视图解析器、主题解析器的逻辑应该就在这里了<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initStrategies</span><span class="params">(ApplicationContext context)</span> </span>&#123;</span><br><span class="line">	initMultipartResolver(context);</span><br><span class="line">	initLocaleResolver(context);</span><br><span class="line">	initThemeResolver(context);</span><br><span class="line">	initHandlerMappings(context);</span><br><span class="line">	initHandlerAdapters(context);</span><br><span class="line">	initHandlerExceptionResolvers(context);</span><br><span class="line">	initRequestToViewNameTranslator(context);</span><br><span class="line">	initViewResolvers(context);</span><br><span class="line">	initFlashMapManager(context);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>果不其然，9个initXXX方法整齐地被调用了，其实这些initXXX方法方法仅仅是根据名称和类型获取Spring IOC容器里面的Bean，默认的视图解析器、主题解析器等Bean的创建逻辑在<code>DelegatingWebMvcConfiguration</code>和它的父类<code>WebMvcConfigurationSupport</code>里面，这里篇幅有限，就不再拓展了。</p>
+<p>然后回到<code>FrameworkServlet</code>的initFrameworkServlet方法<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * This method will be invoked after any bean properties have been set and</span></span><br><span class="line"><span class="comment"> * the WebApplicationContext has been loaded. The default implementation is empty;</span></span><br><span class="line"><span class="comment"> * subclasses may override this method to perform any initialization they require.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> ServletException in case of an initialization exception</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initFrameworkServlet</span><span class="params">()</span> <span class="keyword">throws</span> ServletException </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>又是什么也没有做，但是也没有子类实现这个方法，说明这个方法完全留给我们拓展的，比如我们要魔改<code>DispatcherServlet</code>的时候，就可以重写这个方法，然后添加自己的逻辑。</p>
+<p>所以DispatcherServlet的创建流程大概就是这样子了。</p>
+<h2 id="注册到Servlet容器"><a href="#注册到Servlet容器" class="headerlink" title="注册到Servlet容器"></a>注册到Servlet容器</h2><p>这里的Servlet容器为Tomcat</p>
+<p>用注解的方式注册Servlet到Servlet容器中，需要Servlet3.0+的版本，因为这是3.0版本的新特性，关键是<code>ServletContainerInitializer</code>接口，这个接口的文档可以点<a href="https://docs.oracle.com/javaee/7/api/javax/servlet/ServletContainerInitializer.html" target="_blank" rel="noopener">这里</a>查看<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ServletContainerInitializer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onStartup</span><span class="params">(Set&lt;Class&lt;?&gt;&gt; c, ServletContext ctx)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> ServletException</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个接口的具体功能是用来在Web应用启动的阶段向Servlet容器动态地注册Servlet, Filter或者listener。接口里面只有一个onStartup方法，里面有两个参数，第一个参数是是Set类型，这个参数可以存放<code>@HandlesTypes</code>指定的类的集合，如果没有这样的类，则为空，也可以存放是<code>ServletContainerInitializer</code>类型的类的集合，这个参数的具体作用将会在讲spring-web模块中实现了这个接口的类，即<code>SpringServletContainerInitializer</code>的时候仔细讲解。第二个参数是ServletContext类型的，用来动态注册Servlet, Filter或者listener。</p>
+<p>要实现这个接口，需要在你的类文件根目录下创建一个META-INF/services目录，然后在这个目录下创建一个名为javax.servlet.ServletContainerInitializer的文件，里面的内容为你的实现类的全限定名。在spring-web模块中，具体的实现类为<code>SpringServletContainerInitializer</code><br><img src="https://i.imgur.com/UAf1oeQ.png" alt="Imgur"><br><img src="https://i.imgur.com/u6sVuBe.png" alt="Imgur"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@HandlesTypes</span>(WebApplicationInitializer.class)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringServletContainerInitializer</span> <span class="keyword">implements</span> <span class="title">ServletContainerInitializer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onStartup</span><span class="params">(@Nullable Set&lt;Class&lt;?&gt;&gt; webAppInitializerClasses, ServletContext servletContext)</span></span></span><br><span class="line"><span class="function">			<span class="keyword">throws</span> ServletException </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 用来存放WebApplicationInitializer类型实例</span></span><br><span class="line">		List&lt;WebApplicationInitializer&gt; initializers = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (webAppInitializerClasses != <span class="keyword">null</span>) &#123;</span><br><span class="line">			<span class="comment">// 遍历Servlet容器传过来的webAppInitializerClasses</span></span><br><span class="line">			<span class="keyword">for</span> (Class&lt;?&gt; waiClass : webAppInitializerClasses) &#123;</span><br><span class="line">				<span class="comment">// Be defensive: Some servlet containers provide us with invalid classes,</span></span><br><span class="line">				<span class="comment">// no matter what @HandlesTypes says...</span></span><br><span class="line">				<span class="comment">// 筛选出类型为WebApplicationInitializer的具体类</span></span><br><span class="line">				<span class="keyword">if</span> (!waiClass.isInterface() &amp;&amp; !Modifier.isAbstract(waiClass.getModifiers()) &amp;&amp;</span><br><span class="line">						WebApplicationInitializer.class.isAssignableFrom(waiClass)) &#123;</span><br><span class="line">					<span class="keyword">try</span> &#123;</span><br><span class="line">						<span class="comment">// 使用反射动态创建WebApplicationInitializer实例</span></span><br><span class="line">						initializers.add((WebApplicationInitializer)</span><br><span class="line">								ReflectionUtils.accessibleConstructor(waiClass).newInstance());</span><br><span class="line">					&#125;</span><br><span class="line">					<span class="keyword">catch</span> (Throwable ex) &#123;</span><br><span class="line">						<span class="keyword">throw</span> <span class="keyword">new</span> ServletException(<span class="string">"Failed to instantiate WebApplicationInitializer class"</span>, ex);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (initializers.isEmpty()) &#123;</span><br><span class="line">			servletContext.log(<span class="string">"No Spring WebApplicationInitializer types detected on classpath"</span>);</span><br><span class="line">			<span class="keyword">return</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		servletContext.log(initializers.size() + <span class="string">" Spring WebApplicationInitializers detected on classpath"</span>);</span><br><span class="line">		AnnotationAwareOrderComparator.sort(initializers);</span><br><span class="line">		<span class="comment">// 调用所有WebApplicationInitializer类型的实例的onStartup方法</span></span><br><span class="line">		<span class="keyword">for</span> (WebApplicationInitializer initializer : initializers) &#123;</span><br><span class="line">			initializer.onStartup(servletContext);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在<code>SpringServletContainerInitializer</code>中<code>@HandlesTypes</code>注解的值为WebApplicationInitializer.class，Servlet容器自动检测classpath中所有的类型为<code>WebApplicationInitializer</code>或者<code>ServletContainerInitializer</code>的类，然后将它们组合起来创建一个Set实例然后传给onStartup方法。</p>
+<p>在onStartup方法中，只选择类型为<code>WebApplicationInitializer</code>的具体类，然后创建这些类的实例，接着调用这些类的onStartup方法。</p>
+<p><code>WebApplicationInitializer</code>在spring-web模块中，它的作用类似与Servlet的<code>ServletContainerInitializer</code>接口，都是用来配置<code>ServletContext</code>的<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">WebApplicationInitializer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Configure the given &#123;<span class="doctag">@link</span> ServletContext&#125; with any servlets, filters, listeners</span></span><br><span class="line"><span class="comment">	 * context-params and attributes necessary for initializing this web application. See</span></span><br><span class="line"><span class="comment">	 * examples &#123;<span class="doctag">@linkplain</span> WebApplicationInitializer above&#125;.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> servletContext the &#123;<span class="doctag">@code</span> ServletContext&#125; to initialize</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@throws</span> ServletException if any call against the given &#123;<span class="doctag">@code</span> ServletContext&#125;</span></span><br><span class="line"><span class="comment">	 * throws a &#123;<span class="doctag">@code</span> ServletException&#125;</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">onStartup</span><span class="params">(ServletContext servletContext)</span> <span class="keyword">throws</span> ServletException</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>AbstractContextLoaderInitializer</code>类实现了这个接口，它是个抽象类<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractContextLoaderInitializer</span> <span class="keyword">implements</span> <span class="title">WebApplicationInitializer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/** Logger available to subclasses. */</span></span><br><span class="line">	<span class="keyword">protected</span> <span class="keyword">final</span> Log logger = LogFactory.getLog(getClass());</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onStartup</span><span class="params">(ServletContext servletContext)</span> <span class="keyword">throws</span> ServletException </span>&#123;</span><br><span class="line">		registerContextLoaderListener(servletContext);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">registerContextLoaderListener</span><span class="params">(ServletContext servletContext)</span> </span>&#123;</span><br><span class="line">		WebApplicationContext rootAppContext = createRootApplicationContext();</span><br><span class="line">		<span class="keyword">if</span> (rootAppContext != <span class="keyword">null</span>) &#123;</span><br><span class="line">			ContextLoaderListener listener = <span class="keyword">new</span> ContextLoaderListener(rootAppContext);</span><br><span class="line">			listener.setContextInitializers(getRootApplicationContextInitializers());</span><br><span class="line">			servletContext.addListener(listener);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			logger.debug(<span class="string">"No ContextLoaderListener registered, as "</span> +</span><br><span class="line">					<span class="string">"createRootApplicationContext() did not return an application context"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Nullable</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> WebApplicationContext <span class="title">createRootApplicationContext</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Nullable</span></span><br><span class="line">	<span class="keyword">protected</span> ApplicationContextInitializer&lt;?&gt;[] getRootApplicationContextInitializers() &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在onStartup方法里面，调用了registerContextLoaderListener方法，这个方法首先创建了rootAppContext（所有Servlet共享的<code>WebApplicationContext</code>），然后这个rootAppContext作为参数用来创建ContextLoaderListener的实例，然后将这个实例添加到servletContext的listeners中。<br><code>ContextLoaderListener</code>实现了<code>ServletContextListener</code>接口<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ServletContextListener</span> <span class="keyword">extends</span> <span class="title">EventListener</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">contextInitialized</span><span class="params">(ServletContextEvent sce)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">contextDestroyed</span><span class="params">(ServletContextEvent sce)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ContextLoaderListener</span> <span class="keyword">extends</span> <span class="title">ContextLoader</span> <span class="keyword">implements</span> <span class="title">ServletContextListener</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">ContextLoaderListener</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">ContextLoaderListener</span><span class="params">(WebApplicationContext context)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>(context);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Initialize the root web application context.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">contextInitialized</span><span class="params">(ServletContextEvent event)</span> </span>&#123;</span><br><span class="line">		initWebApplicationContext(event.getServletContext());</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Close the root web application context.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">contextDestroyed</span><span class="params">(ServletContextEvent event)</span> </span>&#123;</span><br><span class="line">		closeWebApplicationContext(event.getServletContext());</span><br><span class="line">		ContextCleanupListener.cleanupAttributes(event.getServletContext());</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>contextInitialized将在filters 或者 servlets开始被初始化之前（web应用启动的时候）执行，contextDestroyed将在所有servlets 和 filters被销毁之后（web应用关闭的时候）执行。</p>
+<p>contextInitialized方法调用了initWebApplicationContext方法，说明在在filters 或者 servlets开始被初始化之前将会初始化WebApplicationContext，因此在初始化filters 或者 servlets的时候WebApplicationContext是可用的。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> WebApplicationContext <span class="title">initWebApplicationContext</span><span class="params">(ServletContext servletContext)</span> </span>&#123;</span><br><span class="line">	    <span class="comment">// 这时候rootWebApplicationContext应该还没有被初始化并绑定到servletContext属性中</span></span><br><span class="line">	    <span class="comment">// 因为这个方法是由AbstractContextLoaderInitializer的onStartup方法调用的，因此应该在最前面执行</span></span><br><span class="line">	    <span class="comment">// 而且rootWebApplicationContext只能有一个，不能配置多个</span></span><br><span class="line">		<span class="keyword">if</span> (servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE) != <span class="keyword">null</span>) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(</span><br><span class="line">					<span class="string">"Cannot initialize context because there is already a root application context present - "</span> +</span><br><span class="line">					<span class="string">"check whether you have multiple ContextLoader* definitions in your web.xml!"</span>);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		servletContext.log(<span class="string">"Initializing Spring root WebApplicationContext"</span>);</span><br><span class="line">		Log logger = LogFactory.getLog(ContextLoader.class);</span><br><span class="line">		<span class="keyword">if</span> (logger.isInfoEnabled()) &#123;</span><br><span class="line">			logger.info(<span class="string">"Root WebApplicationContext: initialization started"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">long</span> startTime = System.currentTimeMillis();</span><br><span class="line"></span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="comment">// Store context in local instance variable, to guarantee that</span></span><br><span class="line">			<span class="comment">// it is available on ServletContext shutdown.</span></span><br><span class="line">			<span class="comment">// 这里在之前的创建ContextLoaderListener的实例的时候已经把rootWebApplicationContext传过来了</span></span><br><span class="line">			<span class="comment">// 所以这里的context是不为空的(如果是用的注解配置，而不是web.xml)</span></span><br><span class="line">			<span class="keyword">if</span> (<span class="keyword">this</span>.context == <span class="keyword">null</span>) &#123;</span><br><span class="line">				<span class="keyword">this</span>.context = createWebApplicationContext(servletContext);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">// 这里将初始化rootWebApplicationContext</span></span><br><span class="line">			<span class="keyword">if</span> (<span class="keyword">this</span>.context <span class="keyword">instanceof</span> ConfigurableWebApplicationContext) &#123;</span><br><span class="line">				ConfigurableWebApplicationContext cwac = (ConfigurableWebApplicationContext) <span class="keyword">this</span>.context;</span><br><span class="line">				<span class="keyword">if</span> (!cwac.isActive()) &#123;</span><br><span class="line">					<span class="comment">// The context has not yet been refreshed -&gt; provide services such as</span></span><br><span class="line">					<span class="comment">// setting the parent context, setting the application context id, etc</span></span><br><span class="line">					<span class="keyword">if</span> (cwac.getParent() == <span class="keyword">null</span>) &#123;</span><br><span class="line">						<span class="comment">// The context instance was injected without an explicit parent -&gt;</span></span><br><span class="line">						<span class="comment">// determine parent for root web application context, if any.</span></span><br><span class="line">						ApplicationContext parent = loadParentContext(servletContext);</span><br><span class="line">						cwac.setParent(parent);</span><br><span class="line">					&#125;</span><br><span class="line">					configureAndRefreshWebApplicationContext(cwac, servletContext);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">// 初始化之后绑定到servletContext的属性里面</span></span><br><span class="line">			servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, <span class="keyword">this</span>.context);</span><br><span class="line"></span><br><span class="line">			ClassLoader ccl = Thread.currentThread().getContextClassLoader();</span><br><span class="line">			<span class="keyword">if</span> (ccl == ContextLoader.class.getClassLoader()) &#123;</span><br><span class="line">				currentContext = <span class="keyword">this</span>.context;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span> <span class="keyword">if</span> (ccl != <span class="keyword">null</span>) &#123;</span><br><span class="line">				currentContextPerThread.put(ccl, <span class="keyword">this</span>.context);</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> (logger.isInfoEnabled()) &#123;</span><br><span class="line">				<span class="keyword">long</span> elapsedTime = System.currentTimeMillis() - startTime;</span><br><span class="line">				logger.info(<span class="string">"Root WebApplicationContext initialized in "</span> + elapsedTime + <span class="string">" ms"</span>);</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">this</span>.context;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (RuntimeException | Error ex) &#123;</span><br><span class="line">			logger.error(<span class="string">"Context initialization failed"</span>, ex);</span><br><span class="line">			servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, ex);</span><br><span class="line">			<span class="keyword">throw</span> ex;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到这个方法将在创建Servlet和Filters这些东西之前把rootApplicationContext配置好，使得创建这些东西的时候可以使用rootApplicationContext。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>SpringServletContainerInitializer</code>类实现了<code>ServletContainerInitializer</code>接口，使得Servlet容器能够使用这个类来自动检测我们的实现了<code>WebApplicationInitializer</code>接口的类，然后用反射创建这些类的实例，调用实例的onStartup方法，然后onStartup方法里面会初始化rootWebApplicationContext。</p>
+<p>在spring-mvc中，我们通过继承的<code>AbstractAnnotationConfigDispatcherServletInitializer</code>类，实际上间接实现了<code>WebApplicationInitializer</code>接口（实际上是它的父类的父类实现的），因此能够被Servlet容器检测到，然后就和上面说的一样，Servlet检测到我们的<code>AbstractAnnotationConfigDispatcherServletInitializer</code>，然后通过反射创建它的实例，调用实例的onStartup方法。</p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/12/22/SpringMVC原理浅析/" data-toggle="tooltip" data-placement="top"
+                           title="SpringMVC原理浅析">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/12/19/SpringMVC视图解析/" data-toggle="tooltip" data-placement="top"
+                           title="SpringMVC视图解析">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8zODUyNi8xNTA1NA==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#创建和初始化"><span class="toc-text">创建和初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#注册到Servlet容器"><span class="toc-text">注册到Servlet容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/Tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/Tags/#SpringMVC"
+                           title="SpringMVC">SpringMVC</a>
+                        
+                        <a class="tag" href="/Tags/#Web"
+                           title="Web">Web</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a href="https://echi.me">echisan</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/plentymorea">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/plentymore">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; PLTM 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    <br>
+                    Theme by <a href="https://github.com/Haojen/hexo-theme-Anisina">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://plentymore.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-123175280-1';
+    var _gaDomain = 'plentymore.github.io';
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<!-- <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script> -->
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="https://avatars3.githubusercontent.com/u/30522768?s=400&amp;u=a2ce54d7c63789391a0ba32b17792b7a21d64fbb&amp;v=4">
+</body>
+
+</html>

@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BLOG">
+    <meta name="keyword" content="pltm">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <!-- google-site-verification -->
+    <meta name="google-site-verification" content="fgG59EBWTLiWni3UcgCPhkEPiVDNCnLeaocoTWjctOg" />
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="alternate" type="application/atom+xml" title="PLTM" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Red-Black Tree｜PTLM blog
+        
+    </title>
+
+    <link rel="canonical" href="https://plentymore.github.io/2018/08/18/Red-Black-Tree/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+    <!-- Google AdSense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+             google_ad_client: "ca-pub-1771277850135880",
+             enable_page_level_ads: true
+          });
+    </script>
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    PLTM
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+                        
+							
+								
+							
+						
+                    
+					
+					
+						<li>
+							<a href="/about">About</a>
+						</li>
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img" src="https://i.imgur.com/RAwKwAj.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('https://i.imgur.com/RAwKwAj.jpg');
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Red-Black Tree</h1>
+                    
+                    <span class="meta">
+                         作者 plentymore
+                        <span>
+                          日期 2018-08-18
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/Tags/#DataStructure"
+                           title="DataStructure">DataStructure</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Red-Black Tree
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h2 id="红黑树的定义"><a href="#红黑树的定义" class="headerlink" title="红黑树的定义"></a>红黑树的定义</h2><p>红黑树是平衡二叉搜索树的其中一种，它的节点有一个标志位用来标识该节点是红色或者黑色，<br>节点颜色的作用是帮树保持平衡。<br><img src="https://upload.wikimedia.org/wikipedia/commons/6/66/Red-black_tree_example.svg" alt="RBT"></p>
+<h2 id="红黑树必须满足的约束条件"><a href="#红黑树必须满足的约束条件" class="headerlink" title="红黑树必须满足的约束条件"></a>红黑树必须满足的约束条件</h2><p>除了满足平衡二叉搜索树的约束条件之外，红黑树还必须满足以下几个约束条件（参考维基百科的定义）：</p>
+<ol>
+<li><p>Each node is either red or black.（每个节点只能是红色或者黑色）</p>
+</li>
+<li><p>The root is black. （根节点为黑色）This rule is sometimes omitted. Since the root can always be changed from red to black, but not necessarily vice versa, this rule has little effect on analysis.</p>
+</li>
+<li><p>All leaves (NIL) are black.（所有叶子节点都是黑色的）</p>
+</li>
+<li><p>If a node is red, then both its children are black.（红色节点的两个孩子都是黑色的）</p>
+</li>
+<li><p>Every path from a given node to any of its descendant NIL nodes contains the same number of black nodes.（任意一个非叶子节点到的它子孙的叶子节点的路径的黑色节点个数都是相等的）</p>
+</li>
+</ol>
+<blockquote>
+<p>The leaf nodes of red–black trees do not contain data. These leaves need not be explicit in computer memory—a null child pointer can encode the fact that this child is a leaf—but it simplifies some algorithms for operating on red–black trees if the leaves really are explicit nodes. To save execution time, sometimes a pointer to a single sentinel node (instead of a null pointer) performs the role of all leaf nodes; all references from internal nodes to leaf nodes then point to the sentinel node.</p>
+</blockquote>
+<p>需要注意的是，红黑树的所有叶子节点都是空节点，不包含数据，且都是黑色的，这些节点可以是概念上存在（不占用内存，用null表示），也可以是真实存在（占用内存，用一个真正的节点表示）。</p>
+<h2 id="左旋"><a href="#左旋" class="headerlink" title="左旋"></a>左旋</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">rotate_left</span><span class="params">(struct node* n)</span> </span>&#123;</span><br><span class="line"> struct node* nnew = n-&gt;right;  <span class="comment">//将要左旋的节点的右孩子存储到nnew变量中</span></span><br><span class="line"> <span class="keyword">assert</span>(nnew != LEAF); <span class="comment">// since the leaves of a red-black tree are empty, they cannot become internal nodes</span></span><br><span class="line"> <span class="comment">//如过右孩子节点不存在（为叶子节点），就没办法左旋了</span></span><br><span class="line"> n-&gt;right = nnew-&gt;left;  <span class="comment">//将右孩子节点(nnew)的左孩子(nnew-&gt;left)变成要左旋的节点（n）的右孩子(n-&gt;right)</span></span><br><span class="line"> nnew-&gt;left = n;  <span class="comment">//将要左旋的节点（n）变成右孩子节点（nnew）的左孩子（nnew-left）</span></span><br><span class="line"> nnew-&gt;parent = n-&gt;parent;  <span class="comment">//将要左旋的节点（n）的父亲(n-&gt;parent)设置成右孩子节点（nnew）的父亲（nnew-&gt;parent）</span></span><br><span class="line"> n-&gt;parent = nnew;  <span class="comment">//将要右孩子节点（nnew）设置成要左旋的节点（n）的父亲(n-&gt;parent)</span></span><br><span class="line"> <span class="comment">// (the other related parent and child links would also have to be updated)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>左旋的主要步骤如下：</p>
+<ol>
+<li><p>检查要左旋的节点的右孩子节点是否为空，如果是，则不能进行左旋。</p>
+</li>
+<li><p>如果右孩子节点有左孩子节点，则将右孩子节点的左孩子节点变成要左旋的节点的右孩子</p>
+</li>
+<li><p>将要左旋的节点变成第1步说的右孩子节点的左孩子</p>
+</li>
+<li><p>如果要左旋的节点原来有父亲，则将第1步说的右孩子节点的父亲变成要左旋的节点的父亲，没有的话第1步说的右孩子节点的父亲设置为空</p>
+</li>
+<li><p>如果要左旋的节点有父亲且是它父亲的左孩子，将则将第1步说的右孩子节点设置成他的父亲节点的左孩子，否则设置成他的父亲节点的右孩子。</p>
+</li>
+<li><p>将要左旋的节点的父亲节点设置成第1步说的右孩子节点</p>
+</li>
+</ol>
+<p>结合上面的步骤分析一下JDK1.8中HashMap中红黑树的左旋代码：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//红黑树节点的结构</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">TreeNode</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">LinkedHashMap</span>.<span class="title">Entry</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">        TreeNode&lt;K,V&gt; parent;  <span class="comment">// red-black tree links</span></span><br><span class="line">        TreeNode&lt;K,V&gt; left;</span><br><span class="line">        TreeNode&lt;K,V&gt; right;</span><br><span class="line">        TreeNode&lt;K,V&gt; prev;    <span class="comment">// needed to unlink next upon deletion</span></span><br><span class="line">        <span class="keyword">boolean</span> red;</span><br><span class="line">        TreeNode(<span class="keyword">int</span> hash, K key, V val, Node&lt;K,V&gt; next) &#123;</span><br><span class="line">            <span class="keyword">super</span>(hash, key, val, next);</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> &lt;K,V&gt; <span class="function">TreeNode&lt;K,V&gt; <span class="title">rotateLeft</span><span class="params">(TreeNode&lt;K,V&gt; root,</span></span></span><br><span class="line"><span class="function"><span class="params">                                              TreeNode&lt;K,V&gt; p)</span> </span>&#123;</span><br><span class="line">            TreeNode&lt;K,V&gt; r, pp, rl;</span><br><span class="line">            <span class="comment">//r为要左旋的节点的右孩子节点，pp为p的父亲节点，rl为r的左孩子节点</span></span><br><span class="line">            <span class="comment">//首选判断p是否为空和p的右孩子是否为空，如果是则不进行左旋，返回root节点</span></span><br><span class="line">            <span class="keyword">if</span> (p != <span class="keyword">null</span> &amp;&amp; (r = p.right) != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="comment">//将r的左孩子变成p的右孩子</span></span><br><span class="line">                <span class="keyword">if</span> ((rl = p.right = r.left) != <span class="keyword">null</span>)</span><br><span class="line">                    rl.parent = p;  <span class="comment">//将r的左孩子的父亲设置成p</span></span><br><span class="line">                <span class="comment">//将r的父亲设置成p的父亲节点</span></span><br><span class="line">                <span class="keyword">if</span> ((pp = r.parent = p.parent) == <span class="keyword">null</span>)</span><br><span class="line">                <span class="comment">//如果p没有父亲，说明p是根节点，左旋后r将变成根节点，红黑树的根节点一定是黑色，所以将r设置成黑色</span></span><br><span class="line">                    (root = r).red = <span class="keyword">false</span>;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (pp.left == p)</span><br><span class="line">                    <span class="comment">//如果p是他的父亲的左子树，则将r设置成p的父亲的左子树</span></span><br><span class="line">                    pp.left = r;</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                  <span class="comment">//如果p是他的父亲的右子树，则将r设置成p的父亲的右子树</span></span><br><span class="line">                    pp.right = r;</span><br><span class="line">                r.left = p;  <span class="comment">//将p设置成r的右子树</span></span><br><span class="line">                p.parent = r;  <span class="comment">//将r设置为p的父亲</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> root;  <span class="comment">//返回根节点，经过旋转后根节点可能会发生变化</span></span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="右旋"><a href="#右旋" class="headerlink" title="右旋"></a>右旋</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">rotate_right</span><span class="params">(struct node* n)</span> </span>&#123;</span><br><span class="line"> struct node* nnew = n-&gt;left;  <span class="comment">//将要右旋的节点的右孩子存储到nnew变量中</span></span><br><span class="line"> <span class="keyword">assert</span>(nnew != LEAF); <span class="comment">// since the leaves of a red-black tree are empty, they cannot become internal nodes</span></span><br><span class="line"> <span class="comment">//如过左孩子节点不存在（为叶子节点），就没办法右旋了</span></span><br><span class="line"> n-&gt;left = nnew-&gt;right;  <span class="comment">//将左孩子节点(nnew)的右孩子(nnew-&gt;right)变成要右旋的节点（n）的左孩子(n-&gt;left)</span></span><br><span class="line"> nnew-&gt;right = n;  <span class="comment">// //将要右旋的节点（n）变成左孩子节点（nnew）的右孩子（nnew-right）</span></span><br><span class="line"> nnew-&gt;parent = n-&gt;parent;  <span class="comment">//这里和后面的都不再赘述，逻辑和左旋反过来就行</span></span><br><span class="line"> n-&gt;parent = nnew;</span><br><span class="line"> <span class="comment">// (the other related parent and child links would also have to be updated)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到右旋的操作和左旋基本上是一致的，只是方向反过来了，比如左旋是判断右孩子是否存在，然后将有孩子的左孩子变成左旋节点的右孩子，<br>而右旋则是判断左孩子是否存在，然后将左孩子的右孩子变成右旋节点的左孩子。<br>步骤和左旋一样，就是方向反过来，这里也不再赘述。<br>下面再分析一下JDK1.8的HashMap中的右旋方法：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> &lt;K,V&gt; <span class="function">TreeNode&lt;K,V&gt; <span class="title">rotateRight</span><span class="params">(TreeNode&lt;K,V&gt; root,</span></span></span><br><span class="line"><span class="function"><span class="params">                                               TreeNode&lt;K,V&gt; p)</span> </span>&#123;</span><br><span class="line">            TreeNode&lt;K,V&gt; l, pp, lr;</span><br><span class="line">            <span class="comment">//l是p的左孩子，pp是p的父亲，lr是l的右孩子</span></span><br><span class="line">            <span class="comment">//判断p和p的左孩子是否为空，做过是，则不进行右旋</span></span><br><span class="line">            <span class="keyword">if</span> (p != <span class="keyword">null</span> &amp;&amp; (l = p.left) != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="comment">//如果l的右孩子不为空，则将l的右孩子的父亲设置为p节点</span></span><br><span class="line">                <span class="keyword">if</span> ((lr = p.left = l.right) != <span class="keyword">null</span>)</span><br><span class="line">                    lr.parent = p;</span><br><span class="line">                <span class="comment">//如果p的父亲为空，说明p是根节点，右旋后l将变成根节点</span></span><br><span class="line">                <span class="comment">//而红黑树的根节点是黑色的，因此需要将l的颜色设置成黑色</span></span><br><span class="line">                <span class="keyword">if</span> ((pp = l.parent = p.parent) == <span class="keyword">null</span>)</span><br><span class="line">                    (root = l).red = <span class="keyword">false</span>;</span><br><span class="line">                <span class="comment">//如果p是他的父亲的右孩子，则将l设置成p的父亲的右孩子</span></span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (pp.right == p)</span><br><span class="line">                    pp.right = l;</span><br><span class="line">                <span class="comment">//否则将l设置成p的父亲的左孩子</span></span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                    pp.left = l;</span><br><span class="line">                l.right = p;  <span class="comment">//将p设置为l的右孩子</span></span><br><span class="line">                p.parent = l;  <span class="comment">//将l设置成p的父亲</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> root;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h2><p>插入一个节点后可能会破坏红黑树的结构，需要通过<strong>修改节点颜色</strong>和<strong>旋转</strong>两种方式来保持平衡。<br>一般插入的节点默认是红色的，因为插入一个红色的节点一般只会使书的结构违背约束4，<br>此时我们可以通过上面说的两种方法对树的结构进行调整，使得该树不违背红黑树的所有约束条件。</p>
+<p>插入一个红色节点可以分为3种可能的情况：</p>
+<h3 id="情况1"><a href="#情况1" class="headerlink" title="情况1"></a>情况1</h3><p>插入的节点为根节点，此时只需要将节点设置为黑色</p>
+<h3 id="情况2"><a href="#情况2" class="headerlink" title="情况2"></a>情况2</h3><p>插入的节点的父节点为黑色，此时不需要进行任何操作，树依旧满足红黑树的约束条件，下图插入的是值为2的节点<br><img src="https://i.imgur.com/jDdATFh.png" alt="black-f"></p>
+<p>插入红色的节点不会增加黑色节点的个数，所以不会违反约束5，父亲节点是黑色的，所以不会违反约束4，因此不需要进行任何调整</p>
+<h3 id="情况3"><a href="#情况3" class="headerlink" title="情况3"></a>情况3</h3><p>插入的节点的父节点为红色，此时就有两个连续的红色节点，不满足红黑树的第4个约束条件，需要根据相应的情况对树的结构进行调整</p>
+<h4 id="3-1-红叔"><a href="#3-1-红叔" class="headerlink" title="3.1 红叔"></a>3.1 红叔</h4><p>父节点为红色，叔节点存在，而且叔节点也是红色，需要进行以下调整：</p>
+<p>1)将父节点和叔节点涂黑，将祖父节点涂红</p>
+<p>2)将祖父节点设置成当前节点，继续对树的结构进行调整。</p>
+<p><img src="https://i.imgur.com/U4796ja.png" alt="red-u"><br>将父和叔节点涂黑，祖父节点涂红<br><img src="https://i.imgur.com/BNDWsJX.png" alt="root"><br>将祖父节点设为当前节点后，这里发现它已经是根节点了，因此将它涂黑</p>
+<p>在上面的图中要插入的节点值为2，它的父节点为红色，叔节点也为红色，通过上面的操作之后，树的结构又重新满足了红黑树的约束。</p>
+<h4 id="3-2-黑叔"><a href="#3-2-黑叔" class="headerlink" title="3.2 黑叔"></a>3.2 黑叔</h4><p>父亲节点为红色，叔节点不存在或者为黑色</p>
+<h5 id="3-2-1-左右"><a href="#3-2-1-左右" class="headerlink" title="3.2.1 左右"></a>3.2.1 左右</h5><p>父亲节点为祖节点的左孩子，当前节点为父节点的右孩子<br><img src="https://i.imgur.com/QYf3uzi.png" alt="lr"></p>
+<p>需要进行以下调整：</p>
+<p>1)以父节点为基准进行左旋</p>
+<p>2)设置父节点为当前节点</p>
+<p>经过上面的两部操作后，树的结构如下图：<br><img src="https://i.imgur.com/CIOHNTt.png" alt="ll"></p>
+<p>可以看到树的结构依旧不满足红黑树的约束，但是变成了3.2.2的情况，我们可以继续按照3.2.2的情况对其进行调整</p>
+<h5 id="3-2-2-左左"><a href="#3-2-2-左左" class="headerlink" title="3.2.2 左左"></a>3.2.2 左左</h5><p>父亲节点为祖节点的左孩子，当前节点为父节点的左孩子</p>
+<p><img src="https://i.imgur.com/jwLvpKx.png" alt="ll"><br>需要进行以下调整：</p>
+<p>1)将父节点涂黑</p>
+<p>2)将祖父节点涂红</p>
+<p>3)以祖父节点为基准进行右旋</p>
+<p>经过上面的调整后，树的结构如下图：<br><img src="https://i.imgur.com/H3X9834.png" alt="cmp"></p>
+<p>可以看到树的结构已经满足了红黑树的约束</p>
+<h5 id="3-2-3-右左"><a href="#3-2-3-右左" class="headerlink" title="3.2.3 右左"></a>3.2.3 右左</h5><p>父亲节点为祖节点的右孩子，当前节点为父节点的左孩子<br><img src="https://i.imgur.com/7PdyFVf.png" alt="rl"></p>
+<p>此时需要进行的操作和3.2.1是对称的</p>
+<p>1)以父节点为基准进右旋</p>
+<p>2)设置父节点为当前节点</p>
+<p>调整后的结构如下图：<br><img src="https://i.imgur.com/kHfDmxg.png" alt="rlt"></p>
+<p>此时树的结构依旧不满足红黑树的约束，但是变成了和3.2.4一样的情况，因此可以按照3.2.4的情况继续进行调整</p>
+<h5 id="3-2-4-右右"><a href="#3-2-4-右右" class="headerlink" title="3.2.4 右右"></a>3.2.4 右右</h5><p><img src="https://i.imgur.com/kHfDmxg.png" alt="rlt"></p>
+<p>此时需要进行的操作和3.2.2是对称的</p>
+<p>1)将父节点涂黑</p>
+<p>2)将祖父节点涂红</p>
+<p>3)以祖父节点为基准进行左旋</p>
+<p>经过上面的调整后，树的结构如下图：<br><img src="https://i.imgur.com/CDZXGPl.png" alt="cmp"></p>
+<p>可以看到树的结构已经满足了红黑树的约束</p>
+<h3 id="JDK1-8-balanceInsertion"><a href="#JDK1-8-balanceInsertion" class="headerlink" title="JDK1.8 balanceInsertion"></a>JDK1.8 balanceInsertion</h3><p>JDK1.8 HashMap中红黑树按的平衡插入方法（节点实际上已插入，该方法只是调整树的结构使树满足红黑树的约束条件）：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> &lt;K,V&gt; <span class="function">TreeNode&lt;K,V&gt; <span class="title">balanceInsertion</span><span class="params">(TreeNode&lt;K,V&gt; root,</span></span></span><br><span class="line"><span class="function"><span class="params">                                                    TreeNode&lt;K,V&gt; x)</span> </span>&#123;</span><br><span class="line">            x.red = <span class="keyword">true</span>;  <span class="comment">//插入的节点默认为红色</span></span><br><span class="line">            <span class="comment">//root为根节点，x为插入的节点（当前节点），xp为x的父节点</span></span><br><span class="line">            <span class="comment">//xpp为x的祖父节点，xppl为祖父节点的左孩子，xppr为祖父节点的右孩子</span></span><br><span class="line">            <span class="comment">//这里的循环将不断地设置x的祖先节点为当前节点</span></span><br><span class="line">            <span class="comment">//直到当前节点为根节点或者当前节点的父节点为黑色且没有父节点</span></span><br><span class="line">            <span class="keyword">for</span> (TreeNode&lt;K,V&gt; xp, xpp, xppl, xppr;;) &#123;</span><br><span class="line">                <span class="keyword">if</span> ((xp = x.parent) == <span class="keyword">null</span>) &#123;  <span class="comment">//当前节点为根节点？</span></span><br><span class="line">                    x.red = <span class="keyword">false</span>;  <span class="comment">//将根节点涂成黑色</span></span><br><span class="line">                    <span class="keyword">return</span> x;  <span class="comment">//返回当前节点（根节点）</span></span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (!xp.red || (xpp = xp.parent) == <span class="keyword">null</span>)  <span class="comment">//当前节点的父节点为黑色节点或者根节点？</span></span><br><span class="line">                    <span class="keyword">return</span> root;  <span class="comment">//父节点为黑色或者父节点为黑色，直接返回根节点</span></span><br><span class="line">                 <span class="comment">//上面的判断使得下面的xp一定是红色的 </span></span><br><span class="line">                <span class="keyword">if</span> (xp == (xppl = xpp.left)) &#123;  <span class="comment">//父节点为祖父节点的左孩子？</span></span><br><span class="line">                    <span class="keyword">if</span> ((xppr = xpp.right) != <span class="keyword">null</span> &amp;&amp; xppr.red) &#123;  <span class="comment">//叔节点为红色？</span></span><br><span class="line">                        xppr.red = <span class="keyword">false</span>;  <span class="comment">//将叔节点涂成黑色</span></span><br><span class="line">                        xp.red = <span class="keyword">false</span>;  <span class="comment">//将父节点涂成黑色</span></span><br><span class="line">                        xpp.red = <span class="keyword">true</span>;  <span class="comment">//将祖父节点涂成红色</span></span><br><span class="line">                        x = xpp;  <span class="comment">//将父节点设置为当前节点</span></span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">else</span> &#123;  <span class="comment">//叔节点为黑色或者不存在</span></span><br><span class="line">                        <span class="keyword">if</span> (x == xp.right) &#123;  <span class="comment">//当前节点是父节点的右孩子</span></span><br><span class="line">                            root = rotateLeft(root, x = xp);  <span class="comment">//以父节点为基点进行左旋</span></span><br><span class="line">                            <span class="comment">//左旋后x引用的对象就变成了xp引用的对象的父亲，xpp的引用的对象的左孩子</span></span><br><span class="line">                            <span class="comment">//变成了x引用的对象，因此下面要纠正它们的引用</span></span><br><span class="line">                            <span class="comment">//将xp的指向x的引用对象的父节点，此时xp可能为空即x引用的对象可能没有父亲</span></span><br><span class="line">                            <span class="comment">//如果xp为空，则xpp也设置为空，否则xpp将指向xp引用的对象的父节点</span></span><br><span class="line">                            xpp = (xp = x.parent) == <span class="keyword">null</span> ? <span class="keyword">null</span> : xp.parent;</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">if</span> (xp != <span class="keyword">null</span>) &#123;  父节点不为空？</span><br><span class="line">                            xp.red = <span class="keyword">false</span>;  <span class="comment">//将父节点涂成黑色</span></span><br><span class="line">                            <span class="keyword">if</span> (xpp != <span class="keyword">null</span>) &#123;  <span class="comment">//祖父节点不为空？</span></span><br><span class="line">                                xpp.red = <span class="keyword">true</span>;  <span class="comment">//将祖父节点涂成红色</span></span><br><span class="line">                                root = rotateRight(root, xpp);  <span class="comment">//以祖父节点为基准进行右旋</span></span><br><span class="line">                            &#125;</span><br><span class="line">                            <span class="comment">//如果上面的祖父节点为空，说明父节点已经是根节点了，已经涂成了黑色，不需要进行操作了</span></span><br><span class="line">                            <span class="comment">//如果祖父节点不为空，则要以祖父节点为基准进行右旋 </span></span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> &#123;  <span class="comment">//父节点为祖父节点的右孩子，下面的操作和父节点为祖父节点的左孩子时的操作是对称的，因此不再详细分析</span></span><br><span class="line">                    <span class="keyword">if</span> (xppl != <span class="keyword">null</span> &amp;&amp; xppl.red) &#123;  <span class="comment">//叔节点为红色？</span></span><br><span class="line">                        xppl.red = <span class="keyword">false</span>;</span><br><span class="line">                        xp.red = <span class="keyword">false</span>;</span><br><span class="line">                        xpp.red = <span class="keyword">true</span>;</span><br><span class="line">                        x = xpp;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">else</span> &#123;<span class="comment">//叔节点不存在或者不为红色</span></span><br><span class="line">                        <span class="keyword">if</span> (x == xp.left) &#123;  <span class="comment">//当前节点为父节点的左孩子？</span></span><br><span class="line">                            root = rotateRight(root, x = xp);  <span class="comment">//以父节点为基准进行右旋</span></span><br><span class="line">                            <span class="comment">//重新调整xp、xpp的引用指向的对象</span></span><br><span class="line">                            xpp = (xp = x.parent) == <span class="keyword">null</span> ? <span class="keyword">null</span> : xp.parent;</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">if</span> (xp != <span class="keyword">null</span>) &#123;</span><br><span class="line">                            xp.red = <span class="keyword">false</span>;</span><br><span class="line">                            <span class="keyword">if</span> (xpp != <span class="keyword">null</span>) &#123;</span><br><span class="line">                                xpp.red = <span class="keyword">true</span>;</span><br><span class="line">                                root = rotateLeft(root, xpp);</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><p>删除一个节点同样有可能破坏红黑树的结构</p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/09/09/Collection-Framework-1/" data-toggle="tooltip" data-placement="top"
+                           title="Collection Framework(1)">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/08/15/Hashtable/" data-toggle="tooltip" data-placement="top"
+                           title="Hashtable">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8zODUyNi8xNTA1NA==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#红黑树的定义"><span class="toc-text">红黑树的定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#红黑树必须满足的约束条件"><span class="toc-text">红黑树必须满足的约束条件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#左旋"><span class="toc-text">左旋</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#右旋"><span class="toc-text">右旋</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#插入"><span class="toc-text">插入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#情况1"><span class="toc-text">情况1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#情况2"><span class="toc-text">情况2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#情况3"><span class="toc-text">情况3</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-红叔"><span class="toc-text">3.1 红叔</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-黑叔"><span class="toc-text">3.2 黑叔</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-1-左右"><span class="toc-text">3.2.1 左右</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-2-左左"><span class="toc-text">3.2.2 左左</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-3-右左"><span class="toc-text">3.2.3 右左</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-4-右右"><span class="toc-text">3.2.4 右右</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JDK1-8-balanceInsertion"><span class="toc-text">JDK1.8 balanceInsertion</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#删除"><span class="toc-text">删除</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/Tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/Tags/#DataStructure"
+                           title="DataStructure">DataStructure</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a href="https://echi.me">echisan</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/plentymorea">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/plentymore">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; PLTM 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    <br>
+                    Theme by <a href="https://github.com/Haojen/hexo-theme-Anisina">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://plentymore.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-123175280-1';
+    var _gaDomain = 'plentymore.github.io';
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<!-- <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script> -->
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="https://avatars3.githubusercontent.com/u/30522768?s=400&amp;u=a2ce54d7c63789391a0ba32b17792b7a21d64fbb&amp;v=4">
+</body>
+
+</html>

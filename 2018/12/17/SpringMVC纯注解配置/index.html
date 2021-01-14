@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BLOG">
+    <meta name="keyword" content="pltm">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <!-- google-site-verification -->
+    <meta name="google-site-verification" content="fgG59EBWTLiWni3UcgCPhkEPiVDNCnLeaocoTWjctOg" />
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="alternate" type="application/atom+xml" title="PLTM" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        SpringMVC纯注解配置｜PTLM blog
+        
+    </title>
+
+    <link rel="canonical" href="https://plentymore.github.io/2018/12/17/SpringMVC纯注解配置/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+    <!-- Google AdSense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+             google_ad_client: "ca-pub-1771277850135880",
+             enable_page_level_ads: true
+          });
+    </script>
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    PLTM
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+                        
+							
+								
+							
+						
+                    
+					
+					
+						<li>
+							<a href="/about">About</a>
+						</li>
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="/images/3.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>SpringMVC纯注解配置</h1>
+                    
+                    <span class="meta">
+                         作者 plentymore
+                        <span>
+                          日期 2018-12-17
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/Tags/#SpringMVC"
+                           title="SpringMVC">SpringMVC</a>
+                        
+                        <a class="tag" href="/Tags/#Web"
+                           title="Web">Web</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            SpringMVC纯注解配置
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>最近复习了一下SpringMVC，相关文档是<a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html" target="_blank" rel="noopener">Web on Servlet Stack</a>，发现里面似乎没有一个VAN♂全使用Java注解的使用SpringMVC开发的Web应用的完整例子（例子倒是有，不过太分散了，每隔几个章节贴一点代码），搜索官网里面的guides也没有搜到，有的话大概也是用Spring Boot的，而我想要的是只用Spring Framework的，自己手动配置的例子。于是只好从文档上面把零碎的代码片段搜集起来组成的一个完整例子了。</p>
+<h2 id="需要的依赖"><a href="#需要的依赖" class="headerlink" title="需要的依赖"></a>需要的依赖</h2><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- https://mvnrepository.com/artifact/org.springframework/spring-webmvc --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-webmvc<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.1.2.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">&lt;!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.servlet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>javax.servlet-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>只需要spring-webmvc和servlet-api就行了，因为spring-mvc用到了其它的spring模块，所以它会把需要的其它spring模块都弄过来，servlet-api也是需要的，编译这个Web项目的时候要用到，没有这个的话会编译不了</p>
+<h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><p><img src="https://i.imgur.com/7a3mM3j.png" alt="Imgur"></p>
+<p><code>WebInit.java</code><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebInit</span> <span class="keyword">extends</span> <span class="title">AbstractAnnotationConfigDispatcherServletInitializer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> Class&lt;?&gt;[] getRootConfigClasses() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Class[]&#123;WebConfig.class&#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> Class&lt;?&gt;[] getServletConfigClasses() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> String[] getServletMappings() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> String[] &#123; <span class="string">"/"</span> &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个类很关键，它利用了Servlet3.0+的一个<a href="http://docs.jboss.org/jbossas/javadoc/7.1.2.Final/javax/servlet/ServletContainerInitializer.html" target="_blank" rel="noopener">新特性</a>，<code>ServletContainerInitializer</code>，实现这个接口就可以在应用启动阶段在代码里面注册自己的servlets, filters, 和listeners，利用这个特性就可以连web.xml都省掉了，所以这个web应用一个xml文件都不需要。spring-web对于这个接口实现类是<code>ServletContainerInitializer</code>，可以在spring-web模块下面的META-INF/services目录看到一个名为javax.servlet.ServletContainerInitializer的文件，里面的内容为org.springframework.web.SpringServletContainerInitializer</p>
+<p><code>WebConfig.java</code><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableWebMvc</span></span><br><span class="line"><span class="meta">@ComponentScan</span>(basePackages = <span class="string">"com.pltm.springmvc"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>目前这个类只是用来启用自动扫描然后注入依赖，实际上它可以用来配置SpringMVC，只需要实现WebMvcConfigurer接口（这个接口里面的方法都是默认方法，因此你不需要重写这个接口的每一个方法），然后就可以按照自己的喜好进行配置了，比如配置静态资源路径，配置跨域等。@EnableWebMvc这个注解必须要有，没有这个注解，你的Controller是不会生效的，因为这个注解会导入<code>DelegatingWebMvcConfiguration</code>类，这个类上面有@Configuration注解，因此是一个Bean配置类，会被Spring创建，而且它继承了<code>WebMvcConfigurationSupport</code>，这个类里面配置了很多默认的@Bean，比如<code>RequestMappingHandlerMapping</code>，<code>PathMatcher</code>，<code>UrlPathHelper</code>，<code>ContentNegotiationManager</code>，<code>HandlerMapping viewControllerHandlerMapping()</code>，<code>BeanNameUrlHandlerMapping</code>，<code>HandlerMapping resourceHandlerMapping()</code>，<code>ResourceUrlProvider</code>，<code>HandlerMapping defaultServletHandlerMapping</code>，<br><code>RequestMappingHandlerAdapter</code>等一大堆Bean，这些Bean的作用看名字就可以猜到大概了，少了这些Bean，你的Controller里面的handler(就是你用@RequestMapping这样的注解标注了的方法)是不会被解析的，最后会导致返回tomcat的404页面，控制台上会输出<code>org.springframework.web.servlet.DispatcherServlet.noHandlerFound No mapping for GET /</code>这样的WARNING级别的日志。</p>
+<p><code>IndexController.java</code><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IndexController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">index</span><span class="params">(@RequestParam(value = <span class="string">"name"</span>, required = <span class="keyword">false</span>)</span> String name)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"hello"</span> + (name == <span class="keyword">null</span> ? <span class="string">""</span> : <span class="string">", "</span> + name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>随便写的一个控制器，这里用的@RestController，返回字符串，而不是视图文件，因为返回视图要配置视图解析器这些东西，这里为了简单就直接返回字符串了（实际上最终返回格式的取决于你的请求头的Accept的值，内容是返回的字符串）</p>
+<h2 id="Tomcat配置"><a href="#Tomcat配置" class="headerlink" title="Tomcat配置"></a>Tomcat配置</h2><p>不用Spring Boot的话只能外面跑个tomcat然后把这个Web项目打包成war或者其它tomcat可以接受的格式放到tomcat里面部署了，Spring Boot内置的tomcat和其它容器还是有丶方便的。</p>
+<p>需要注意的就是项目的打包，由于一开始我忘了把依赖也一起打包进去，所以打包之后放到tomcat里面运行之后，一直404，在打包选项界面配置了好久才发现依赖没有被打包进去。假设你用的是Intllij IDEA，你可以直接点右上角那个运行按钮旁边的Edit Configurations按钮，然后添加一个tomcat local配置，选择好你本地的tomcat的目录，然后选择Deployment选项，按一下+<br><img src="https://i.imgur.com/FdoWCfd.png" alt="Imgur"><br>记得要把依赖包都双击一下，然后就会把依赖打包到lib目录下面了，然后配置好就可以运行了，浏览器被自动打开，然后页面输出hello</p>
+<h2 id="WebInit-java"><a href="#WebInit-java" class="headerlink" title="WebInit.java"></a>WebInit.java</h2><p>继续讲一下这个类，它继承了<code>AbstractAnnotationConfigDispatcherServletInitializer</code>类，实现了三个方法。详情可以查看<a href="https://docs.spring.io/spring/docs/5.1.3.RELEASE/javadoc-api/" target="_blank" rel="noopener">api</a></p>
+<h3 id="getRootConfigClasses"><a href="#getRootConfigClasses" class="headerlink" title="getRootConfigClasses"></a>getRootConfigClasses</h3><blockquote>
+<p>for “root” application context (non-web<br>这里要了解一下WebApplicationContext的分级，详情可以查看<a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-servlet-context-hierarchy" target="_blank" rel="noopener">文档</a><br>The root WebApplicationContext typically contains infrastructure beans, such as data repositories and business services that need to be shared across multiple Servlet instances<br>这里一般配置一些全局的（在所有Servlet中共享的）基础设施，比如和数据库操作对象Repository，业务逻辑对象Service等</p>
+</blockquote>
+<h3 id="getServletConfigClasses"><a href="#getServletConfigClasses" class="headerlink" title="getServletConfigClasses"></a>getServletConfigClasses</h3><p>这里一般放一些只存在于特定Servlet中的对象（Servlet私有的，不被其他Servlet共享），比如视图解析配置对象，Controller对象，或者其他和Web相关的对象，一般情况下，基于sprinv-mvc的Web应用只需要DispatcherServlet这一个Servlet，因此可以把全部配置放到上面的root WebApplicationContext里面，就是直接让这个方法返回null，只配置上面的getRootConfigClasses方法。root WebApplicationContext和其它的WebApplicationContext的关系如下图<br><img src="https://i.imgur.com/OcH8ETB.png" alt="Imgur"></p>
+<h3 id="getServletMappings"><a href="#getServletMappings" class="headerlink" title="getServletMappings"></a>getServletMappings</h3><p>这个是配置DispatcherServlet这个核心Servlet匹配的路径的，因为一般我们的应用都只有一个这个Servlet的实例，因此我们会将所有的请求都匹配到这个Servlet，然后由这个Servlet进行各种操作（比如根据请求路径调用我们写的handler，就是我们的controller里面的各个有配置了路径的方法），设置匹配”/“后，所有的请求都会匹配到DispatcherServlet（不明白的话可以先去了解一下servlet容器路径匹配的规则）</p>
+<h2 id="WebMvc配置"><a href="#WebMvc配置" class="headerlink" title="WebMvc配置"></a>WebMvc配置</h2><p>前面已经提到了一下，只需要让WebConfig类（任意的类都可以，只要加个@Configuration或者@Compmponent注解，还需要至少有一个@EnableWebMvc注解在有@Configuration注解的类上面）实现<code>WebMvcConfigurer</code>接口，然后重写里面的默认方法就可以了。</p>
+<p>具体来说，你可以随便创建一个类实现<code>WebMvcConfigurer</code>接口，然后在这个类上面加上@Configuration或者@Component注解，最后必须要有一个@EnableWebMvc注解，这个注解可以放在任何一个有@Configurationh或者注解的类上面，也可以放在@Component注解的类上面，@EnableWebMvc里面有个@Import注解，@Import注解的作用相当于XML文件配置里面的<import>标签，就是导入其他的Beans配置文件，@Configuration和@Component注解相当于<beans>标签，当一个Beans配置文件被导入到另一个标签，会把<beans>标签里面的所有<bean>都导入进来，最后还会去除重复的<bean>标签。那么@Configuratoin和@Component有什么不同？初略地讲，@Configuration里面被@Bean标注的非静态方法是被CGLIB增强过的，而@Component的没有（增强过的意思是在被@Configuration注解类里面，在被@Bean标注的方法里面调用其它同样被@Bean标注的方法，最终将从容器中返回那个方法创建的Bean，而不是直接调用那个方法，而在@Component注解的类里面就真的只是直接调用那个方法），具体可以查看<a href="https://docs.spring.io/spring/docs/5.1.3.RELEASE/spring-framework-reference/core.html#beans-factorybeans-annotations" target="_blank" rel="noopener">文档</a>。</bean></bean></beans></beans></import></p>
+<p>什么方法配置什么东西就不讲了，文档上面写得很清楚，<a href="https://docs.spring.io/spring/docs/5.1.3.RELEASE/spring-framework-reference/web.html#mvc-config" target="_blank" rel="noopener">点击这里查看</a></p>
+<h2 id="特定类型的Bean"><a href="#特定类型的Bean" class="headerlink" title="特定类型的Bean"></a>特定类型的Bean</h2><p>spring-mvc里面有几种特定类型的Bean，你只需要自定义一个这些特定类型的Bean，就可以自定义spring-mvc的很多配置了，比如路径匹配，视图解析等，DispatcherServlet就会自动检测你有没有自定义这些特定类型Bean，如果没有的话它就使用默认的Bean，基本上用默认的Bean就能满足大部分需求了，如果需要配置的话我一般是像上面说的实现<code>WebMvcConfigurer</code>接口然后重写方法进行配置（留下了没技术的泪水.jpg</p>
+<p>具体有那些类型的Bean可以<a href="https://docs.spring.io/spring/docs/5.1.3.RELEASE/spring-framework-reference/web.html#mvc-servlet-special-bean-types" target="_blank" rel="noopener">查看文档</a>，就里就不再复读了</p>
+<h2 id="DispatcherServlet处理过程"><a href="#DispatcherServlet处理过程" class="headerlink" title="DispatcherServlet处理过程"></a>DispatcherServlet处理过程</h2><p>我们把所有请求都匹配到DiapatcherServlet这个Servlet，然后让它把请求进行一番操作后，再根据请求路径调用匹配的handler（我们写的Controller里面有@RequestMapping标注的方法，还有拦截器的方法，过滤器等），然后再经过一番操作后把结果发回给客户端。那么它具体是怎么操作的呢？文档上面有讲到这个<a href="https://docs.spring.io/spring/docs/5.1.3.RELEASE/spring-framework-reference/web.html#mvc-servlet-sequence" target="_blank" rel="noopener">过程</a>。</p>
+<ol>
+<li>首先找到WebApplicationContext，然后绑定到请求的一个属性里面，这样我们的Controller和其他的拦截器过滤器等就可以获取到WebApplicationContext并使用了，属性的名称可以通过DispatcherServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE这个静态变量找到，所以我们可以通过request.getAttribute(DispatcherServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE)获取到绑定的WebApplicationContext<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IndexController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">index</span><span class="params">(@RequestParam(value = <span class="string">"name"</span>, required = <span class="keyword">false</span>)</span> String name, HttpServletRequest request)</span>&#123;</span><br><span class="line">        WebApplicationContext ctx = (WebApplicationContext) request.getAttribute(DispatcherServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE);</span><br><span class="line">        System.out.println(ctx);</span><br><span class="line">        System.out.println(DispatcherServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"hello"</span> + (name == <span class="keyword">null</span> ? <span class="string">""</span> : <span class="string">", "</span> + name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>输出结果为<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">WebApplicationContext for namespace &apos;dispatcher-servlet&apos;, started on Tue Dec 18 19:13:42 CST 2018, parent: Root WebApplicationContext</span><br><span class="line">org.springframework.web.servlet.DispatcherServlet.CONTEXT</span><br></pre></td></tr></table></figure></p>
+<ol start="2">
+<li><p>将locale resolver绑定到请求，然后在后面处理请求的时候（渲染视图，填充数据等）可以根据这个locale resolver解析出请求对应的客户端当前的位置，然后确定了位置信息之后使用相应的语言去继续处理请求（渲染视图，填充数据等），如果你不需要解析位置信息，你可以不使用它。一般网站不是面向全球的话，都不需要用到。</p>
+</li>
+<li><p>然后轮到theme resolver，这个东西是用来让视图使用不同的主题的，主题（其实是一堆静态资源的集合，各种图片、css等东西组合起来）需要自己进行配置，如果你不需要主题，你可以……（复读暗示）（好像也没见过有人用</p>
+</li>
+<li><p>如果你配置了multipart文件解析器，将会检查请求是不是带有multipart，如果是，就把请求封装成<code>MultipartHttpServletRequest</code>类型，然后继续进行后续的处理。</p>
+</li>
+<li><p>根据请求路径找到对应的handler（你的Controller里面的被@RequestMapping这类注解标注的方法，还有过滤器，拦截器的方法），如果找到了相应的handler，则执行响应的handler，一般按照过滤器-拦截器前置处理-Controller-拦截器后置处理-拦截器这样的顺序执行对应的handler。如果没有找到就404警告</p>
+</li>
+<li><p>最后，如果返回的<code>ModelAndView</code>不为空，将会渲染视图，否则，不渲染视图，返回的不是model的原因可能是因为拦截器的前置处理和后置处理拦截了请求然后直接返回了。</p>
+</li>
+</ol>
+<p>上面的步骤讲得比较粗糙，很多细节都没有体现，整个流程的逻辑在DiapatcherServlet的doService方法里面可以看到，因此要深入了解可以直接看对应的代码<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doService</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">	logRequest(request);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Keep a snapshot of the request attributes in case of an include,</span></span><br><span class="line">	<span class="comment">// to be able to restore the original attributes after the include.</span></span><br><span class="line">	Map&lt;String, Object&gt; attributesSnapshot = <span class="keyword">null</span>;</span><br><span class="line">	<span class="keyword">if</span> (WebUtils.isIncludeRequest(request)) &#123;</span><br><span class="line">		attributesSnapshot = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">		Enumeration&lt;?&gt; attrNames = request.getAttributeNames();</span><br><span class="line">		<span class="keyword">while</span> (attrNames.hasMoreElements()) &#123;</span><br><span class="line">			String attrName = (String) attrNames.nextElement();</span><br><span class="line">			<span class="keyword">if</span> (<span class="keyword">this</span>.cleanupAfterInclude || attrName.startsWith(DEFAULT_STRATEGIES_PREFIX)) &#123;</span><br><span class="line">				attributesSnapshot.put(attrName, request.getAttribute(attrName));</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Make framework objects available to handlers and view objects.</span></span><br><span class="line">	request.setAttribute(WEB_APPLICATION_CONTEXT_ATTRIBUTE, getWebApplicationContext());</span><br><span class="line">	request.setAttribute(LOCALE_RESOLVER_ATTRIBUTE, <span class="keyword">this</span>.localeResolver);</span><br><span class="line">	request.setAttribute(THEME_RESOLVER_ATTRIBUTE, <span class="keyword">this</span>.themeResolver);</span><br><span class="line">	request.setAttribute(THEME_SOURCE_ATTRIBUTE, getThemeSource());</span><br><span class="line">       <span class="comment">// 上面的request.setAttribute 3连对应上面说的步骤123</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">this</span>.flashMapManager != <span class="keyword">null</span>) &#123;</span><br><span class="line">		FlashMap inputFlashMap = <span class="keyword">this</span>.flashMapManager.retrieveAndUpdate(request, response);</span><br><span class="line">		<span class="keyword">if</span> (inputFlashMap != <span class="keyword">null</span>) &#123;</span><br><span class="line">			request.setAttribute(INPUT_FLASH_MAP_ATTRIBUTE, Collections.unmodifiableMap(inputFlashMap));</span><br><span class="line">		&#125;</span><br><span class="line">		request.setAttribute(OUTPUT_FLASH_MAP_ATTRIBUTE, <span class="keyword">new</span> FlashMap());</span><br><span class="line">		request.setAttribute(FLASH_MAP_MANAGER_ATTRIBUTE, <span class="keyword">this</span>.flashMapManager);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		doDispatch(request, response);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">finally</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (!WebAsyncUtils.getAsyncManager(request).isConcurrentHandlingStarted()) &#123;</span><br><span class="line">			<span class="comment">// Restore the original attribute snapshot, in case of an include.</span></span><br><span class="line">			<span class="keyword">if</span> (attributesSnapshot != <span class="keyword">null</span>) &#123;</span><br><span class="line">				restoreAttributesAfterInclude(request, attributesSnapshot);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其中doDispatch方法的实现如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doDispatch</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">	HttpServletRequest processedRequest = request;</span><br><span class="line">	HandlerExecutionChain mappedHandler = <span class="keyword">null</span>;</span><br><span class="line">	<span class="keyword">boolean</span> multipartRequestParsed = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">	WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		ModelAndView mv = <span class="keyword">null</span>;</span><br><span class="line">		Exception dispatchException = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			processedRequest = checkMultipart(request);</span><br><span class="line">			<span class="comment">// 上面检查请求是不是有multipart，对应前面说的步骤4</span></span><br><span class="line">			multipartRequestParsed = (processedRequest != request);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Determine handler for the current request.</span></span><br><span class="line">			<span class="comment">// 后面的一系列对应步骤5</span></span><br><span class="line">			mappedHandler = getHandler(processedRequest);</span><br><span class="line">			<span class="keyword">if</span> (mappedHandler == <span class="keyword">null</span>) &#123;</span><br><span class="line">				noHandlerFound(processedRequest, response);</span><br><span class="line">				<span class="keyword">return</span>;</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Determine handler adapter for the current request.</span></span><br><span class="line">			HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Process last-modified header, if supported by the handler.</span></span><br><span class="line">			String method = request.getMethod();</span><br><span class="line">			<span class="keyword">boolean</span> isGet = <span class="string">"GET"</span>.equals(method);</span><br><span class="line">			<span class="keyword">if</span> (isGet || <span class="string">"HEAD"</span>.equals(method)) &#123;</span><br><span class="line">				<span class="keyword">long</span> lastModified = ha.getLastModified(request, mappedHandler.getHandler());</span><br><span class="line">				<span class="keyword">if</span> (<span class="keyword">new</span> ServletWebRequest(request, response).checkNotModified(lastModified) &amp;&amp; isGet) &#123;</span><br><span class="line">					<span class="keyword">return</span>;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> (!mappedHandler.applyPreHandle(processedRequest, response)) &#123;</span><br><span class="line">				<span class="keyword">return</span>;</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Actually invoke the handler.</span></span><br><span class="line">			<span class="comment">// 调用完handle方法后进入步骤6，然后继续看下面的processDispatchResult方法</span></span><br><span class="line">			mv = ha.handle(processedRequest, response, mappedHandler.getHandler());</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> (asyncManager.isConcurrentHandlingStarted()) &#123;</span><br><span class="line">				<span class="keyword">return</span>;</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			applyDefaultViewName(processedRequest, mv);</span><br><span class="line">			mappedHandler.applyPostHandle(processedRequest, response, mv);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (Exception ex) &#123;</span><br><span class="line">			dispatchException = ex;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (Throwable err) &#123;</span><br><span class="line">			<span class="comment">// As of 4.3, we're processing Errors thrown from handler methods as well,</span></span><br><span class="line">			<span class="comment">// making them available for @ExceptionHandler methods and other scenarios.</span></span><br><span class="line">			dispatchException = <span class="keyword">new</span> NestedServletException(<span class="string">"Handler dispatch failed"</span>, err);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// 这个方法将会检查会决定是否要渲染视图</span></span><br><span class="line">		processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">catch</span> (Exception ex) &#123;</span><br><span class="line">		triggerAfterCompletion(processedRequest, response, mappedHandler, ex);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">catch</span> (Throwable err) &#123;</span><br><span class="line">		triggerAfterCompletion(processedRequest, response, mappedHandler,</span><br><span class="line">				<span class="keyword">new</span> NestedServletException(<span class="string">"Handler processing failed"</span>, err));</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">finally</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (asyncManager.isConcurrentHandlingStarted()) &#123;</span><br><span class="line">			<span class="comment">// Instead of postHandle and afterCompletion</span></span><br><span class="line">			<span class="keyword">if</span> (mappedHandler != <span class="keyword">null</span>) &#123;</span><br><span class="line">				mappedHandler.applyAfterConcurrentHandlingStarted(processedRequest, response);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="comment">// Clean up any resources used by a multipart request.</span></span><br><span class="line">			<span class="keyword">if</span> (multipartRequestParsed) &#123;</span><br><span class="line">				cleanupMultipart(processedRequest);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">processDispatchResult</span><span class="params">(HttpServletRequest request, HttpServletResponse response,</span></span></span><br><span class="line"><span class="function"><span class="params">		@Nullable HandlerExecutionChain mappedHandler, @Nullable ModelAndView mv,</span></span></span><br><span class="line"><span class="function"><span class="params">		@Nullable Exception exception)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">boolean</span> errorView = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (exception != <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="keyword">if</span> (exception <span class="keyword">instanceof</span> ModelAndViewDefiningException) &#123;</span><br><span class="line">			logger.debug(<span class="string">"ModelAndViewDefiningException encountered"</span>, exception);</span><br><span class="line">			mv = ((ModelAndViewDefiningException) exception).getModelAndView();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			Object handler = (mappedHandler != <span class="keyword">null</span> ? mappedHandler.getHandler() : <span class="keyword">null</span>);</span><br><span class="line">			mv = processHandlerException(request, response, handler, exception);</span><br><span class="line">			errorView = (mv != <span class="keyword">null</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Did the handler return a view to render?</span></span><br><span class="line">	<span class="keyword">if</span> (mv != <span class="keyword">null</span> &amp;&amp; !mv.wasCleared()) &#123;</span><br><span class="line">		<span class="comment">// 这个方法将会用到视图解析器，然后疯狂操作</span></span><br><span class="line">		render(mv, request, response);</span><br><span class="line">		<span class="keyword">if</span> (errorView) &#123;</span><br><span class="line">			WebUtils.clearErrorRequestAttributes(request);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">			logger.trace(<span class="string">"No view rendering, null ModelAndView returned."</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (WebAsyncUtils.getAsyncManager(request).isConcurrentHandlingStarted()) &#123;</span><br><span class="line">		<span class="comment">// Concurrent handling started during a forward</span></span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (mappedHandler != <span class="keyword">null</span>) &#123;</span><br><span class="line">		mappedHandler.triggerAfterCompletion(request, response, <span class="keyword">null</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>render方法的代码就不贴了，可以在DispatcherServlet里面可以看到具体实现细节。</p>
+<h3 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h3><p><code>HandlerExceptionResolver</code>这个类型的Bean可以<a href="https://docs.spring.io/spring/docs/5.1.3.RELEASE/spring-framework-reference/web.html#mvc-exceptionhandlers" target="_blank" rel="noopener">自定义异常处理逻辑</a></p>
+<h3 id="视图解析"><a href="#视图解析" class="headerlink" title="视图解析"></a>视图解析</h3><p>在spring-mvc中，<code>ViewResolver</code>负责将视图的名称和实际的视图文件（比如视图名叫index，视图文件是index.html）关联起来，而<code>View</code>的则是：</p>
+<blockquote>
+<p>MVC View for a web interaction. Implementations are responsible for rendering content, and exposing the model. A single view exposes multiple model attributes.</p>
+</blockquote>
+<p><code>ViewResolver</code>的实现有以下几个：<code>AbstractCachingViewResolver</code>，<code>XmlViewResolver</code>，<code>ResourceBundleViewResolver</code>，<code>UrlBasedViewResolver</code>，<code>InternalResourceViewResolver</code>，<code>FreeMarkerViewResolver</code>，<code>ContentNegotiatingViewResolver</code>，具体可以查看<a href="https://docs.spring.io/spring/docs/5.1.3.RELEASE/spring-framework-reference/web.html#mvc-viewresolver" target="_blank" rel="noopener">文档</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/12/19/SpringMVC视图解析/" data-toggle="tooltip" data-placement="top"
+                           title="SpringMVC视图解析">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/12/17/mybatis-lazyLoading/" data-toggle="tooltip" data-placement="top"
+                           title="mybatis lazyLoading 基本原理">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8zODUyNi8xNTA1NA==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#需要的依赖"><span class="toc-text">需要的依赖</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#目录结构"><span class="toc-text">目录结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tomcat配置"><span class="toc-text">Tomcat配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WebInit-java"><span class="toc-text">WebInit.java</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#getRootConfigClasses"><span class="toc-text">getRootConfigClasses</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#getServletConfigClasses"><span class="toc-text">getServletConfigClasses</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#getServletMappings"><span class="toc-text">getServletMappings</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WebMvc配置"><span class="toc-text">WebMvc配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#特定类型的Bean"><span class="toc-text">特定类型的Bean</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DispatcherServlet处理过程"><span class="toc-text">DispatcherServlet处理过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#异常处理"><span class="toc-text">异常处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#视图解析"><span class="toc-text">视图解析</span></a></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/Tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/Tags/#SpringMVC"
+                           title="SpringMVC">SpringMVC</a>
+                        
+                        <a class="tag" href="/Tags/#Web"
+                           title="Web">Web</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a href="https://echi.me">echisan</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/plentymorea">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/plentymore">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; PLTM 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    <br>
+                    Theme by <a href="https://github.com/Haojen/hexo-theme-Anisina">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://plentymore.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-123175280-1';
+    var _gaDomain = 'plentymore.github.io';
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<!-- <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script> -->
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="https://avatars3.githubusercontent.com/u/30522768?s=400&amp;u=a2ce54d7c63789391a0ba32b17792b7a21d64fbb&amp;v=4">
+</body>
+
+</html>

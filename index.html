@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BLOG">
+    <meta name="keyword" content="pltm">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <!-- google-site-verification -->
+    <meta name="google-site-verification" content="fgG59EBWTLiWni3UcgCPhkEPiVDNCnLeaocoTWjctOg" />
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="alternate" type="application/atom+xml" title="PLTM" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        PTLM blog
+        
+    </title>
+
+    <link rel="canonical" href="https://plentymore.github.io/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+    <!-- Google AdSense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+             google_ad_client: "ca-pub-1771277850135880",
+             enable_page_level_ads: true
+          });
+    </script>
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/images/3.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "false" data-istags="false
+" data-ishome = "true" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    PLTM
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+                        
+							
+								
+							
+						
+                    
+					
+					
+						<li>
+							<a href="/about">About</a>
+						</li>
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+
+<style>
+
+    .custom-haojen-container .post-preview:nth-of-type(1),
+    .custom-haojen-container .post-preview-poetry:nth-of-type(1) {
+        text-align: center;
+        background-repeat: no-repeat;
+        border-radius: 3px;
+        background-size: cover;
+        padding: 0;
+        height: 300px;
+        display: table;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.16);
+    }
+
+    /*去掉诗歌的背景图片*/
+    .custom-haojen-container .post-preview-poetry:nth-of-type(1) {
+        background-image: none !important;
+        background-color: rgba(255, 248, 220, 0.5);
+    }
+
+    .custom-haojen-container .post-preview:nth-child(1) h2,
+    .custom-haojen-container .post-preview:nth-child(1) .post-meta,
+    .custom-haojen-container .post-preview:nth-child(1) .post-subtitle {
+        text-shadow: 0 0 40px rgba(0, 0, 0, 1);
+        letter-spacing: 1px;
+        color: #fff;
+        margin-top: 0;
+        padding-left: 60px;
+        padding-right: 60px;
+    }
+
+    .custom-haojen-container .post-preview:nth-child(1) .post-meta {
+        font-size: .9em;
+        font-weight: 300;
+        margin-top: 0;
+    }
+
+    .custom-haojen-container .post-preview-poetry:nth-child(1) .post-subtitle {
+        letter-spacing: 6px;
+        font-size: 18px;
+        font-family: unset;
+        font-weight: 400;
+        color: rgba(0, 0, 0, .75)
+    }
+
+    /*不显示摘要*/
+    .custom-haojen-container .post-preview:nth-child(1) .post-content-preview {
+        display: none
+    }
+
+    /*只第一个显示背景图片*/
+    .custom-haojen-container .post-preview:not(:nth-child(1)) {
+        background-image: none !important;
+    }
+
+    /*第一个分界线去掉*/
+    .custom-haojen-container hr:nth-of-type(1) {
+        display: none;
+    }
+
+    /*主题*/
+    .custom-haojen-container .post-preview:nth-of-type(1) > a {
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+    /*诗词标题*/
+    .custom-haojen-container .post-preview-poetry:nth-child(1) h2 {
+        font-size: 35px;
+        font-family: STKaiti;
+        color: rgba(0, 0, 0, .8);
+    }
+
+    .custom-haojen-container .post-preview-poetry:nth-of-type(1) .post-meta {
+        color: #0e2231;
+    }
+
+    @media (max-width: 768px) {
+        .custom-haojen-container .post-preview:nth-child(1) {
+            height: 240px;
+        }
+
+        .custom-haojen-container .post-preview-poetry:nth-child(1) h2 {
+            font-size: 28px !important;
+            margin-top: 0;
+        }
+
+        .custom-haojen-container .post-preview:nth-child(1) .post-subtitle {
+            font-size: 18px;
+            font-weight: 400;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .custom-haojen-container .post-preview:nth-of-type(1) > a {
+            padding: 20px
+        }
+    }
+
+    /*手机屏幕*/
+    @media (max-width: 400px) {
+        .custom-haojen-container .post-preview:nth-child(1) {
+            height: 195px;
+        }
+
+        .custom-haojen-container .post-preview-poetry:nth-child(1) h2 {
+            font-size: 20px !important;
+        }
+
+        .custom-haojen-container .post-preview:nth-child(1) .post-subtitle {
+            font-size: 16px;
+        }
+
+        .custom-haojen-container .post-preview:nth-child(1) a {
+            padding: 30px 20px;
+        }
+    }
+</style>
+
+<!-- Page Header -->
+<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 visible-xs-block visible-sm-block">
+    <div class="row">
+        <header class="intro-header">
+            <div class="container">
+                <div class="site-heading text-center">
+                    <div class="about-me">
+                        <!--移动端头部显示-->
+                        <img src="https://avatars3.githubusercontent.com/u/30522768?s=400&amp;u=a2ce54d7c63789391a0ba32b17792b7a21d64fbb&amp;v=4"/>
+                        <h5><a href="/about/">plentymore</a></h5>
+                        <p>告诫♂之心</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </div>
+</div>
+<!-- Main Content -->
+<div class="container custom-haojen-container">
+    <!-- Post Container -->
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-1 col-md-8 col-md-offset-1 col-sm-12 col-xs-12 post-container">
+            <!-- Main Content -->
+
+
+
+<div class="post-preview "
+     style="background-image: url('https://i.imgur.com/RAwKwAj.jpg')">
+    <a href="/2019/01/12/ClassLoader资源加载机制/">
+        <h2 class="post-title">
+            ClassLoader资源加载机制
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-01-12
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                Java的类加载器（ClassLoader）不仅可以加载类，还可以加载资源（文本文件，图片，视频等各种文件资源）。
+三个重要的类加载器在Java中，一般有三个类加载器， Bootstrap Class Loader，ExtClassLoader 和 AppClassLoader。
+Bootstr..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('https://i.imgur.com/RAwKwAj.jpg')">
+    <a href="/2019/01/12/HTTP消息格式/">
+        <h2 class="post-title">
+            HTTP消息格式
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-01-12
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                这篇博客的主要目的是对HTTP的消息格式（主要是请求端和响应端的格式）进行总结。
+Request请求端的消息格式如下：
+
+Request line, such as GET /logo.gif HTTP/1.1
+
+Headers 比如Host : www.google.com（从HTTP/1.1..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('https://i.imgur.com/RAwKwAj.jpg')">
+    <a href="/2019/01/11/使用VPS下载bt资源/">
+        <h2 class="post-title">
+            使用VPS下载bt资源
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-01-11
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                迅雷无法下载一些bt资源，而且迅雷没有Linux版，用别的bt下载软件来下载的话因为没有公网ip所以速度比较尴尬，刚好手上有几台vps，有公网ip，而且每个月剩下900多G流量用过不完，刚好可以用来下载这些资源。
+安装dockerdocker的安装可以参考我的另一篇博客
+编写docker-coc..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('https://i.imgur.com/RAwKwAj.jpg')">
+    <a href="/2019/01/09/Java-Map接口常用实现类/">
+        <h2 class="post-title">
+            Java Map接口常用实现类
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-01-09
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                Map用来存储key-value（键值对），它是Java集合框架的一部分。
+接口public interface Map&lt;K,V&gt; &#123;	// Query Operations    // Map中的键值对数量    int size();    // Map是否为空，即没有..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('https://i.imgur.com/RAwKwAj.jpg')">
+    <a href="/2019/01/09/Java-Dueue接口常用实现类/">
+        <h2 class="post-title">
+            Java Dueue接口常用实现类
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-01-09
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                Deque表示双向队列，可以从队首或者队尾插入元素。
+接口public interface Deque&lt;E&gt; extends Queue&lt;E&gt; &#123;    // 添加元素到队列头部，如果添加失败，则抛出异常	void addFirst(E e);    // 添加..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('https://i.imgur.com/RAwKwAj.jpg')">
+    <a href="/2019/01/09/Java-Queue接口常用实现类/">
+        <h2 class="post-title">
+            Java Queue接口常用实现类
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-01-09
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                Queue表示队列，在Java中，一般是FIFO（先进先出）的队列，但也有不是先进先出的队列，比如优先级队列
+接口public interface Queue&lt;E&gt; extends Collection&lt;E&gt; &#123;    // 添加一个元素到队列，在先进先出队列中..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('https://i.imgur.com/RAwKwAj.jpg')">
+    <a href="/2019/01/09/Java-Set接口常用实现类/">
+        <h2 class="post-title">
+            Java Set接口常用实现类
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-01-09
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                Set拓展了Collection接口，表示不包含重复元素的集合。
+接口Set的方法基本上全是从Collection继承的，没有增加新的方法，不过因为Set不包含重复元素，所以它的add方法有自己的含义（当集合中已经有相同的元素时，则添加失败）。public interface Collectio..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('https://i.imgur.com/RAwKwAj.jpg')">
+    <a href="/2019/01/09/Java-List接口常用实现类/">
+        <h2 class="post-title">
+            Java List接口常用实现类
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-01-09
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                List可以包含重复元素的有序集合，它可以使用下标访问集合里面的元素，List也被称为顺序表
+接口public interface List&lt;E&gt; extends Collection&lt;E&gt; &#123;    // 往集合里面添加一个元素，添加到集合的最后面    bo..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('https://i.imgur.com/RAwKwAj.jpg')">
+    <a href="/2019/01/08/Java集合框架/">
+        <h2 class="post-title">
+            Java集合框架
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-01-08
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                Java集合框架（Java Collections Framework）是用来操纵和表示集合的统一框架，该框架包含三个要素：接口，实现，算法
+接口
+Java集合框架里面的接口是分级的，具体如上图，Collection是最顶层的接口，它定义了最基本的集合操作，Collection有4个子接口，分别..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('https://i.imgur.com/RAwKwAj.jpg')">
+    <a href="/2019/01/06/Java线程池原理/">
+        <h2 class="post-title">
+            Java线程池原理
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-01-06
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                Java线程池主要是为了复用宝贵的线程资源，其相关接口和具体实现在java.util.concurrent包下。
+主要接口ExecutorExecutor是Java线程池的顶层接口，它只有一个execute方法void execute(Runnable command);
+Executor的作用..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('https://i.imgur.com/RAwKwAj.jpg')">
+    <a href="/2019/01/04/IDEA查看Java的sun包下的源码/">
+        <h2 class="post-title">
+            IDEA查看Java的sun包下的源码
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-01-04
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                由于JDK的src.zip里面没有sun包的源码，所以要在IDEA里面查看sun包下的源码的时候只能看到通过反编译得到的代码，反编译得到的代码没有注释，而且很多局部变量名都变成了var1，var2这样子，看起来不太舒适。如果只是想随便看一看，可以直接在github或者OpenJDK上查看，但是这..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('https://i.imgur.com/RAwKwAj.jpg')">
+    <a href="/2018/12/29/Spring-EnableAsync-注解原理/">
+        <h2 class="post-title">
+            Spring @EnableAsync 注解原理
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-12-29
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                @EnableAsync注解是用来开启Spring的异步功能的，一般在方法上加上@Async注解，就可以让这个方法变成一个异步方法（其实就是用线程池的其中一个线程来运行这个方法），前提是要使用@EnableAsync注解开启Spring的异步功能。Spring的异步功能使用起来非常简单，但是这个..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('https://i.imgur.com/RAwKwAj.jpg')">
+    <a href="/2018/12/24/Spring-IoC原理/">
+        <h2 class="post-title">
+            Spring IoC原理
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-12-24
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                Spring的核心是它的IoC（控制反转）容器和AOP（面向切面编程），Spring与其它类库的整合（比如Spring事务，Spring Data JDBC等）大部分都是在建立在这两个功能的基础上的。在使用Spring的IoC容器的时候，在类上面加几个注解就可以了，用起来非常的简单，具体的原理我..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('https://i.imgur.com/RAwKwAj.jpg')">
+    <a href="/2018/12/23/spring-boot自动配置原理/">
+        <h2 class="post-title">
+            spring-boot自动配置原理
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-12-23
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                效率对比Spring Boot的出现是为了简化Spring集成的项目(还有一些常用的第三方类库)的配置，在原本的Spring集成的项目中（比如spring-web，spring-data-jdbc等），无论是基于注解的配置还是基于xml的配置，你都需要进行很多的配置才能正常使用。比如spring..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('https://i.imgur.com/RAwKwAj.jpg')">
+    <a href="/2018/12/22/SpringMVC原理浅析/">
+        <h2 class="post-title">
+            SpringMVC原理浅析
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-12-22
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                SpringMVC的原理是把DispatcherServlet作为中央Servlet来处理请求（一般情况下所有请求都会被匹配到DispatcherServlet，因为它的servletMapping一般都是设置为/，而且不会配置其它的有servletMapping的Servlet，jsp Ser..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('https://i.imgur.com/RAwKwAj.jpg')">
+    <a href="/2018/12/21/SpringMVC-DispatcherServlet的创建流程/">
+        <h2 class="post-title">
+            SpringMVC DispatcherServlet的创建流程
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-12-21
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                在spring-mvc里面，一般所有的请求都会被匹配到DispatcherServlet，然后由它调用相应的Interceptor，Hnadler处理请求（Filter是在Servlet之前执行的），因此DispatcherServlet可以说是spring-mvc里面很核心的一个东西，下面我们..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+
+<!-- 翻页 pager -->
+
+<ul class="pager">
+    
+    
+    <li class="next">
+        <a href="/page/2/">Older Posts &rarr;</a>
+    </li>
+    
+</ul>
+
+
+        </div>
+        <!-- Sidebar Container -->
+        <div class="
+                col-lg-3 col-lg-offset-0
+                col-md-3 col-md-offset-0
+                col-sm-12
+                col-xs-12
+                sidebar-container
+            ">
+
+            <!-- About Me -->
+            <section class="visible-md visible-lg" style="padding: 0 18px">
+                <div class="short-about">
+                    <!--侧边栏头像-->
+                    
+                    <img src="https://avatars3.githubusercontent.com/u/30522768?s=400&amp;u=a2ce54d7c63789391a0ba32b17792b7a21d64fbb&amp;v=4"/>
+                    
+                    <h5><a href="/about/">plentymore</a></h5>
+                    
+                    <p>告诫♂之心</p>
+                    
+                    <hr>
+                    <!-- SNS Link 社交 -->
+                    <ul class="list-inline">
+                        
+                        
+                        <li>
+                            <a target="_blank" href="https://twitter.com/plentymorea">
+                                        <span class="fa-stack fa-lg">
+                                            <i class="fa fa-circle fa-stack-2x"></i>
+                                            <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                        </span>
+                            </a>
+                        </li>
+                        
+                        
+
+                        
+
+                        
+
+                        
+                        <li>
+                            <a target="_blank" href="https://github.com/plentymore">
+                                        <span class="fa-stack fa-lg">
+                                            <i class="fa fa-circle fa-stack-2x"></i>
+                                            <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                        </span>
+                            </a>
+                        </li>
+                        
+
+                        
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Featured Tags  标签 -->
+            
+            <section>
+                <div class="tags">
+                    
+                    
+                    <a href="/Tags/#JavaBasic" title="JavaBasic"
+                       rel="9">JavaBasic</a>
+                    
+                    
+                    
+                    <a href="/Tags/#Container" title="Container"
+                       rel="4">Container</a>
+                    
+                    
+                    
+                    <a href="/Tags/#Collection" title="Collection"
+                       rel="8">Collection</a>
+                    
+                    
+                    
+                    <a href="/Tags/#EssentialClasses" title="EssentialClasses"
+                       rel="3">EssentialClasses</a>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    <a href="/Tags/#Spring" title="Spring"
+                       rel="3">Spring</a>
+                    
+                    
+                    
+                    <a href="/Tags/#SpringMVC" title="SpringMVC"
+                       rel="4">SpringMVC</a>
+                    
+                    
+                    
+                    <a href="/Tags/#Web" title="Web"
+                       rel="4">Web</a>
+                    
+                    
+                    
+                    
+                    
+                    <a href="/Tags/#Misc" title="Misc"
+                       rel="3">Misc</a>
+                    
+                    
+                    
+                    
+                    
+                    
+                </div>
+            </section>
+            
+
+            
+            <hr>
+            <h5 style="text-align: center;">Friends</h5>
+            <ul class="list-inline" style="text-align: center;">
+                
+                <li><a href="https://echi.me" target="_blank">echisan</a></li>
+                
+            </ul>
+            
+
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/plentymorea">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/plentymore">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; PLTM 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    <br>
+                    Theme by <a href="https://github.com/Haojen/hexo-theme-Anisina">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://plentymore.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-123175280-1';
+    var _gaDomain = 'plentymore.github.io';
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<!-- <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script> -->
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="https://avatars3.githubusercontent.com/u/30522768?s=400&amp;u=a2ce54d7c63789391a0ba32b17792b7a21d64fbb&amp;v=4">
+</body>
+
+</html>
